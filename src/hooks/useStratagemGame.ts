@@ -6,6 +6,7 @@ const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
+const STRATAGEMS_PER_ROUND = 8;
 
 export interface GameStats {
   roundBonus: number;
@@ -23,9 +24,9 @@ export const useStratagemGame = () => {
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
   
+  const [fullPool, setFullPool] = useState<Stratagem[]>([]);
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
-  const [lastQueueSize, setLastQueueSize] = useState(0);
   
   const [mistakesInGame, setMistakesInGame] = useState(0);
   const [errorsThisStratagem, setErrorsThisStratagem] = useState(0);
@@ -41,28 +42,25 @@ export const useStratagemGame = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const generateLevelQueue = useCallback((lvl: number, prevSize: number) => {
-    let count = lvl === 1 ? 6 : prevSize + Math.floor(Math.random() * 3) + 1;
-    const queue: Stratagem[] = [];
-    for (let i = 0; i < count; i++) {
-      const pool = STRATAGEMS.filter(s => {
-        if (lvl < 3) return s.sequence.length <= 5;
-        if (lvl < 6) return s.sequence.length <= 7;
-        return true;
-      });
-      queue.push(pool[Math.floor(Math.random() * pool.length)]);
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const newArr = [...array];
+    for (let i = newArr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
     }
-    return { queue, count };
-  }, []);
+    return newArr;
+  };
 
   const startGame = () => {
     audioManager.playStart();
-    const { queue, count } = generateLevelQueue(1, 0);
+    const shuffled = shuffleArray(STRATAGEMS);
+    const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
+    
+    setFullPool(shuffled);
     setScore(0);
     setLevel(1);
     setTimeLeft(INITIAL_TIME);
-    setMissionQueue(queue);
-    setLastQueueSize(count);
+    setMissionQueue(firstRound);
     setCurrentQueueIndex(0);
     setInputIndex(0);
     setMistakesInGame(0);
@@ -86,17 +84,25 @@ export const useStratagemGame = () => {
 
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
-    const { queue, count } = generateLevelQueue(nextLvl, lastQueueSize);
+    const startIdx = (nextLvl - 1) * STRATAGEMS_PER_ROUND;
+    const nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
+    
+    if (nextRound.length === 0) {
+      // No more stratagems left - Victory/Game Over
+      calculateFinalStats();
+      setGameState("gameover");
+      return;
+    }
+
     setLevel(nextLvl);
-    setMissionQueue(queue);
-    setLastQueueSize(count);
+    setMissionQueue(nextRound);
     setCurrentQueueIndex(0);
     setInputIndex(0);
     setErrorsThisStratagem(0);
     setTimeLeft(INITIAL_TIME);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
-  }, [level, lastQueueSize, generateLevelQueue]);
+  }, [level, fullPool, calculateFinalStats]);
 
   const handleInput = useCallback((direction: Direction) => {
     if (gameState !== "playing" || missionQueue.length === 0) return;
@@ -104,30 +110,25 @@ export const useStratagemGame = () => {
     const currentStratagem = missionQueue[currentQueueIndex];
 
     if (currentStratagem.sequence[inputIndex] === direction) {
-      // Correct key press
       setLastInputCorrect(true);
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === currentStratagem.sequence.length) {
-        // Completed Stratagem
         audioManager.playCorrect();
         
-        // Calculate Score
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
         const complexityBonus = currentStratagem.sequence.length * 100;
-        const speedBonus = Math.max(0, Math.floor((3000 - timeTaken) / 10)); // Bonus if under 3 seconds
+        const speedBonus = Math.max(0, Math.floor((3000 - timeTaken) / 10));
         const errorPenalty = errorsThisStratagem * 50;
         
         const points = Math.max(10, complexityBonus + speedBonus - errorPenalty);
         setScore(prev => prev + points);
         
-        // Time Reward
         const timeReward = BASE_TIME_REWARD + (currentStratagem.sequence.length * 0.1);
         setTimeLeft(prev => Math.min(prev + timeReward, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
-          // End of Level
           audioManager.playSuccess();
           setGameState("break");
           setBreakTimeLeft(BREAK_DURATION);
@@ -141,10 +142,9 @@ export const useStratagemGame = () => {
         setInputIndex(nextInputIdx);
       }
     } else {
-      // Mistake while typing
       audioManager.playHit();
       setLastInputCorrect(false);
-      setInputIndex(0); // Reset sequence on error
+      setInputIndex(0);
       setErrorsThisStratagem(prev => prev + 1);
       setMistakesInGame(prev => prev + 1);
     }
