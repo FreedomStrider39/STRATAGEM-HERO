@@ -1,3 +1,11 @@
+import autocannonSvg from "../assets/icons/support/autocannon.svg";
+import breachingHammerSvg from "../assets/icons/support/breaching_hammer.svg";
+import commandoSvg from "../assets/icons/support/commando.svg";
+import defoliationToolSvg from "../assets/icons/support/defoliation_tool.svg";
+import warpPackSvg from "../assets/icons/support/warp_pack.svg";
+import oneTrueFlagSvg from "../assets/icons/mission/one_true_flag.svg";
+import soloSiloSvg from "../assets/icons/mission/solo_silo.svg";
+
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -40,7 +48,7 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconUrl: getIcon("support/spear.png") },
   { name: "Railgun", sequence: ["D", "R", "D", "U", "L", "R"], category: "Support", iconUrl: getIcon("support/railgun.png") },
   { name: "Anti-Materiel Rifle", sequence: ["D", "L", "R", "U", "D"], category: "Support", iconUrl: getIcon("support/amr.png") },
-  { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconUrl: getIcon("support/autocannon.svg") },
+  { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconUrl: autocannonSvg },
   { name: "Laser Cannon", sequence: ["D", "L", "D", "U", "L"], category: "Support", iconUrl: getIcon("support/laser_cannon.png") },
   { name: "Quasar Cannon", sequence: ["D", "D", "U", "L", "R"], category: "Support", iconUrl: getIcon("support/quasar.png") },
   { name: "Arc Thrower", sequence: ["D", "R", "D", "U", "L", "L"], category: "Support", iconUrl: getIcon("support/arc_thrower.png") },
@@ -49,10 +57,10 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: getIcon("support/machine_gun.png") },
   { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconUrl: getIcon("support/stalwart.png") },
   { name: "Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: getIcon("support/hmg.png") },
-  { name: "Commando", sequence: ["D", "L", "U", "D", "R"], category: "Support", iconUrl: getIcon("support/commando.svg") },
-  { name: "Warp Pack", sequence: ["D", "U", "U", "L", "R"], category: "Support", iconUrl: getIcon("support/warp_pack.svg") },
-  { name: "Defoliation Tool", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: getIcon("support/defoliation_tool.svg") },
-  { name: "Breaching Hammer", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: getIcon("support/breaching_hammer.svg") },
+  { name: "Commando", sequence: ["D", "L", "U", "D", "R"], category: "Support", iconUrl: commandoSvg },
+  { name: "Warp Pack", sequence: ["D", "U", "U", "L", "R"], category: "Support", iconUrl: warpPackSvg },
+  { name: "Defoliation Tool", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: defoliationToolSvg },
+  { name: "Breaching Hammer", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: breachingHammerSvg },
 
   // --- DEFENSIVE (Green) ---
   { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: getIcon("defensive/mortar_sentry.png") },
@@ -72,8 +80,8 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: getIcon("mission/sos_beacon.png") },
   { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: getIcon("mission/resupply.png") },
   { name: "Super Destroyer", sequence: ["U", "U", "D", "D", "L", "R", "L", "R"], category: "Mission", iconUrl: getIcon("mission/super_destroyer.png") },
-  { name: "One True Flag", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: getIcon("mission/one_true_flag.svg") },
-  { name: "Solo Silo", sequence: ["U", "U", "D", "D", "L", "R", "L", "R"], category: "Mission", iconUrl: getIcon("mission/solo_silo.svg") },
+  { name: "One True Flag", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: oneTrueFlagSvg },
+  { name: "Solo Silo", sequence: ["U", "U", "D", "D", "L", "R", "L", "R"], category: "Mission", iconUrl: soloSiloSvg },
 ];
 
 export const RANKS = [
