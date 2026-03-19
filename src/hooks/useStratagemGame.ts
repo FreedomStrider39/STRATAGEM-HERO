@@ -7,6 +7,7 @@ const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
+const DISRUPTOR_REFRESH_MS = 4000;
 
 export interface GameStats {
   roundBonus: number;
@@ -27,6 +28,7 @@ export const useStratagemGame = () => {
   // Challenges
   const [isDisrupted, setIsDisrupted] = useState(false);
   const [isInterfered, setIsInterfered] = useState(false);
+  const [activeSequence, setActiveSequence] = useState<Direction[]>([]);
   
   const [fullPool, setFullPool] = useState<Stratagem[]>([]);
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
@@ -45,20 +47,21 @@ export const useStratagemGame = () => {
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const disruptorIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    const newArr = [...array];
-    for (let i = newArr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-    }
-    return newArr;
+  const getRandomDirection = (): Direction => {
+    const dirs: Direction[] = ["U", "D", "L", "R"];
+    return dirs[Math.floor(Math.random() * dirs.length)];
+  };
+
+  const generateRandomSequence = (length: number): Direction[] => {
+    return Array.from({ length }, () => getRandomDirection());
   };
 
   const startGame = () => {
     audioManager.playStart();
     audioManager.startBgm(true);
-    const shuffled = shuffleArray(STRATAGEMS);
+    const shuffled = [...STRATAGEMS].sort(() => Math.random() - 0.5);
     const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
     setFullPool(shuffled);
@@ -68,6 +71,7 @@ export const useStratagemGame = () => {
     setMissionQueue(firstRound);
     setCurrentQueueIndex(0);
     setInputIndex(0);
+    setActiveSequence(firstRound[0].sequence);
     setMistakesInGame(0);
     setErrorsThisStratagem(0);
     setIsDisrupted(false);
@@ -92,7 +96,7 @@ export const useStratagemGame = () => {
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
     const startIdx = (nextLvl - 1) * STRATAGEMS_PER_ROUND;
-    let nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
+    const nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
     
     if (nextRound.length === 0) {
       calculateFinalStats();
@@ -100,32 +104,22 @@ export const useStratagemGame = () => {
       return;
     }
 
-    // Challenge Logic
     const roll = Math.random();
-    
-    // Illuminate Cognitive Disruptor (Scrambled sequences) - 25% chance from Round 2
-    const shouldDisrupt = nextLvl >= 2 && roll < 0.25;
-    setIsDisrupted(shouldDisrupt);
+    const shouldDisrupt = nextLvl >= 2 && roll < 0.35;
+    const shouldInterfere = nextLvl >= 3 && roll > 0.75;
 
-    // Atmospheric Interference (Obscured icons) - 20% chance from Round 3
-    const shouldInterfere = nextLvl >= 3 && roll > 0.8;
+    setIsDisrupted(shouldDisrupt);
     setIsInterfered(shouldInterfere);
 
     if (shouldDisrupt) {
-      audioManager.playError(); 
-      nextRound = nextRound.map(strat => {
-        let scrambled = shuffleArray([...strat.sequence]) as Direction[];
-        // Ensure it's actually different if possible
-        if (strat.sequence.length > 1 && JSON.stringify(scrambled) === JSON.stringify(strat.sequence)) {
-          scrambled = [...scrambled].reverse() as Direction[];
-        }
-        return { ...strat, sequence: scrambled };
-      });
+      audioManager.playError();
+      const firstFake = generateRandomSequence(nextRound[0].sequence.length);
+      setActiveSequence(firstFake);
+    } else {
+      setActiveSequence(nextRound[0].sequence);
     }
 
-    if (shouldInterfere) {
-      audioManager.playHit(); // Static sound feel
-    }
+    if (shouldInterfere) audioManager.playHit();
 
     setLevel(nextLvl);
     setMissionQueue(nextRound);
@@ -137,27 +131,44 @@ export const useStratagemGame = () => {
     setGameState("playing");
   }, [level, fullPool, calculateFinalStats]);
 
+  // Handle Disruptor Refresh
+  useEffect(() => {
+    if (gameState === "playing" && isDisrupted) {
+      disruptorIntervalRef.current = setInterval(() => {
+        const currentStrat = missionQueue[currentQueueIndex];
+        if (currentStrat) {
+          setActiveSequence(generateRandomSequence(currentStrat.sequence.length));
+          setInputIndex(0); // Reset progress because the sequence changed
+          audioManager.playHit(); // Glitch sound
+        }
+      }, DISRUPTOR_REFRESH_MS);
+    } else {
+      if (disruptorIntervalRef.current) clearInterval(disruptorIntervalRef.current);
+    }
+    return () => {
+      if (disruptorIntervalRef.current) clearInterval(disruptorIntervalRef.current);
+    };
+  }, [gameState, isDisrupted, currentQueueIndex, missionQueue]);
+
   const handleInput = useCallback((direction: Direction) => {
     if (gameState !== "playing" || missionQueue.length === 0) return;
 
-    const currentStratagem = missionQueue[currentQueueIndex];
-
-    if (currentStratagem.sequence[inputIndex] === direction) {
+    if (activeSequence[inputIndex] === direction) {
       setLastInputCorrect(true);
       const nextInputIdx = inputIndex + 1;
       
-      if (nextInputIdx === currentStratagem.sequence.length) {
+      if (nextInputIdx === activeSequence.length) {
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
-        const complexityBonus = currentStratagem.sequence.length * 100;
+        const complexityBonus = activeSequence.length * 100;
         const speedBonus = Math.max(0, Math.floor((3000 - timeTaken) / 10));
         const errorPenalty = errorsThisStratagem * 50;
         
         const points = Math.max(10, complexityBonus + speedBonus - errorPenalty);
         setScore(prev => prev + points);
         
-        const timeReward = BASE_TIME_REWARD + (currentStratagem.sequence.length * 0.1);
+        const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.1);
         setTimeLeft(prev => Math.min(prev + timeReward, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
@@ -166,9 +177,17 @@ export const useStratagemGame = () => {
           setGameState("break");
           setBreakTimeLeft(BREAK_DURATION);
         } else {
+          const nextStrat = missionQueue[nextQueueIdx];
           setCurrentQueueIndex(nextQueueIdx);
           setInputIndex(0);
           setErrorsThisStratagem(0);
+          
+          if (isDisrupted) {
+            setActiveSequence(generateRandomSequence(nextStrat.sequence.length));
+          } else {
+            setActiveSequence(nextStrat.sequence);
+          }
+          
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
@@ -184,7 +203,7 @@ export const useStratagemGame = () => {
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
-  }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem]);
+  }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem, activeSequence, isDisrupted]);
 
   useEffect(() => {
     if (gameState === "playing") {
@@ -247,6 +266,7 @@ export const useStratagemGame = () => {
     lastInputCorrect,
     isDisrupted,
     isInterfered,
+    activeSequence,
     stats,
     startGame,
     handleInput

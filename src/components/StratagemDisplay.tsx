@@ -11,11 +11,12 @@ interface StratagemDisplayProps {
   queue: Stratagem[];
   isInterfered?: boolean;
   isDisrupted?: boolean;
+  activeSequence: Direction[];
 }
 
 const IlluminateText = () => {
   const [glyphs, setGlyphs] = useState("");
-  const symbols = "᚛᚜ᚐᚑᚒᚓᚔᚕᚖᚗᚘᚙᚚ᚛᚜"; // Ogham-like symbols for alien feel
+  const symbols = "᚛᚜ᚐᚑᚒᚓᚔᚕᚖᚗᚘᚙᚚ᚛᚜";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,15 +43,16 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
   return (
     <motion.div 
       animate={isDisrupted ? {
-        x: [0, Math.random() * 4 - 2, 0],
-        y: [0, Math.random() * 4 - 2, 0],
-        rotate: [0, Math.random() * 2 - 1, 0]
+        x: [0, Math.random() * 12 - 6, 0],
+        y: [0, Math.random() * 12 - 6, 0],
+        rotate: [0, Math.random() * 10 - 5, 0],
+        scale: [1, 1.1, 0.9, 1]
       } : {}}
-      transition={{ repeat: Infinity, duration: 0.2 }}
+      transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
         "transition-all duration-75 w-12 h-12 flex items-center justify-center",
         completed ? "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" : "text-[#4a4a4a]",
-        isDisrupted && !completed && "text-purple-400/50"
+        isDisrupted && !completed && "text-purple-400/70"
       )}
     >
       <svg 
@@ -64,12 +66,19 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
   );
 };
 
-const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentIndex, isError, queue, isInterfered, isDisrupted }) => {
+const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ 
+  stratagem, 
+  currentIndex, 
+  isError, 
+  queue, 
+  isInterfered, 
+  isDisrupted,
+  activeSequence 
+}) => {
   return (
     <div className="flex flex-col items-center w-full max-w-4xl">
       {/* Top Section: Icon and Queue */}
       <div className="flex items-end gap-4 mb-2">
-        {/* Current Icon */}
         <div className={cn(
           "w-24 h-24 border-4 p-1 bg-black/40 relative overflow-hidden transition-colors duration-500",
           isDisrupted ? "border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)]" : "border-yellow-400"
@@ -92,7 +101,6 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentI
           )} />
         </div>
 
-        {/* Upcoming Queue */}
         <div className="flex gap-2 pb-1">
           {queue.slice(1, 6).map((nextStrat, idx) => (
             <div key={idx} className="w-10 h-10 opacity-60 grayscale brightness-75 relative overflow-hidden">
@@ -128,7 +136,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentI
         "flex flex-wrap justify-center gap-2 transition-transform duration-75 mb-8",
         isError && "animate-shake"
       )}>
-        {stratagem.sequence.map((dir, idx) => (
+        {activeSequence.map((dir, idx) => (
           <CustomArrow 
             key={`${stratagem.name}-${idx}`} 
             direction={dir} 

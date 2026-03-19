@@ -22,6 +22,7 @@ const Index = () => {
     lastInputCorrect,
     isDisrupted,
     isInterfered,
+    activeSequence,
     stats,
     startGame,
     handleInput
@@ -142,6 +143,7 @@ const Index = () => {
                       queue={missionQueue.slice(currentQueueIndex)}
                       isInterfered={isInterfered}
                       isDisrupted={isDisrupted}
+                      activeSequence={activeSequence}
                     />
                   )}
                 </div>
