@@ -28,7 +28,7 @@ import airburstRocketLauncherSvg from "../assets/icons/support/airburst_rocket_l
 import amrSvg from "../assets/icons/support/amr.svg";
 import arcThrowerSvg from "../assets/icons/support/arc_thrower.svg";
 import autocannonSvg from "../assets/icons/support/autocannon.svg";
-import ballisticShieldSvg from "../assets/icons/support/ballistic_shield.svg";
+// import ballisticShieldSvg from "../assets/icons/support/ballistic_shield.svg";
 import breachingHammerSvg from "../assets/icons/support/breaching_hammer.svg";
 import c4PackSvg from "../assets/icons/support/c4_pack.svg";
 import commandoSvg from "../assets/icons/support/commando.svg";
@@ -164,7 +164,7 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Defoliation Tool", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: defoliationToolSvg },
   { name: "Breaching Hammer", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: breachingHammerSvg },
   { name: "Airburst Rocket Launcher", sequence: ["D", "U", "U", "L", "R"], category: "Support", iconUrl: airburstRocketLauncherSvg },
-  { name: "Ballistic Shield Backpack", sequence: ["D", "L", "D", "D", "U", "L"], category: "Support", iconUrl: ballisticShieldSvg },
+  // { name: "Ballistic Shield Backpack", sequence: ["D", "L", "D", "D", "U", "L"], category: "Support", iconUrl: ballisticShieldSvg },
   { name: "C4 Pack", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: c4PackSvg },
   { name: "EAT-411", sequence: ["D", "D", "L", "U", "R"], category: "Support", iconUrl: eat411Svg },
   { name: "Emancipator Exosuit", sequence: ["L", "D", "R", "U", "L", "D", "U"], category: "Support", iconUrl: emancipatorSvg },
