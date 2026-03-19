@@ -81,15 +81,15 @@ export const useStratagemGame = () => {
     setDisruptedCount(0);
     setDisruptedLimit(0);
     setShowDisruptorDestroyed(false);
-    lastDisruptedRoundRef.current = -5; // Ensure it doesn't happen too early
+    lastDisruptedRoundRef.current = -5;
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   };
 
   const calculateFinalStats = useCallback(() => {
-    const rBonus = level * 100;
-    const tBonus = Math.floor(timeLeft * 20);
-    const pBonus = mistakesInGame === 0 ? 1000 : 0;
+    const rBonus = level * 25; // Reduced from 100
+    const tBonus = Math.floor(timeLeft * 5); // Reduced from 20
+    const pBonus = mistakesInGame === 0 ? 250 : 0; // Reduced from 1000
     
     setStats({
       roundBonus: rBonus,
@@ -110,9 +110,6 @@ export const useStratagemGame = () => {
       return;
     }
 
-    // Logic for disruption frequency: 
-    // 1. Must be at least Round 5
-    // 2. Must have at least 4 rounds gap since the last disruption ended
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
     const canDisrupt = nextLvl >= 5 && roundsSinceLast >= 4;
     const shouldDisrupt = canDisrupt && Math.random() < 0.25;
@@ -121,7 +118,6 @@ export const useStratagemGame = () => {
       audioManager.playError();
       setIsDisrupted(true);
       lastDisruptedRoundRef.current = nextLvl;
-      // Disrupt between 2 and 4 stratagems
       const limit = Math.floor(Math.random() * 3) + 2;
       setDisruptedLimit(limit);
       setDisruptedCount(0);
@@ -145,7 +141,6 @@ export const useStratagemGame = () => {
     setGameState("playing");
   }, [level, fullPool, calculateFinalStats]);
 
-  // Handle Disruptor Refresh
   useEffect(() => {
     if (gameState === "playing" && isDisrupted) {
       disruptorIntervalRef.current = setInterval(() => {
@@ -175,11 +170,11 @@ export const useStratagemGame = () => {
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
-        const complexityBonus = activeSequence.length * 100;
-        const speedBonus = Math.max(0, Math.floor((3000 - timeTaken) / 10));
-        const errorPenalty = errorsThisStratagem * 50;
+        const complexityBonus = activeSequence.length * 15; // Reduced from 100
+        const speedBonus = Math.max(0, Math.floor((2000 - timeTaken) / 40)); // Reduced window and multiplier
+        const errorPenalty = errorsThisStratagem * 25; // Reduced penalty
         
-        const points = Math.max(10, complexityBonus + speedBonus - errorPenalty);
+        const points = Math.max(5, complexityBonus + speedBonus - errorPenalty);
         setScore(prev => prev + points);
         
         const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.1);
@@ -187,7 +182,6 @@ export const useStratagemGame = () => {
         
         const nextQueueIdx = currentQueueIndex + 1;
         
-        // Handle disruption logic
         let nextIsDisrupted = isDisrupted;
         if (isDisrupted) {
           const newCount = disruptedCount + 1;
