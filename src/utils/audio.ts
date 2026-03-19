@@ -19,6 +19,7 @@ import success2 from "@/assets/audio/success2.wav";
 import success3 from "@/assets/audio/success3.wav";
 import failure from "@/assets/audio/failure.wav";
 import startSfx from "@/assets/audio/start.wav";
+import playingBgm from "@/assets/audio/playing.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
@@ -48,6 +49,7 @@ class AudioManager {
       this.loadSound("success3", success3);
       this.loadSound("failure", failure);
       this.loadSound("start", startSfx);
+      this.loadSound("playing", playingBgm);
     }
   }
 
@@ -99,9 +101,21 @@ class AudioManager {
     this.playSound("failure");
   }
 
-  // Generic key press sound if needed, otherwise we use the specific ones
-  playKeyPress() {
-    // Using a very short subtle sound or nothing if not specified
+  startBgm() {
+    const sound = this.sounds["playing"];
+    if (sound) {
+      sound.loop = true;
+      sound.volume = 0.6;
+      sound.play().catch(() => {});
+    }
+  }
+
+  stopBgm() {
+    const sound = this.sounds["playing"];
+    if (sound) {
+      sound.pause();
+      sound.currentTime = 0;
+    }
   }
 }
 
