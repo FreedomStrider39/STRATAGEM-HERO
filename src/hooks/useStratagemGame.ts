@@ -85,7 +85,8 @@ export const useStratagemGame = () => {
     setMissionQueue(nextQueue);
     setCurrentQueueIndex(0);
     setInputIndex(0);
-    setTimeLeft(prev => Math.min(MAX_TIME, INITIAL_TIME + (prev * 0.3)));
+    // Carry over time but cap it
+    setTimeLeft(prev => Math.min(MAX_TIME, prev + 5));
     setGameState("playing");
   }, [level, generateLevelQueue]);
 
@@ -98,12 +99,16 @@ export const useStratagemGame = () => {
       setLastInputCorrect(true);
       const nextInputIdx = inputIndex + 1;
       
+      // Small time bonus for every correct arrow
+      setTimeLeft(prev => Math.min(prev + 0.15, MAX_TIME));
+      
       if (nextInputIdx === currentStratagem.sequence.length) {
-        const timeBonus = 1.0 + (currentStratagem.sequence.length * 0.2);
+        // Larger bonus for completing the whole stratagem
+        const completionBonus = 1.5 + (currentStratagem.sequence.length * 0.25);
         const points = currentStratagem.sequence.length * 100;
         
         setScore(prev => prev + points);
-        setTimeLeft(prev => Math.min(prev + timeBonus, MAX_TIME));
+        setTimeLeft(prev => Math.min(prev + completionBonus, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
@@ -120,7 +125,8 @@ export const useStratagemGame = () => {
       setLastInputCorrect(false);
       setInputIndex(0);
       setMistakesInGame(prev => prev + 1);
-      setTimeLeft(prev => Math.max(0, prev - 1.5));
+      // Penalty for mistakes
+      setTimeLeft(prev => Math.max(0, prev - 2.0));
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
@@ -135,7 +141,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          const drainRate = 0.1 + (level * 0.02);
+          // Drain rate increases slightly with level
+          const drainRate = 0.1 + (level * 0.015);
           return prev - drainRate;
         });
       }, 100);
@@ -173,6 +180,7 @@ export const useStratagemGame = () => {
     score,
     level,
     timeLeft,
+    maxTime: MAX_TIME,
     breakTimeLeft,
     missionQueue,
     currentQueueIndex,

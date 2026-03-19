@@ -11,6 +11,7 @@ const Index = () => {
     score,
     level,
     timeLeft,
+    maxTime,
     breakTimeLeft,
     missionQueue,
     currentQueueIndex,
@@ -117,7 +118,7 @@ const Index = () => {
                 <div className="relative h-4 bg-gray-700/50 border border-gray-600 overflow-hidden">
                   <motion.div 
                     className="absolute inset-y-0 left-0 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                    style={{ width: `${(timeLeft / 15) * 100}%` }}
+                    style={{ width: `${(timeLeft / maxTime) * 100}%` }}
                     transition={{ duration: 0.1 }}
                   />
                 </div>
