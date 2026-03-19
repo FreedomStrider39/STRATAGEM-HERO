@@ -141,6 +141,7 @@ const Index = () => {
                       isError={lastInputCorrect === false}
                       queue={missionQueue.slice(currentQueueIndex)}
                       isInterfered={isInterfered}
+                      isDisrupted={isDisrupted}
                     />
                   )}
                 </div>
