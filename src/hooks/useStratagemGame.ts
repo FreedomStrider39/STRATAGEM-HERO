@@ -139,8 +139,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Doubled the drain rate: 3 seconds of game time per 1 second of real time
-          const drainRate = 0.3;
+          // Adjusted drain rate to 2.2 seconds of game time per 1 second of real time
+          const drainRate = 0.22;
           return prev - drainRate;
         });
       }, 100);
