@@ -1,80 +1,48 @@
 import React from "react";
-import { 
-  Target, Plane, Wrench, Shield, Flag, 
-  Zap, Flame, Crosshair, Bomb, Rocket, 
-  Cpu, Radio, Loader, Swords, MoveUp,
-  Skull, Cloud, Wind, Activity, ShieldAlert
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StratagemIconProps {
-  type: string;
+  index: number;
   category: string;
   className?: string;
 }
 
-const StratagemIcon: React.FC<StratagemIconProps> = ({ type, category, className }) => {
-  const getIcon = () => {
-    switch (type) {
-      case "gatling": return <Activity />;
-      case "walking": return <MoveUp />;
-      case "barrage": return <Target />;
-      case "heavy-barrage": return <Target className="stroke-[3px]" />;
-      case "gas": return <Skull />;
-      case "ems": return <Zap />;
-      case "smoke": return <Cloud />;
-      case "airburst": return <Wind />;
-      case "precision": return <Crosshair />;
-      case "railcannon": return <Zap className="stroke-[3px]" />;
-      case "laser": return <Zap />;
-      case "strafing": return <Plane />;
-      case "napalm": return <Flame />;
-      case "rocket-pods": return <Rocket />;
-      case "airstrike": return <Bomb />;
-      case "cluster": return <Bomb className="scale-75" />;
-      case "500kg": return <Bomb className="stroke-[3px]" />;
-      case "machine-gun": return <Swords />;
-      case "grenade": return <Bomb />;
-      case "eat": return <Rocket />;
-      case "recoilless": return <Rocket />;
-      case "spear": return <Crosshair />;
-      case "railgun": return <Zap />;
-      case "amr": return <Crosshair />;
-      case "autocannon": return <Loader />;
-      case "laser-cannon": return <Zap />;
-      case "quasar": return <Zap className="stroke-[3px]" />;
-      case "arc": return <Zap />;
-      case "flame": return <Flame />;
-      case "sentry": return <Shield />;
-      case "sentry-ems": return <ShieldAlert />;
-      case "tesla": return <Zap />;
-      case "shield": return <Shield />;
-      case "hmg-e": return <Shield />;
-      case "sos": return <Radio />;
-      case "resupply": return <Loader />;
-      case "mech": return <Cpu />;
-      default: return <Flag />;
-    }
-  };
+const StratagemIcon: React.FC<StratagemIconProps> = ({ index, category, className }) => {
+  // Assuming the sprite sheet is a 10x10 grid
+  const cols = 10;
+  const row = Math.floor(index / cols);
+  const col = index % cols;
+  
+  // Calculate percentage positions for background-position
+  const posX = (col / (cols - 1)) * 100;
+  const posY = (row / (cols - 1)) * 100;
 
-  const getCategoryColor = () => {
+  const getCategoryBorder = () => {
     switch (category) {
-      case "Orbital": return "text-red-500 border-red-500/50 bg-red-500/10";
-      case "Eagle": return "text-red-400 border-red-400/50 bg-red-400/10";
-      case "Support": return "text-blue-400 border-blue-400/50 bg-blue-400/10";
-      case "Defensive": return "text-green-400 border-green-400/50 bg-green-400/10";
-      case "Mission": return "text-yellow-400 border-yellow-400/50 bg-yellow-400/10";
-      default: return "text-gray-400 border-gray-400/50 bg-gray-400/10";
+      case "Orbital": return "border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]";
+      case "Eagle": return "border-red-400 shadow-[0_0_10px_rgba(248,113,113,0.3)]";
+      case "Support": return "border-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.3)]";
+      case "Defensive": return "border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.3)]";
+      case "Mission": return "border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]";
+      default: return "border-white/20";
     }
   };
 
   return (
     <div className={cn(
-      "flex items-center justify-center border-2 rounded-md p-1.5",
-      getCategoryColor(),
+      "relative overflow-hidden border-2 rounded-md bg-black/40",
+      getCategoryBorder(),
       className
     )}>
-      {React.cloneElement(getIcon() as React.ReactElement, { size: "100%" })}
+      <div 
+        className="absolute inset-0 bg-no-repeat"
+        style={{
+          backgroundImage: `url('/src/assets/stratagems_list.png')`,
+          backgroundSize: '1000%', // 10 columns = 1000%
+          backgroundPosition: `${posX}% ${posY}%`,
+          imageRendering: 'pixelated'
+        }}
+      />
     </div>
   );
 };

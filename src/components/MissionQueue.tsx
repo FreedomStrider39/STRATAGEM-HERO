@@ -27,11 +27,11 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ queue, currentIndex }) => {
             }}
             className={cn(
               "flex-shrink-0 w-12 h-12 transition-all duration-300 relative",
-              isCurrent && "drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"
+              isCurrent && "drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]"
             )}
           >
             <StratagemIcon 
-              type={strat.iconType} 
+              index={strat.iconIndex} 
               category={strat.category} 
               className={cn(
                 "w-full h-full",

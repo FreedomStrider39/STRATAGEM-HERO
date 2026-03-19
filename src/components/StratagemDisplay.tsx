@@ -41,9 +41,9 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentI
         className="flex flex-col items-center text-center"
       >
         <StratagemIcon 
-          type={stratagem.iconType} 
+          index={stratagem.iconIndex} 
           category={stratagem.category} 
-          className="w-20 h-20 mb-4 border-4"
+          className="w-24 h-24 mb-4 border-4"
         />
         <h2 className="text-3xl font-black text-yellow-400 uppercase tracking-tighter italic">
           {stratagem.name}

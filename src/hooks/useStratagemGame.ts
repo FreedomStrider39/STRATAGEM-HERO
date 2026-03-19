@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 
-const INITIAL_TIME = 10;
-const BREAK_DURATION = 5; // Reduced break for better flow
+const INITIAL_TIME = 15;
+const MAX_TIME = 30;
+const BREAK_DURATION = 5;
 
 export const useStratagemGame = () => {
   const [gameState, setGameState] = useState<"idle" | "playing" | "break" | "gameover">("idle");
@@ -13,7 +14,6 @@ export const useStratagemGame = () => {
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
   
-  // Mission Queue State
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
   
@@ -21,18 +21,18 @@ export const useStratagemGame = () => {
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const generateLevelQueue = useCallback((lvl: number) => {
-    // Difficulty increases: more stratagems per level as you go up
-    // Level 1: 3-5, Level 2: 4-6, Level 5: 7-9, etc.
-    const minCount = 2 + Math.floor(lvl / 2);
-    const maxCount = 4 + Math.floor(lvl / 1.5);
+    // Levels get significantly longer: 
+    // L1: 5-7, L2: 8-10, L3: 11-13, etc.
+    const minCount = 4 + (lvl * 2);
+    const maxCount = 6 + (lvl * 3);
     const count = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
     
     const queue: Stratagem[] = [];
     for (let i = 0; i < count; i++) {
-      // Later levels include more complex stratagems (longer sequences)
+      // Filter for longer sequences as level increases
       const pool = STRATAGEMS.filter(s => {
-        if (lvl < 3) return s.sequence.length <= 4;
-        if (lvl < 6) return s.sequence.length <= 6;
+        if (lvl < 2) return s.sequence.length <= 5;
+        if (lvl < 4) return s.sequence.length <= 7;
         return true;
       });
       queue.push(pool[Math.floor(Math.random() * pool.length)]);
@@ -58,7 +58,8 @@ export const useStratagemGame = () => {
     setMissionQueue(nextQueue);
     setCurrentQueueIndex(0);
     setInputIndex(0);
-    setTimeLeft(Math.min(INITIAL_TIME + (nextLvl * 0.5), 20)); // Slightly more time for longer levels
+    // Reset time but keep a portion of previous time as a reward
+    setTimeLeft(prev => Math.min(MAX_TIME, INITIAL_TIME + (prev * 0.2)));
     setGameState("playing");
   }, [level, generateLevelQueue]);
 
@@ -73,11 +74,12 @@ export const useStratagemGame = () => {
       
       if (nextInputIdx === currentStratagem.sequence.length) {
         // Stratagem completed
-        const timeBonus = Math.max(0.5, 2 - (level * 0.1)); // Bonus decreases as level increases
+        // Generous time bonus: 2s base + 0.5s per arrow in sequence
+        const timeBonus = 1.5 + (currentStratagem.sequence.length * 0.3);
         const points = currentStratagem.sequence.length * 100 * level;
         
         setScore(prev => prev + points);
-        setTimeLeft(prev => Math.min(prev + timeBonus, 20));
+        setTimeLeft(prev => Math.min(prev + timeBonus, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
@@ -92,13 +94,14 @@ export const useStratagemGame = () => {
       }
     } else {
       setLastInputCorrect(false);
-      setInputIndex(0); // Reset on mistake
+      setInputIndex(0);
+      // Penalty for mistake: lose 1 second
+      setTimeLeft(prev => Math.max(0, prev - 1));
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
   }, [gameState, missionQueue, currentQueueIndex, inputIndex, level]);
 
-  // Timers
   useEffect(() => {
     if (gameState === "playing") {
       timerRef.current = setInterval(() => {
@@ -107,8 +110,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Difficulty: Time drains faster at higher levels
-          const drainRate = 0.1 + (level * 0.005);
+          // Drain rate increases slightly with level
+          const drainRate = 0.1 + (level * 0.01);
           return prev - drainRate;
         });
       }, 100);
@@ -130,7 +133,6 @@ export const useStratagemGame = () => {
     };
   }, [gameState, level, startNextLevel]);
 
-  // Keyboard support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowUp" || e.key === "w") handleInput("U");
