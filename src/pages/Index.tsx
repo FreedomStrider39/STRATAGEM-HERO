@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import GameControls from "@/components/GameControls";
+import MissionQueue from "@/components/MissionQueue";
 import { getRank } from "@/data/stratagems";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Play, RotateCcw, Shield, CheckCircle2, Timer } from "lucide-react";
+import { Play, RotateCcw, Shield, CheckCircle2, Timer, Zap } from "lucide-react";
 
 const Index = () => {
   const {
@@ -15,11 +16,10 @@ const Index = () => {
     level,
     timeLeft,
     breakTimeLeft,
-    currentStratagem,
+    missionQueue,
+    currentQueueIndex,
     inputIndex,
     lastInputCorrect,
-    completedInLevel,
-    totalInLevel,
     startGame,
     handleInput
   } = useStratagemGame();
@@ -36,6 +36,8 @@ const Index = () => {
     }
   }, [score, highScore]);
 
+  const currentStratagem = missionQueue[currentQueueIndex];
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-yellow-400 selection:text-black overflow-hidden flex flex-col items-center justify-center p-4 relative">
       {/* Background Elements */}
@@ -45,12 +47,12 @@ const Index = () => {
       {/* Header Info */}
       <div className="absolute top-8 left-8 right-8 flex justify-between items-start z-10">
         <div className="flex flex-col">
-          <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.3em]">Current Rank</span>
-          <span className="text-2xl font-black uppercase italic tracking-tighter">{getRank(level)}</span>
+          <span className="text-yellow-400 font-black text-[10px] uppercase tracking-[0.3em]">Current Rank</span>
+          <span className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">{getRank(level)}</span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.3em]">High Score</span>
-          <span className="text-2xl font-black uppercase italic tracking-tighter">{highScore.toLocaleString()}</span>
+          <span className="text-yellow-400 font-black text-[10px] uppercase tracking-[0.3em]">High Score</span>
+          <span className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">{highScore.toLocaleString()}</span>
         </div>
       </div>
 
@@ -93,25 +95,32 @@ const Index = () => {
             className="flex flex-col items-center w-full max-w-2xl z-10"
           >
             {/* Game Stats */}
-            <div className="w-full flex justify-between items-end mb-8 px-4">
+            <div className="w-full flex justify-between items-end mb-4 px-4">
               <div className="flex flex-col">
-                <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.2em]">Score</span>
-                <span className="text-5xl font-black italic tracking-tighter">{score.toLocaleString()}</span>
+                <span className="text-yellow-400 font-black text-[10px] uppercase tracking-[0.2em]">Score</span>
+                <span className="text-4xl font-black italic tracking-tighter">{score.toLocaleString()}</span>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.2em]">Level {level}</span>
-                <span className="text-2xl font-black italic tracking-tighter">{completedInLevel} / {totalInLevel}</span>
+                <div className="flex items-center gap-2 text-yellow-400 mb-1">
+                  <Zap className="w-3 h-3 fill-current" />
+                  <span className="font-black text-[10px] uppercase tracking-[0.2em]">Level {level}</span>
+                </div>
+                <span className="text-xl font-black italic tracking-tighter">
+                  {currentQueueIndex + 1} / {missionQueue.length}
+                </span>
               </div>
             </div>
 
+            {/* Mission Queue Icons */}
+            <MissionQueue queue={missionQueue} currentIndex={currentQueueIndex} />
+
             {/* Timer Bar */}
             <div className="w-full max-w-md mb-12 relative">
-              <div className="absolute -top-6 left-0 text-yellow-400 font-black text-[10px] uppercase tracking-widest">Time Remaining</div>
               <Progress 
-                value={(timeLeft / 15) * 100} 
-                className="h-3 bg-white/10 border border-white/20 rounded-none"
+                value={(timeLeft / 20) * 100} 
+                className="h-2 bg-white/10 border border-white/20 rounded-none"
               />
-              <div className="absolute -bottom-6 right-0 text-white/50 font-mono text-xs">
+              <div className="absolute -bottom-6 right-0 text-white/50 font-mono text-[10px]">
                 {timeLeft.toFixed(1)}s
               </div>
             </div>
@@ -125,10 +134,6 @@ const Index = () => {
             )}
 
             <GameControls onInput={handleInput} />
-            
-            <p className="mt-12 text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse">
-              Use Arrow Keys or On-Screen Buttons
-            </p>
           </motion.div>
         )}
 
@@ -144,10 +149,10 @@ const Index = () => {
               <div className="absolute inset-0 bg-yellow-400/5 animate-pulse" />
               <CheckCircle2 className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
               <h2 className="text-5xl font-black italic uppercase tracking-tighter text-yellow-400">
-                Level {level} Complete
+                Level {level} Clear
               </h2>
               <p className="text-white font-bold uppercase tracking-widest mt-2">
-                Tactical Resupply in Progress
+                Preparing Next Tactical Wave
               </p>
             </div>
 
@@ -157,14 +162,9 @@ const Index = () => {
                 <span>Next Mission in {breakTimeLeft.toFixed(1)}s</span>
               </div>
               <Progress 
-                value={(breakTimeLeft / 10) * 100} 
+                value={(breakTimeLeft / 5) * 100} 
                 className="w-64 h-2 bg-white/10 rounded-none"
               />
-            </div>
-
-            <div className="p-4 bg-white/5 border border-white/10 w-full max-w-xs">
-              <span className="text-yellow-400 font-black text-xs uppercase tracking-widest block mb-1">Current Score</span>
-              <span className="text-4xl font-black italic">{score.toLocaleString()}</span>
             </div>
           </motion.div>
         )}
@@ -181,7 +181,7 @@ const Index = () => {
                 Mission Failed
               </h2>
               <p className="text-white font-bold uppercase tracking-widest mt-2">
-                You ran out of time, Helldiver.
+                Time expired. Super Earth expects better.
               </p>
             </div>
 
@@ -203,22 +203,10 @@ const Index = () => {
               >
                 <RotateCcw className="mr-2" /> Redeploy
               </Button>
-              <Button 
-                variant="outline"
-                className="border-white/20 hover:bg-white/10 text-white font-black uppercase italic py-6 rounded-none skew-x-[-12deg]"
-                onClick={() => window.location.reload()}
-              >
-                Main Menu
-              </Button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Footer Decoration */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center opacity-20 pointer-events-none">
-        <div className="h-[1px] w-full max-w-4xl bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
-      </div>
     </div>
   );
 };
