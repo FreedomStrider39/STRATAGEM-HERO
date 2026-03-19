@@ -37,6 +37,21 @@ import supportMachineGun from "@/assets/icons/support/machine_gun.png";
 import supportStalwart from "@/assets/icons/support/stalwart.png";
 import supportHmg from "@/assets/icons/support/hmg.png";
 
+// New Support Icons
+import supportWasp from "@/assets/icons/support/wasp_launcher.png";
+import supportHammer from "@/assets/icons/support/breaching_hammer.png";
+import supportEpoch from "@/assets/icons/support/epoch.png";
+import supportSpeargun from "@/assets/icons/support/speargun.png";
+import supportNapalm from "@/assets/icons/support/expendable_napalm.png";
+import supportLeveller from "@/assets/icons/support/leveller.png";
+import supportDeEscalator from "@/assets/icons/support/de_escalator.png";
+import supportDefoliation from "@/assets/icons/support/defoliation_tool.png";
+import supportSterilizer from "@/assets/icons/support/sterilizer.png";
+import supportBeltFedGl from "@/assets/icons/support/belt_fed_gl.png";
+import supportCremator from "@/assets/icons/support/cremator.png";
+import supportMaxigun from "@/assets/icons/support/maxigun.png";
+import supportC4 from "@/assets/icons/support/c4_pack.png";
+
 // Defensive Icons
 import defensiveMortar from "@/assets/icons/defensive/mortar_sentry.png";
 import defensiveEmsMortar from "@/assets/icons/defensive/ems_mortar_sentry.png";
@@ -53,6 +68,8 @@ import defensiveShield from "@/assets/icons/defensive/shield_generator.png";
 // Mission Icons
 import missionSos from "@/assets/icons/mission/sos_beacon.png";
 import missionResupply from "@/assets/icons/mission/resupply.png";
+import missionSoloSilo from "@/assets/icons/mission/solo_silo.png";
+import missionFlag from "@/assets/icons/mission/one_true_flag.png";
 
 export type Direction = "U" | "D" | "L" | "R";
 
@@ -105,6 +122,21 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: supportMachineGun },
   { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconUrl: supportStalwart },
   { name: "Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: supportHmg },
+  
+  // --- NEW SUPPORT ---
+  { name: "StA-X3 W.A.S.P. Launcher", sequence: ["D", "D", "U", "D", "R"], category: "Support", iconUrl: supportWasp },
+  { name: "CQC-20 Breaching Hammer", sequence: ["D", "L", "R", "D", "U"], category: "Support", iconUrl: supportHammer },
+  { name: "PLAS-45 Epoch", sequence: ["D", "L", "U", "R", "D"], category: "Support", iconUrl: supportEpoch },
+  { name: "S-11 Speargun", sequence: ["D", "R", "D", "L", "U", "R"], category: "Support", iconUrl: supportSpeargun },
+  { name: "EAT-700 Expendable Napalm", sequence: ["D", "D", "L", "U", "R", "D"], category: "Support", iconUrl: supportNapalm },
+  { name: "EAT-411 Leveller", sequence: ["D", "D", "L", "U", "D", "D"], category: "Support", iconUrl: supportLeveller },
+  { name: "GL-52 De-Escalator", sequence: ["D", "L", "U", "R", "L", "D"], category: "Support", iconUrl: supportDeEscalator },
+  { name: "CQC-9 Defoliation Tool", sequence: ["D", "L", "R", "D", "D", "D"], category: "Support", iconUrl: supportDefoliation },
+  { name: "TX-41 Sterilizer", sequence: ["D", "L", "U", "D", "D", "D"], category: "Support", iconUrl: supportSterilizer },
+  { name: "GL-28 Belt-Fed Grenade Launcher", sequence: ["D", "L", "U", "R", "D", "U", "U"], category: "Support", iconUrl: supportBeltFedGl },
+  { name: "B/FLAM-80 Cremator", sequence: ["D", "D", "L", "D", "U", "U", "U"], category: "Support", iconUrl: supportCremator },
+  { name: "M-1000 Maxigun", sequence: ["D", "L", "R", "D", "U", "U", "U"], category: "Support", iconUrl: supportMaxigun },
+  { name: "B/MD C4 Pack", sequence: ["D", "R", "U", "U", "R", "D", "L"], category: "Support", iconUrl: supportC4 },
 
   // --- DEFENSIVE (Green) ---
   { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: defensiveMortar },
@@ -124,6 +156,8 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: missionSos },
   { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: missionResupply },
   { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: `${ICON_BASE}/hellbomb.png` },
+  { name: "MS-11 Solo Silo", sequence: ["D", "U", "R", "D", "D", "D"], category: "Mission", iconUrl: missionSoloSilo },
+  { name: "CQC-1 One True Flag", sequence: ["D", "L", "D", "U", "U", "U"], category: "Mission", iconUrl: missionFlag },
 ];
 
 export const RANKS = [
