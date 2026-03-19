@@ -1,78 +1,3 @@
-import orbitalGatling from "@/assets/icons/orbital/gatling.png";
-import orbitalWalking from "@/assets/icons/orbital/walking.png";
-import orbital120mm from "@/assets/icons/orbital/120mm.png";
-import orbital380mm from "@/assets/icons/orbital/380mm.png";
-import orbitalGas from "@/assets/icons/orbital/gas.png";
-import orbitalEms from "@/assets/icons/orbital/ems.png";
-import orbitalSmoke from "@/assets/icons/orbital/smoke.png";
-import orbitalAirburst from "@/assets/icons/orbital/airburst.png";
-import orbitalPrecision from "@/assets/icons/orbital/precision.png";
-import orbitalRailcannon from "@/assets/icons/orbital/railcannon.png";
-import orbitalLaser from "@/assets/icons/orbital/laser.png";
-
-// Eagle Icons
-import eagleRearm from "@/assets/icons/eagle/rearm.png";
-import eagleStrafing from "@/assets/icons/eagle/strafing.png";
-import eagleAirstrike from "@/assets/icons/eagle/airstrike.png";
-import eagleCluster from "@/assets/icons/eagle/cluster.png";
-import eagleNapalm from "@/assets/icons/eagle/napalm.png";
-import eagleSmoke from "@/assets/icons/eagle/smoke.png";
-import eagleRocketPods from "@/assets/icons/eagle/rocket_pods.png";
-import eagle500kg from "@/assets/icons/eagle/500kg.png";
-
-// Support Icons
-import supportGrenadeLauncher from "@/assets/icons/support/grenade_launcher.png";
-import supportEat from "@/assets/icons/support/eat.png";
-import supportRecoilless from "@/assets/icons/support/recoilless.png";
-import supportSpear from "@/assets/icons/support/spear.png";
-import supportRailgun from "@/assets/icons/support/railgun.png";
-import supportAmr from "@/assets/icons/support/amr.png";
-import supportAutocannon from "@/assets/icons/support/autocannon.png";
-import supportLaserCannon from "@/assets/icons/support/laser_cannon.png";
-import supportQuasar from "@/assets/icons/support/quasar.png";
-import supportArcThrower from "@/assets/icons/support/arc_thrower.png";
-import supportFlamethrower from "@/assets/icons/support/flamethrower.png";
-import supportPatriot from "@/assets/icons/support/patriot.png";
-import supportMachineGun from "@/assets/icons/support/machine_gun.png";
-import supportStalwart from "@/assets/icons/support/stalwart.png";
-import supportHmg from "@/assets/icons/support/hmg.png";
-
-// New Support Icons
-import supportWasp from "@/assets/icons/support/wasp_launcher.png";
-import supportHammer from "@/assets/icons/support/breaching_hammer.png";
-import supportEpoch from "@/assets/icons/support/epoch.png";
-import supportSpeargun from "@/assets/icons/support/speargun.png";
-import supportNapalm from "@/assets/icons/support/expendable_napalm.png";
-import supportLeveller from "@/assets/icons/support/leveller.png";
-import supportDeEscalator from "@/assets/icons/support/de_escalator.png";
-import supportDefoliation from "@/assets/icons/support/defoliation_tool.png";
-import supportSterilizer from "@/assets/icons/support/sterilizer.png";
-import supportBeltFedGl from "@/assets/icons/support/belt_fed_gl.png";
-import supportCremator from "@/assets/icons/support/cremator.png";
-import supportMaxigun from "@/assets/icons/support/maxigun.png";
-import supportC4 from "@/assets/icons/support/c4_pack.png";
-
-// Defensive Icons
-import defensiveMortar from "@/assets/icons/defensive/mortar_sentry.png";
-import defensiveEmsMortar from "@/assets/icons/defensive/ems_mortar_sentry.png";
-import defensiveTesla from "@/assets/icons/defensive/tesla_tower.png";
-import defensiveAntiPersonnel from "@/assets/icons/defensive/anti_personnel_mines.png";
-import defensiveIncendiary from "@/assets/icons/defensive/incendiary_mines.png";
-import defensiveHmgEmplacement from "@/assets/icons/defensive/hmg_emplacement.png";
-import defensiveMachineGun from "@/assets/icons/defensive/machine_gun_sentry.png";
-import defensiveGatling from "@/assets/icons/defensive/gatling_sentry.png";
-import defensiveAutocannon from "@/assets/icons/defensive/autocannon_sentry.png";
-import defensiveRocket from "@/assets/icons/defensive/rocket_sentry.png";
-import defensiveShield from "@/assets/icons/defensive/shield_generator.png";
-
-// Mission Icons
-import missionSos from "@/assets/icons/mission/sos_beacon.png";
-import missionResupply from "@/assets/icons/mission/resupply.png";
-import missionSoloSilo from "@/assets/icons/mission/solo_silo.png";
-import missionFlag from "@/assets/icons/mission/one_true_flag.png";
-import missionReinforce from "@/assets/icons/mission/reinforce.png";
-import missionSuperDestroyer from "@/assets/icons/mission/super_destroyer.png";
-
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -82,83 +7,68 @@ export interface Stratagem {
   iconUrl: string;
 }
 
+const BASE_URL = "https://raw.githubusercontent.com/nvigneux/Helldivers-2-Stratagems-icons-svg/master/icons";
+
 export const STRATAGEMS: Stratagem[] = [
   // --- ORBITAL (Red) ---
-  { name: "Orbital Gatling Barrage", sequence: ["R", "D", "L", "U", "U"], category: "Orbital", iconUrl: orbitalGatling },
-  { name: "Orbital Walking Barrage", sequence: ["R", "D", "R", "D", "R", "D"], category: "Orbital", iconUrl: orbitalWalking },
-  { name: "Orbital 120mm HE Barrage", sequence: ["R", "R", "D", "L", "R", "D"], category: "Orbital", iconUrl: orbital120mm },
-  { name: "Orbital 380mm HE Barrage", sequence: ["R", "D", "U", "U", "L", "D", "D"], category: "Orbital", iconUrl: orbital380mm },
-  { name: "Orbital Gas Strike", sequence: ["R", "R", "D", "R"], category: "Orbital", iconUrl: orbitalGas },
-  { name: "Orbital EMS Strike", sequence: ["R", "R", "L", "D"], category: "Orbital", iconUrl: orbitalEms },
-  { name: "Orbital Smoke Strike", sequence: ["R", "R", "D", "U"], category: "Orbital", iconUrl: orbitalSmoke },
-  { name: "Orbital Airburst Strike", sequence: ["R", "R", "R"], category: "Orbital", iconUrl: orbitalAirburst },
-  { name: "Orbital Precision Strike", sequence: ["R", "R", "U"], category: "Orbital", iconUrl: orbitalPrecision },
-  { name: "Orbital Railcannon Strike", sequence: ["R", "U", "D", "D", "R"], category: "Orbital", iconUrl: orbitalRailcannon },
-  { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconUrl: orbitalLaser },
+  { name: "Orbital Gatling Barrage", sequence: ["R", "D", "L", "U", "U"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Gatling%20Barrage.svg` },
+  { name: "Orbital Walking Barrage", sequence: ["R", "D", "R", "D", "R", "D"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Walking%20Barrage.svg` },
+  { name: "Orbital 120mm HE Barrage", sequence: ["R", "R", "D", "L", "R", "D"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20120mm%20HE%20Barrage.svg` },
+  { name: "Orbital 380mm HE Barrage", sequence: ["R", "D", "U", "U", "L", "D", "D"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20380mm%20HE%20Barrage.svg` },
+  { name: "Orbital Gas Strike", sequence: ["R", "R", "D", "R"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Gas%20Strike.svg` },
+  { name: "Orbital EMS Strike", sequence: ["R", "R", "L", "D"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20EMS%20Strike.svg` },
+  { name: "Orbital Smoke Strike", sequence: ["R", "R", "D", "U"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Smoke%20Strike.svg` },
+  { name: "Orbital Airburst Strike", sequence: ["R", "R", "R"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Airburst%20Strike.svg` },
+  { name: "Orbital Precision Strike", sequence: ["R", "R", "U"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Precision%20Strike.svg` },
+  { name: "Orbital Railcannon Strike", sequence: ["R", "U", "D", "D", "R"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Railcannon%20Strike.svg` },
+  { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconUrl: `${BASE_URL}/Orbital/Orbital%20Laser.svg` },
 
   // --- EAGLE (Red/Orange) ---
-  { name: "Eagle Rearm", sequence: ["U", "U", "L", "U", "R"], category: "Eagle", iconUrl: eagleRearm },
-  { name: "Eagle Strafing Run", sequence: ["U", "R", "R"], category: "Eagle", iconUrl: eagleStrafing },
-  { name: "Eagle Airstrike", sequence: ["U", "R", "D", "R"], category: "Eagle", iconUrl: eagleAirstrike },
-  { name: "Eagle Cluster Bomb", sequence: ["U", "R", "D", "D", "R"], category: "Eagle", iconUrl: eagleCluster },
-  { name: "Eagle Napalm Airstrike", sequence: ["U", "R", "D", "U"], category: "Eagle", iconUrl: eagleNapalm },
-  { name: "Eagle Smoke Strike", sequence: ["U", "R", "U", "D"], category: "Eagle", iconUrl: eagleSmoke },
-  { name: "Eagle 110mm Rocket Pods", sequence: ["U", "R", "U", "L"], category: "Eagle", iconUrl: eagleRocketPods },
-  { name: "Eagle 500kg Bomb", sequence: ["U", "R", "D", "D", "D"], category: "Eagle", iconUrl: eagle500kg },
+  { name: "Eagle Rearm", sequence: ["U", "U", "L", "U", "R"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20Rearm.svg` },
+  { name: "Eagle Strafing Run", sequence: ["U", "R", "R"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20Strafing%20Run.svg` },
+  { name: "Eagle Airstrike", sequence: ["U", "R", "D", "R"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20Airstrike.svg` },
+  { name: "Eagle Cluster Bomb", sequence: ["U", "R", "D", "D", "R"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20Cluster%20Bomb.svg` },
+  { name: "Eagle Napalm Airstrike", sequence: ["U", "R", "D", "U"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20Napalm%20Airstrike.svg` },
+  { name: "Eagle Smoke Strike", sequence: ["U", "R", "U", "D"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20Smoke%20Strike.svg` },
+  { name: "Eagle 110mm Rocket Pods", sequence: ["U", "R", "U", "L"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20110mm%20Rocket%20Pods.svg` },
+  { name: "Eagle 500kg Bomb", sequence: ["U", "R", "D", "D", "D"], category: "Eagle", iconUrl: `${BASE_URL}/Eagle/Eagle%20500kg%20Bomb.svg` },
 
   // --- SUPPORT (Blue) ---
-  { name: "Grenade Launcher", sequence: ["D", "L", "U", "L", "D"], category: "Support", iconUrl: supportGrenadeLauncher },
-  { name: "Expendable Anti-Tank", sequence: ["D", "D", "L", "U", "R"], category: "Support", iconUrl: supportEat },
-  { name: "Recoilless Rifle", sequence: ["D", "L", "R", "R", "L"], category: "Support", iconUrl: supportRecoilless },
-  { name: "Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconUrl: supportSpear },
-  { name: "Railgun", sequence: ["D", "R", "D", "U", "L", "R"], category: "Support", iconUrl: supportRailgun },
-  { name: "Anti-Materiel Rifle", sequence: ["D", "L", "R", "U", "D"], category: "Support", iconUrl: supportAmr },
-  { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconUrl: supportAutocannon },
-  { name: "Laser Cannon", sequence: ["D", "L", "D", "U", "L"], category: "Support", iconUrl: supportLaserCannon },
-  { name: "Quasar Cannon", sequence: ["D", "D", "U", "L", "R"], category: "Support", iconUrl: supportQuasar },
-  { name: "Arc Thrower", sequence: ["D", "R", "D", "U", "L", "L"], category: "Support", iconUrl: supportArcThrower },
-  { name: "Flamethrower", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: supportFlamethrower },
-  { name: "Patriot Exosuit", sequence: ["L", "D", "R", "U", "L", "D", "D"], category: "Support", iconUrl: supportPatriot },
-  { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: supportMachineGun },
-  { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconUrl: supportStalwart },
-  { name: "Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: supportHmg },
-  
-  // --- NEW SUPPORT ---
-  { name: "StA-X3 W.A.S.P. Launcher", sequence: ["D", "D", "U", "D", "R"], category: "Support", iconUrl: supportWasp },
-  { name: "CQC-20 Breaching Hammer", sequence: ["D", "L", "R", "L", "U"], category: "Support", iconUrl: supportHammer },
-  { name: "PLAS-45 Epoch", sequence: ["D", "L", "U", "L", "R"], category: "Support", iconUrl: supportEpoch },
-  { name: "S-11 Speargun", sequence: ["D", "R", "D", "L", "U", "R"], category: "Support", iconUrl: supportSpeargun },
-  { name: "EAT-700 Expendable Napalm", sequence: ["D", "D", "L", "U", "L"], category: "Support", iconUrl: supportNapalm },
-  { name: "EAT-411 Leveller", sequence: ["D", "D", "L", "U", "D", "D"], category: "Support", iconUrl: supportLeveller },
-  { name: "GL-52 De-Escalator", sequence: ["D", "R", "U", "L", "R"], category: "Support", iconUrl: supportDeEscalator },
-  { name: "CQC-9 Defoliation Tool", sequence: ["D", "L", "R", "D", "R", "D"], category: "Support", iconUrl: supportDefoliation },
-  { name: "TX-41 Sterilizer", sequence: ["D", "L", "U", "D", "L"], category: "Support", iconUrl: supportSterilizer },
-  { name: "GL-28 Belt-Fed Grenade Launcher", sequence: ["D", "L", "U", "R", "U", "U"], category: "Support", iconUrl: supportBeltFedGl },
-  { name: "B/FLAM-80 Cremator", sequence: ["D", "D", "R", "D", "U", "U"], category: "Support", iconUrl: supportCremator },
-  { name: "M-1000 Maxigun", sequence: ["D", "L", "R", "D", "U", "U"], category: "Support", iconUrl: supportMaxigun },
-  { name: "B/MD C4 Pack", sequence: ["D", "R", "U", "U", "R", "D", "R"], category: "Support", iconUrl: supportC4 },
+  { name: "Grenade Launcher", sequence: ["D", "L", "U", "L", "D"], category: "Support", iconUrl: `${BASE_URL}/Support/GL-21%20Grenade%20Launcher.svg` },
+  { name: "Expendable Anti-Tank", sequence: ["D", "D", "L", "U", "R"], category: "Support", iconUrl: `${BASE_URL}/Support/EAT-17%20Expendable%20Anti-Tank.svg` },
+  { name: "Recoilless Rifle", sequence: ["D", "L", "R", "R", "L"], category: "Support", iconUrl: `${BASE_URL}/Support/GR-8%20Recoilless%20Rifle.svg` },
+  { name: "Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconUrl: `${BASE_URL}/Support/FAF-14%20Spear%20Launcher.svg` },
+  { name: "Railgun", sequence: ["D", "R", "D", "U", "L", "R"], category: "Support", iconUrl: `${BASE_URL}/Support/RS-422%20Railgun.svg` },
+  { name: "Anti-Materiel Rifle", sequence: ["D", "L", "R", "U", "D"], category: "Support", iconUrl: `${BASE_URL}/Support/APW-1%20Anti-Materiel%20Rifle.svg` },
+  { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconUrl: `${BASE_URL}/Support/AC-8%20Autocannon.svg` },
+  { name: "Laser Cannon", sequence: ["D", "L", "D", "U", "L"], category: "Support", iconUrl: `${BASE_URL}/Support/LAS-98%20Laser%20Cannon.svg` },
+  { name: "Quasar Cannon", sequence: ["D", "D", "U", "L", "R"], category: "Support", iconUrl: `${BASE_URL}/Support/LAS-99%20Quasar%20Cannon.svg` },
+  { name: "Arc Thrower", sequence: ["D", "R", "D", "U", "L", "L"], category: "Support", iconUrl: `${BASE_URL}/Support/ARC-3%20Arc%20Thrower.svg` },
+  { name: "Flamethrower", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: `${BASE_URL}/Support/FLAM-40%20Flamethrower.svg` },
+  { name: "Patriot Exosuit", sequence: ["L", "D", "R", "U", "L", "D", "D"], category: "Support", iconUrl: `${BASE_URL}/Support/EXO-45%20Patriot%20Exosuit.svg` },
+  { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: `${BASE_URL}/Support/MG-43%20Machine%20Gun.svg` },
+  { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconUrl: `${BASE_URL}/Support/M-105%20Stalwart.svg` },
+  { name: "Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: `${BASE_URL}/Support/MG-206%20Heavy%20Machine%20Gun.svg` },
 
   // --- DEFENSIVE (Green) ---
-  { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: defensiveMortar },
-  { name: "EMS Mortar Sentry", sequence: ["D", "U", "R", "D", "R"], category: "Defensive", iconUrl: defensiveEmsMortar },
-  { name: "Tesla Tower", sequence: ["D", "U", "R", "U", "L", "R"], category: "Defensive", iconUrl: defensiveTesla },
-  { name: "Anti-Personnel Minefield", sequence: ["D", "L", "U", "R"], category: "Defensive", iconUrl: defensiveAntiPersonnel },
-  { name: "Incendiary Mines", sequence: ["D", "L", "L", "D"], category: "Defensive", iconUrl: defensiveIncendiary },
-  { name: "HMG Emplacement", sequence: ["D", "U", "L", "R", "R", "L"], category: "Defensive", iconUrl: defensiveHmgEmplacement },
-  { name: "Machine Gun Sentry", sequence: ["D", "U", "R", "R", "U"], category: "Defensive", iconUrl: defensiveMachineGun },
-  { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: defensiveGatling },
-  { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L", "U"], category: "Defensive", iconUrl: defensiveAutocannon },
-  { name: "Rocket Sentry", sequence: ["D", "U", "R", "R", "L"], category: "Defensive", iconUrl: defensiveRocket },
-  { name: "Shield Generator Relay", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconUrl: defensiveShield },
+  { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_M-12%20Mortar%20Sentry.svg` },
+  { name: "EMS Mortar Sentry", sequence: ["D", "U", "R", "D", "R"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_M-23%20EMS%20Mortar%20Sentry.svg` },
+  { name: "Tesla Tower", sequence: ["D", "U", "R", "U", "L", "R"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_ARC-3%20Tesla%20Tower.svg` },
+  { name: "Anti-Personnel Minefield", sequence: ["D", "L", "U", "R"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_MD-6%20Anti-Personnel%20Minefield.svg` },
+  { name: "Incendiary Mines", sequence: ["D", "L", "L", "D"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_MD-I4%20Incendiary%20Mines.svg` },
+  { name: "HMG Emplacement", sequence: ["D", "U", "L", "R", "R", "L"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/E_MG-101%20HMG%20Emplacement.svg` },
+  { name: "Machine Gun Sentry", sequence: ["D", "U", "R", "R", "U"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_MG-43%20Machine%20Gun%20Sentry.svg` },
+  { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_G-16%20Gatling%20Sentry.svg` },
+  { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L", "U"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_AC-8%20Autocannon%20Sentry.svg` },
+  { name: "Rocket Sentry", sequence: ["D", "U", "R", "R", "L"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/A_MLS-4X%20Rocket%20Sentry.svg` },
+  { name: "Shield Generator Relay", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconUrl: `${BASE_URL}/Defensive/FX-12%20Shield%20Generator%20Relay.svg` },
 
   // --- MISSION (Yellow) ---
-  { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconUrl: missionReinforce },
-  { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: missionSos },
-  { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: missionResupply },
-  { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: "https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons/hellbomb.png" },
-  { name: "MS-11 Solo Silo", sequence: ["D", "U", "R", "D", "D"], category: "Mission", iconUrl: missionSoloSilo },
-  { name: "CQC-1 One True Flag", sequence: ["D", "L", "R", "D", "U"], category: "Mission", iconUrl: missionFlag },
-  { name: "Call In Super Destroyer", sequence: ["U", "U", "D", "D", "L", "R", "L", "R"], category: "Mission", iconUrl: missionSuperDestroyer },
+  { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconUrl: `${BASE_URL}/Mission/Reinforce.svg` },
+  { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: `${BASE_URL}/Mission/SOS%20Beacon.svg` },
+  { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: `${BASE_URL}/Mission/Resupply.svg` },
+  { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: `${BASE_URL}/Mission/Hellbomb.svg` },
+  { name: "Super Destroyer", sequence: ["U", "U", "D", "D", "L", "R", "L", "R"], category: "Mission", iconUrl: `${BASE_URL}/Mission/Super%20Destroyer.svg` },
 ];
 
 export const RANKS = [
