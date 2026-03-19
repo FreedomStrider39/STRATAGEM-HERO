@@ -50,6 +50,10 @@ import defensiveAutocannon from "@/assets/icons/defensive/autocannon_sentry.png"
 import defensiveRocket from "@/assets/icons/defensive/rocket_sentry.png";
 import defensiveShield from "@/assets/icons/defensive/shield_generator.png";
 
+// Mission Icons
+import missionSos from "@/assets/icons/mission/sos_beacon.png";
+import missionResupply from "@/assets/icons/mission/resupply.png";
+
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -117,8 +121,8 @@ export const STRATAGEMS: Stratagem[] = [
 
   // --- MISSION (Yellow) ---
   { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconUrl: `${ICON_BASE}/reinforce.png` },
-  { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: `${ICON_BASE}/sos-beacon.png` },
-  { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: `${ICON_BASE}/resupply.png` },
+  { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: missionSos },
+  { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: missionResupply },
   { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: `${ICON_BASE}/hellbomb.png` },
 ];
 
