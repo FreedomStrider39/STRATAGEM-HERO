@@ -37,9 +37,9 @@ export const useStratagemGame = () => {
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const generateLevelQueue = useCallback((lvl: number) => {
-    // Increased scaling: more stratagems per level
-    const minCount = Math.floor(4 + lvl * 1.5);
-    const maxCount = Math.floor(6 + lvl * 2.0);
+    // Start with 6 stratagems at level 1 and scale up
+    const minCount = 6 + Math.floor((lvl - 1) * 1.5);
+    const maxCount = 8 + Math.floor((lvl - 1) * 2.0);
     const count = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
     
     const queue: Stratagem[] = [];
