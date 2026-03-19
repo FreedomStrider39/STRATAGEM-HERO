@@ -55,7 +55,7 @@ class AudioManager {
       
       this.bgm = new Audio(playingBgm);
       this.bgm.loop = true;
-      this.bgm.volume = 0.4;
+      this.bgm.volume = 0.3;
     }
   }
 
@@ -107,15 +107,19 @@ class AudioManager {
     this.playSound("failurefull");
   }
 
-  startBgm() {
+  startBgm(forceRestart = false) {
     if (this.bgm) {
-      this.bgm.currentTime = 0;
-      this.bgm.play().catch(() => {});
+      if (forceRestart) {
+        this.bgm.currentTime = 0;
+      }
+      if (this.bgm.paused) {
+        this.bgm.play().catch(() => {});
+      }
     }
   }
 
   stopBgm() {
-    if (this.bgm) {
+    if (this.bgm && !this.bgm.paused) {
       this.bgm.pause();
     }
   }

@@ -53,6 +53,7 @@ export const useStratagemGame = () => {
 
   const startGame = () => {
     audioManager.playStart();
+    audioManager.startBgm(true); // Force restart music on new game
     const shuffled = shuffleArray(STRATAGEMS);
     const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
@@ -157,7 +158,7 @@ export const useStratagemGame = () => {
 
   useEffect(() => {
     if (gameState === "playing") {
-      audioManager.startBgm();
+      audioManager.startBgm(); // Only plays if not already playing
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
