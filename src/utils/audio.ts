@@ -20,6 +20,7 @@ import success3 from "@/assets/audio/success3.wav";
 import failure from "@/assets/audio/failure.wav";
 import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
+import playingBgm from "@/assets/audio/playing.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
@@ -27,6 +28,7 @@ class AudioManager {
   private errorIndex = 0;
   private hitIndex = 0;
   private successIndex = 0;
+  private bgm: HTMLAudioElement | null = null;
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -50,6 +52,10 @@ class AudioManager {
       this.loadSound("failure", failure);
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
+      
+      this.bgm = new Audio(playingBgm);
+      this.bgm.loop = true;
+      this.bgm.volume = 0.4;
     }
   }
 
@@ -102,11 +108,16 @@ class AudioManager {
   }
 
   startBgm() {
-    // BGM disabled as file is missing
+    if (this.bgm) {
+      this.bgm.currentTime = 0;
+      this.bgm.play().catch(() => {});
+    }
   }
 
   stopBgm() {
-    // BGM disabled as file is missing
+    if (this.bgm) {
+      this.bgm.pause();
+    }
   }
 }
 
