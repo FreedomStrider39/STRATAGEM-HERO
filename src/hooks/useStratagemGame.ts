@@ -88,7 +88,6 @@ export const useStratagemGame = () => {
     const nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
     
     if (nextRound.length === 0) {
-      // No more stratagems left - Victory/Game Over
       calculateFinalStats();
       setGameState("gameover");
       return;
@@ -114,6 +113,7 @@ export const useStratagemGame = () => {
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === currentStratagem.sequence.length) {
+        // Sequence complete
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
@@ -139,10 +139,13 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
+        // Individual correct key press
+        audioManager.playHit();
         setInputIndex(nextInputIdx);
       }
     } else {
-      audioManager.playHit();
+      // Mistake
+      audioManager.playError();
       setLastInputCorrect(false);
       setInputIndex(0);
       setErrorsThisStratagem(prev => prev + 1);
