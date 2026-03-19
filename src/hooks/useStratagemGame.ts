@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 
-const INITIAL_TIME = 30; // Increased to 30 seconds fixed
+const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 
@@ -23,6 +23,7 @@ export const useStratagemGame = () => {
   
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
+  const [lastQueueSize, setLastQueueSize] = useState(0);
   
   // Stats tracking
   const [mistakesInGame, setMistakesInGame] = useState(0);
@@ -36,11 +37,15 @@ export const useStratagemGame = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const generateLevelQueue = useCallback((lvl: number) => {
-    // Start with 6 stratagems at level 1 and scale up
-    const minCount = 6 + Math.floor((lvl - 1) * 1.5);
-    const maxCount = 8 + Math.floor((lvl - 1) * 2.0);
-    const count = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
+  const generateLevelQueue = useCallback((lvl: number, prevSize: number) => {
+    // Start at 6, then always ensure the next count is higher than the previous
+    let count: number;
+    if (lvl === 1) {
+      count = 6;
+    } else {
+      // Randomly add 1 to 3 more stratagems than the previous level
+      count = prevSize + Math.floor(Math.random() * 3) + 1;
+    }
     
     const queue: Stratagem[] = [];
     for (let i = 0; i < count; i++) {
@@ -51,15 +56,16 @@ export const useStratagemGame = () => {
       });
       queue.push(pool[Math.floor(Math.random() * pool.length)]);
     }
-    return queue;
+    return { queue, count };
   }, []);
 
   const startGame = () => {
-    const firstQueue = generateLevelQueue(1);
+    const { queue, count } = generateLevelQueue(1, 0);
     setScore(0);
     setLevel(1);
     setTimeLeft(INITIAL_TIME);
-    setMissionQueue(firstQueue);
+    setMissionQueue(queue);
+    setLastQueueSize(count);
     setCurrentQueueIndex(0);
     setInputIndex(0);
     setMistakesInGame(0);
@@ -81,14 +87,15 @@ export const useStratagemGame = () => {
 
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
-    const nextQueue = generateLevelQueue(nextLvl);
+    const { queue, count } = generateLevelQueue(nextLvl, lastQueueSize);
     setLevel(nextLvl);
-    setMissionQueue(nextQueue);
+    setMissionQueue(queue);
+    setLastQueueSize(count);
     setCurrentQueueIndex(0);
     setInputIndex(0);
     setTimeLeft(INITIAL_TIME);
     setGameState("playing");
-  }, [level, generateLevelQueue]);
+  }, [level, lastQueueSize, generateLevelQueue]);
 
   const handleInput = useCallback((direction: Direction) => {
     if (gameState !== "playing" || missionQueue.length === 0) return;
@@ -132,8 +139,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Fixed drain rate: 1 second per second (0.1 per 100ms)
-          const drainRate = 0.1;
+          // Increased drain rate: 1.5 seconds of game time per 1 second of real time
+          const drainRate = 0.15;
           return prev - drainRate;
         });
       }, 100);
