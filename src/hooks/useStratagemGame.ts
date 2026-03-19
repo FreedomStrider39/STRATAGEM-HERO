@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 import { audioManager } from "@/utils/audio";
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
@@ -64,6 +65,8 @@ export const useStratagemGame = () => {
   const startGame = () => {
     audioManager.playStart();
     audioManager.startBgm(true);
+    Haptics.impact({ style: ImpactStyle.Heavy }).catch(() => {});
+    
     const shuffled = [...STRATAGEMS].sort(() => Math.random() - 0.5);
     const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
@@ -87,9 +90,9 @@ export const useStratagemGame = () => {
   };
 
   const calculateFinalStats = useCallback(() => {
-    const rBonus = level * 50; // Adjusted for better round scaling
-    const tBonus = Math.floor(timeLeft * 10); // Adjusted time value
-    const pBonus = mistakesInGame === 0 ? 500 : 0; // Rewarding perfect runs
+    const rBonus = level * 50;
+    const tBonus = Math.floor(timeLeft * 10);
+    const pBonus = mistakesInGame === 0 ? 500 : 0;
     
     setStats({
       roundBonus: rBonus,
@@ -168,10 +171,11 @@ export const useStratagemGame = () => {
       
       if (nextInputIdx === activeSequence.length) {
         audioManager.playCorrect();
+        Haptics.notification({ type: 'SUCCESS' as any }).catch(() => {});
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
-        const complexityBonus = activeSequence.length * 12; // Targeted multiplier
-        const speedBonus = Math.max(0, Math.floor((2500 - timeTaken) / 50)); // Max ~50 points
+        const complexityBonus = activeSequence.length * 12;
+        const speedBonus = Math.max(0, Math.floor((2500 - timeTaken) / 50));
         const errorPenalty = errorsThisStratagem * 15;
         
         const points = Math.max(5, complexityBonus + speedBonus - errorPenalty);
@@ -215,10 +219,12 @@ export const useStratagemGame = () => {
         }
       } else {
         audioManager.playHit();
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
         setInputIndex(nextInputIdx);
       }
     } else {
       audioManager.playError();
+      Haptics.vibrate().catch(() => {});
       setLastInputCorrect(false);
       setInputIndex(0);
       setErrorsThisStratagem(prev => prev + 1);
@@ -236,6 +242,7 @@ export const useStratagemGame = () => {
           if (prev <= 0) {
             audioManager.stopBgm();
             audioManager.playFailure();
+            Haptics.notification({ type: 'ERROR' as any }).catch(() => {});
             calculateFinalStats();
             setGameState("gameover");
             return 0;
