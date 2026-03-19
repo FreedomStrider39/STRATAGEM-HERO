@@ -8,7 +8,7 @@ export interface Stratagem {
 }
 
 export const STRATAGEMS: Stratagem[] = [
-  // Orbital (Red)
+  // --- ORBITAL (Red) ---
   { name: "Orbital Gatling Barrage", sequence: ["R", "D", "L", "U", "U"], category: "Orbital", iconIndex: 0 },
   { name: "Orbital Walking Barrage", sequence: ["R", "D", "R", "D", "R", "D"], category: "Orbital", iconIndex: 1 },
   { name: "Orbital 120mm HE Barrage", sequence: ["R", "R", "D", "L", "R", "D"], category: "Orbital", iconIndex: 2 },
@@ -19,16 +19,18 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Orbital Precision Strike", sequence: ["R", "R", "U"], category: "Orbital", iconIndex: 7 },
   { name: "Orbital Railcannon Strike", sequence: ["R", "U", "D", "D", "R"], category: "Orbital", iconIndex: 8 },
   { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconIndex: 9 },
+  { name: "Orbital Airburst Strike", sequence: ["R", "R", "R"], category: "Orbital", iconIndex: 16 },
 
-  // Eagle (Red/Orange)
+  // --- EAGLE (Red/Orange) ---
   { name: "Eagle Strafing Run", sequence: ["U", "R", "R"], category: "Eagle", iconIndex: 10 },
   { name: "Eagle Napalm Airstrike", sequence: ["U", "R", "D", "U"], category: "Eagle", iconIndex: 11 },
   { name: "Eagle 110mm Rocket Pods", sequence: ["U", "R", "U", "L"], category: "Eagle", iconIndex: 12 },
   { name: "Eagle Airstrike", sequence: ["U", "R", "D", "R"], category: "Eagle", iconIndex: 13 },
   { name: "Eagle Cluster Bomb", sequence: ["U", "R", "D", "D", "R"], category: "Eagle", iconIndex: 14 },
   { name: "Eagle 500kg Bomb", sequence: ["U", "R", "D", "D", "D"], category: "Eagle", iconIndex: 15 },
+  { name: "Eagle Smoke Strike", sequence: ["U", "R", "U", "D"], category: "Eagle", iconIndex: 17 },
 
-  // Support (Blue)
+  // --- SUPPORT (Blue) ---
   { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconIndex: 20 },
   { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconIndex: 21 },
   { name: "Anti-Materiel Rifle", sequence: ["D", "L", "R", "U", "D"], category: "Support", iconIndex: 22 },
@@ -39,18 +41,26 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconIndex: 27 },
   { name: "Railgun", sequence: ["D", "R", "D", "U", "L", "R"], category: "Support", iconIndex: 28 },
   { name: "Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconIndex: 29 },
+  { name: "Laser Cannon", sequence: ["D", "L", "D", "U", "L"], category: "Support", iconIndex: 35 },
+  { name: "Arc Thrower", sequence: ["D", "R", "D", "U", "L", "L"], category: "Support", iconIndex: 36 },
+  { name: "Quasar Cannon", sequence: ["D", "D", "U", "L", "R"], category: "Support", iconIndex: 37 },
 
-  // Defensive (Green)
+  // --- DEFENSIVE (Green) ---
   { name: "Mortar Sentry", sequence: ["D", "D", "U", "U", "D"], category: "Defensive", iconIndex: 30 },
   { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconIndex: 31 },
   { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L", "U"], category: "Defensive", iconIndex: 32 },
   { name: "Rocket Sentry", sequence: ["D", "U", "R", "R", "L"], category: "Defensive", iconIndex: 33 },
-  { name: "Shield Generator", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconIndex: 34 },
+  { name: "Shield Generator Relay", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconIndex: 34 },
+  { name: "Tesla Tower", sequence: ["D", "U", "R", "U", "L", "R"], category: "Defensive", iconIndex: 38 },
+  { name: "EMS Mortar Sentry", sequence: ["D", "D", "D", "U", "D"], category: "Defensive", iconIndex: 39 },
 
-  // Mission (Yellow)
+  // --- MISSION (Yellow) ---
   { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconIndex: 40 },
   { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconIndex: 41 },
   { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconIndex: 42 },
+  { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconIndex: 43 },
+  { name: "Upload Data", sequence: ["D", "D", "U", "U", "U"], category: "Mission", iconIndex: 44 },
+  { name: "Seismic Probe", sequence: ["U", "U", "L", "R", "D", "D"], category: "Mission", iconIndex: 45 },
 ];
 
 export const RANKS = [
