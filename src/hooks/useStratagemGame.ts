@@ -96,12 +96,12 @@ export const useStratagemGame = () => {
       return;
     }
 
-    // Illuminate Cognitive Disruptor Logic
-    const shouldDisrupt = nextLvl >= 4 && Math.random() < 0.3; // 30% chance after round 4
+    // Illuminate Cognitive Disruptor Logic - Now starts from Round 2
+    const shouldDisrupt = nextLvl >= 2 && Math.random() < 0.3; 
     setIsDisrupted(shouldDisrupt);
 
     if (shouldDisrupt) {
-      audioManager.playError(); // Play a warning sound
+      audioManager.playError(); 
       nextRound = nextRound.map(strat => ({
         ...strat,
         sequence: shuffleArray([...strat.sequence]) as Direction[]
