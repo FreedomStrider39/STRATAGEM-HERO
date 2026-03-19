@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 
-const INITIAL_TIME = 15;
-const MAX_TIME = 20; // Cap the time so it doesn't become infinite
-const BREAK_DURATION = 4; // Increased from 2 to 4 seconds
+const INITIAL_TIME = 30; // Increased to 30 seconds fixed
+const MAX_TIME = 30;
+const BREAK_DURATION = 4;
 
 export interface GameStats {
   roundBonus: number;
@@ -37,9 +37,9 @@ export const useStratagemGame = () => {
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const generateLevelQueue = useCallback((lvl: number) => {
-    // Randomize count, increasing with level
-    const minCount = Math.floor(3 + lvl * 0.8);
-    const maxCount = Math.floor(5 + lvl * 1.2);
+    // Increased scaling: more stratagems per level
+    const minCount = Math.floor(4 + lvl * 1.5);
+    const maxCount = Math.floor(6 + lvl * 2.0);
     const count = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
     
     const queue: Stratagem[] = [];
@@ -49,7 +49,6 @@ export const useStratagemGame = () => {
         if (lvl < 6) return s.sequence.length <= 7;
         return true;
       });
-      // Allow duplicates by picking randomly from the pool each time
       queue.push(pool[Math.floor(Math.random() * pool.length)]);
     }
     return queue;
@@ -87,7 +86,6 @@ export const useStratagemGame = () => {
     setMissionQueue(nextQueue);
     setCurrentQueueIndex(0);
     setInputIndex(0);
-    // Reset time to initial for the new level
     setTimeLeft(INITIAL_TIME);
     setGameState("playing");
   }, [level, generateLevelQueue]);
@@ -104,8 +102,6 @@ export const useStratagemGame = () => {
       if (nextInputIdx === currentStratagem.sequence.length) {
         const points = currentStratagem.sequence.length * 100;
         setScore(prev => prev + points);
-        
-        // Time bonus removed as requested
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
@@ -136,8 +132,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Drain rate starts slower and increases with level
-          const drainRate = 0.03 + (level * 0.04);
+          // Fixed drain rate: 1 second per second (0.1 per 100ms)
+          const drainRate = 0.1;
           return prev - drainRate;
         });
       }, 100);
