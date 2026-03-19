@@ -87,9 +87,9 @@ export const useStratagemGame = () => {
   };
 
   const calculateFinalStats = useCallback(() => {
-    const rBonus = level * 25; // Reduced from 100
-    const tBonus = Math.floor(timeLeft * 5); // Reduced from 20
-    const pBonus = mistakesInGame === 0 ? 250 : 0; // Reduced from 1000
+    const rBonus = level * 50; // Adjusted for better round scaling
+    const tBonus = Math.floor(timeLeft * 10); // Adjusted time value
+    const pBonus = mistakesInGame === 0 ? 500 : 0; // Rewarding perfect runs
     
     setStats({
       roundBonus: rBonus,
@@ -170,9 +170,9 @@ export const useStratagemGame = () => {
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
-        const complexityBonus = activeSequence.length * 15; // Reduced from 100
-        const speedBonus = Math.max(0, Math.floor((2000 - timeTaken) / 40)); // Reduced window and multiplier
-        const errorPenalty = errorsThisStratagem * 25; // Reduced penalty
+        const complexityBonus = activeSequence.length * 12; // Targeted multiplier
+        const speedBonus = Math.max(0, Math.floor((2500 - timeTaken) / 50)); // Max ~50 points
+        const errorPenalty = errorsThisStratagem * 15;
         
         const points = Math.max(5, complexityBonus + speedBonus - errorPenalty);
         setScore(prev => prev + points);
