@@ -4,6 +4,7 @@ import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
+const TIME_REWARD = 1.5; // Reward in seconds for each completed stratagem
 
 export interface GameStats {
   roundBonus: number;
@@ -110,6 +111,9 @@ export const useStratagemGame = () => {
         const points = currentStratagem.sequence.length * 100;
         setScore(prev => prev + points);
         
+        // Add time reward
+        setTimeLeft(prev => Math.min(prev + TIME_REWARD, MAX_TIME));
+        
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
           setGameState("break");
@@ -139,7 +143,7 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Dynamic drain rate: starts at 0.20 and increases by 0.02 every level
+          // Dynamic drain rate: starts at 0.18 and increases by 0.02 every level
           const drainRate = 0.18 + (level * 0.02);
           return prev - drainRate;
         });
