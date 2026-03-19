@@ -1,7 +1,6 @@
 import React from "react";
 import { Stratagem, Direction } from "@/data/stratagems";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface StratagemDisplayProps {
@@ -12,17 +11,17 @@ interface StratagemDisplayProps {
 
 const ArrowIcon = ({ direction, active, completed }: { direction: Direction, active: boolean, completed: boolean }) => {
   const icons = {
-    U: <ArrowUp className="w-16 h-16 stroke-[4px]" />,
-    D: <ArrowDown className="w-16 h-16 stroke-[4px]" />,
-    L: <ArrowLeft className="w-16 h-16 stroke-[4px]" />,
-    R: <ArrowRight className="w-16 h-16 stroke-[4px]" />,
+    U: <ArrowUp className="w-10 h-10 stroke-[4px]" />,
+    D: <ArrowDown className="w-10 h-10 stroke-[4px]" />,
+    L: <ArrowLeft className="w-10 h-10 stroke-[4px]" />,
+    R: <ArrowRight className="w-10 h-10 stroke-[4px]" />,
   };
 
   return (
     <div className={cn(
       "transition-all duration-75",
       completed ? "text-gray-500" : 
-      active ? "text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-110" : 
+      active ? "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] scale-110" : 
       "text-white"
     )}>
       {icons[direction]}
@@ -33,16 +32,14 @@ const ArrowIcon = ({ direction, active, completed }: { direction: Direction, act
 const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentIndex, isError }) => {
   return (
     <div className="flex flex-col items-center w-full">
-      {/* Yellow Name Bar */}
-      <div className="w-full bg-yellow-400 py-1 px-4 mb-8 shadow-[0_0_20px_rgba(250,204,21,0.4)]">
-        <h2 className="text-black text-2xl font-black text-center tracking-tight uppercase">
+      <div className="w-full bg-yellow-400 py-1 px-2 mb-6 shadow-[0_0_15px_rgba(250,204,21,0.4)]">
+        <h2 className="text-black text-lg font-black text-center tracking-tight uppercase truncate">
           {stratagem.name}
         </h2>
       </div>
 
-      {/* Large Arrows */}
       <div className={cn(
-        "flex justify-center gap-4 transition-transform duration-75",
+        "flex flex-wrap justify-center gap-2 transition-transform duration-75",
         isError && "animate-shake text-red-500"
       )}>
         {stratagem.sequence.map((dir, idx) => (
