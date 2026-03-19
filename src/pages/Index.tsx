@@ -5,7 +5,7 @@ import GameControls from "@/components/GameControls";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -21,6 +21,7 @@ const Index = () => {
     inputIndex,
     lastInputCorrect,
     isDisrupted,
+    showDisruptorDestroyed,
     activeSequence,
     stats,
     startGame,
@@ -103,6 +104,19 @@ const Index = () => {
                         <AlertTriangle className="w-5 h-5 text-purple-400 animate-pulse" />
                         <span className="text-purple-400 text-xs md:text-sm font-bold tracking-[0.2em] animate-pulse">
                           COGNITIVE DISRUPTOR DETECTED: SEQUENCES SCRAMBLED
+                        </span>
+                      </motion.div>
+                    )}
+                    {showDisruptorDestroyed && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="flex items-center justify-center gap-2 bg-green-600/20 border border-green-500/50 py-2 px-4 backdrop-blur-sm"
+                      >
+                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                        <span className="text-green-400 text-xs md:text-sm font-bold tracking-[0.2em]">
+                          COGNITIVE DISRUPTOR DESTROYED
                         </span>
                       </motion.div>
                     )}
