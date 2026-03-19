@@ -5,7 +5,7 @@ import GameControls from "@/components/GameControls";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AlertTriangle, Zap } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -21,7 +21,6 @@ const Index = () => {
     inputIndex,
     lastInputCorrect,
     isDisrupted,
-    isInterfered,
     activeSequence,
     stats,
     startGame,
@@ -107,19 +106,6 @@ const Index = () => {
                         </span>
                       </motion.div>
                     )}
-                    {isInterfered && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="flex items-center justify-center gap-2 bg-blue-600/20 border border-blue-500/50 py-2 px-4 backdrop-blur-sm"
-                      >
-                        <Zap className="w-5 h-5 text-blue-400 animate-pulse" />
-                        <span className="text-blue-400 text-xs md:text-sm font-bold tracking-[0.2em] animate-pulse">
-                          ATMOSPHERIC INTERFERENCE: VISUALS OBSCURED
-                        </span>
-                      </motion.div>
-                    )}
                   </AnimatePresence>
                 </div>
 
@@ -141,7 +127,6 @@ const Index = () => {
                       currentIndex={inputIndex}
                       isError={lastInputCorrect === false}
                       queue={missionQueue.slice(currentQueueIndex)}
-                      isInterfered={isInterfered}
                       isDisrupted={isDisrupted}
                       activeSequence={activeSequence}
                     />
@@ -151,7 +136,7 @@ const Index = () => {
                 <div className="w-full px-4 mt-8">
                   <div className="relative h-6 md:h-8 bg-black/60 border-2 border-white/20 overflow-hidden">
                     <motion.div 
-                      className={`absolute inset-y-0 left-0 shadow-[0_0_20px_rgba(250,204,21,0.8)] ${isDisrupted ? 'bg-purple-500' : isInterfered ? 'bg-blue-500' : 'bg-yellow-400'}`}
+                      className={`absolute inset-y-0 left-0 shadow-[0_0_20px_rgba(250,204,21,0.8)] ${isDisrupted ? 'bg-purple-500' : 'bg-yellow-400'}`}
                       style={{ width: `${(timeLeft / maxTime) * 100}%` }}
                       transition={{ duration: 0.1 }}
                     />

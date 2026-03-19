@@ -9,7 +9,6 @@ interface StratagemDisplayProps {
   currentIndex: number;
   isError: boolean;
   queue: Stratagem[];
-  isInterfered?: boolean;
   isDisrupted?: boolean;
   activeSequence: Direction[];
 }
@@ -71,7 +70,6 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   currentIndex, 
   isError, 
   queue, 
-  isInterfered, 
   isDisrupted,
   activeSequence 
 }) => {
@@ -88,13 +86,9 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
             category={stratagem.category} 
             className={cn(
               "w-full h-full transition-all duration-500", 
-              isInterfered && "blur-md opacity-20",
               isDisrupted && "hue-rotate-[280deg] brightness-150"
             )} 
           />
-          {isInterfered && (
-            <div className="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uWUqnW9kA/giphy.gif')] opacity-40 mix-blend-screen pointer-events-none" />
-          )}
           <div className={cn(
             "absolute -top-1 -left-1 w-4 h-4 border-t-4 border-l-4 transition-colors duration-500",
             isDisrupted ? "border-purple-500" : "border-yellow-400"
@@ -109,7 +103,6 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
                 category={nextStrat.category} 
                 className={cn(
                   "w-full h-full", 
-                  isInterfered && "blur-sm opacity-10",
                   isDisrupted && "hue-rotate-[280deg]"
                 )} 
               />

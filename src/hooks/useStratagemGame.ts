@@ -7,7 +7,7 @@ const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
-const DISRUPTOR_REFRESH_MS = 1500; // Reduced from 4000ms to 1500ms
+const DISRUPTOR_REFRESH_MS = 4000; // Increased to 4 seconds
 
 export interface GameStats {
   roundBonus: number;
@@ -27,7 +27,6 @@ export const useStratagemGame = () => {
   
   // Challenges
   const [isDisrupted, setIsDisrupted] = useState(false);
-  const [isInterfered, setIsInterfered] = useState(false);
   const [activeSequence, setActiveSequence] = useState<Direction[]>([]);
   
   const [fullPool, setFullPool] = useState<Stratagem[]>([]);
@@ -75,7 +74,6 @@ export const useStratagemGame = () => {
     setMistakesInGame(0);
     setErrorsThisStratagem(0);
     setIsDisrupted(false);
-    setIsInterfered(false);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   };
@@ -106,10 +104,8 @@ export const useStratagemGame = () => {
 
     const roll = Math.random();
     const shouldDisrupt = nextLvl >= 2 && roll < 0.35;
-    const shouldInterfere = nextLvl >= 3 && roll > 0.75;
 
     setIsDisrupted(shouldDisrupt);
-    setIsInterfered(shouldInterfere);
 
     if (shouldDisrupt) {
       audioManager.playError();
@@ -118,8 +114,6 @@ export const useStratagemGame = () => {
     } else {
       setActiveSequence(nextRound[0].sequence);
     }
-
-    if (shouldInterfere) audioManager.playHit();
 
     setLevel(nextLvl);
     setMissionQueue(nextRound);
@@ -138,8 +132,8 @@ export const useStratagemGame = () => {
         const currentStrat = missionQueue[currentQueueIndex];
         if (currentStrat) {
           setActiveSequence(generateRandomSequence(currentStrat.sequence.length));
-          setInputIndex(0); // Reset progress because the sequence changed
-          audioManager.playHit(); // Glitch sound
+          setInputIndex(0);
+          audioManager.playHit();
         }
       }, DISRUPTOR_REFRESH_MS);
     } else {
@@ -265,7 +259,6 @@ export const useStratagemGame = () => {
     inputIndex,
     lastInputCorrect,
     isDisrupted,
-    isInterfered,
     activeSequence,
     stats,
     startGame,
