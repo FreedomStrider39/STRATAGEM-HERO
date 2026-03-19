@@ -30,11 +30,11 @@ const Index = () => {
   });
 
   useEffect(() => {
-    if (stats.totalScore > highScore) {
+    if (gameState === "gameover" && stats.totalScore > highScore) {
       setHighScore(stats.totalScore);
       localStorage.setItem("stratagem-hero-highscore", stats.totalScore.toString());
     }
-  }, [stats.totalScore, highScore]);
+  }, [gameState, stats.totalScore, highScore]);
 
   return (
     <div className="min-h-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
@@ -114,7 +114,7 @@ const Index = () => {
                   )}
                 </div>
 
-                {/* Timer Bar - Positioned at bottom of center area */}
+                {/* Timer Bar */}
                 <div className="w-full px-4 mt-8">
                   <div className="relative h-6 md:h-8 bg-black/60 border-2 border-white/20 overflow-hidden">
                     <motion.div 
@@ -173,43 +173,49 @@ const Index = () => {
               className="flex flex-col items-center justify-center w-full z-10 cursor-pointer px-6"
               onClick={startGame}
             >
-              <h2 className="text-5xl md:text-7xl font-black text-red-500 mb-12 italic tracking-tighter drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]">
+              <h2 className="text-5xl md:text-7xl font-black text-red-500 mb-8 italic tracking-tighter drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]">
                 MISSION FAILED
               </h2>
 
-              <div className="grid grid-cols-2 gap-x-12 md:gap-x-24 gap-y-6 w-full max-w-3xl bg-black/40 p-8 border-2 border-white/10">
+              <div className="grid grid-cols-2 gap-x-12 md:gap-x-24 gap-y-4 w-full max-w-3xl bg-black/40 p-8 border-2 border-white/10">
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-lg md:text-2xl font-bold tracking-widest">ROUND BONUS</p>
+                  <p className="text-[#4ade80] text-lg md:text-xl font-bold tracking-widest">ROUND BONUS</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-3xl md:text-5xl font-black">{stats.roundBonus}</p>
+                  <p className="text-yellow-400 text-2xl md:text-3xl font-black">{stats.roundBonus}</p>
                 </div>
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-lg md:text-2xl font-bold tracking-widest">TIME BONUS</p>
+                  <p className="text-[#4ade80] text-lg md:text-xl font-bold tracking-widest">TIME BONUS</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-3xl md:text-5xl font-black">{stats.timeBonus}</p>
+                  <p className="text-yellow-400 text-2xl md:text-3xl font-black">{stats.timeBonus}</p>
                 </div>
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-lg md:text-2xl font-bold tracking-widest">PERFECT BONUS</p>
+                  <p className="text-[#4ade80] text-lg md:text-xl font-bold tracking-widest">PERFECT BONUS</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-3xl md:text-5xl font-black">{stats.perfectBonus}</p>
+                  <p className="text-yellow-400 text-2xl md:text-3xl font-black">{stats.perfectBonus}</p>
                 </div>
 
-                <div className="col-span-2 h-[2px] bg-white/20 my-4" />
+                <div className="col-span-2 h-[2px] bg-white/20 my-2" />
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-2xl md:text-4xl font-black tracking-[0.2em]">TOTAL SCORE</p>
+                  <p className="text-[#4ade80] text-xl md:text-3xl font-black tracking-[0.2em]">TOTAL SCORE</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-5xl md:text-8xl font-black text-glow-yellow">{stats.totalScore}</p>
+                  <p className="text-yellow-400 text-4xl md:text-6xl font-black text-glow-yellow">{stats.totalScore}</p>
+                </div>
+
+                <div className="col-span-2 flex justify-center mt-4 pt-4 border-t border-white/10">
+                  <p className="text-white/40 text-sm tracking-[0.3em]">
+                    PREVIOUS HIGH SCORE: <span className="text-yellow-400/60">{highScore}</span>
+                  </p>
                 </div>
               </div>
 
-              <p className="mt-16 text-white/40 text-sm md:text-base font-bold animate-pulse tracking-[0.5em]">
+              <p className="mt-12 text-white/40 text-sm md:text-base font-bold animate-pulse tracking-[0.5em]">
                 {isMobile ? "TAP TO REDEPLOY" : "CLICK TO REDEPLOY"}
               </p>
             </motion.div>
