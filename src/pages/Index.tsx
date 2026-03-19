@@ -16,6 +16,7 @@ const Index = () => {
     currentQueueIndex,
     inputIndex,
     lastInputCorrect,
+    stats,
     startGame,
     handleInput
   } = useStratagemGame();
@@ -26,28 +27,17 @@ const Index = () => {
   });
 
   useEffect(() => {
-    if (score > highScore) {
-      setHighScore(score);
-      localStorage.setItem("stratagem-hero-highscore", score.toString());
+    if (stats.totalScore > highScore) {
+      setHighScore(stats.totalScore);
+      localStorage.setItem("stratagem-hero-highscore", stats.totalScore.toString());
     }
-  }, [score, highScore]);
-
-  const currentStratagem = missionQueue[currentQueueIndex];
+  }, [stats.totalScore, highScore]);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-yellow-400 selection:text-black overflow-hidden flex flex-col items-center justify-center relative">
-      {/* Top and Bottom Glowing Lines */}
-      <div className="absolute top-12 left-0 right-0 h-[2px] bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)] z-20" />
-      <div className="absolute bottom-12 left-0 right-0 h-[2px] bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)] z-20" />
-
-      {/* Background Logo (Super Earth) */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10">
-        <img 
-          src="https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons/reinforce.png" 
-          className="w-[600px] h-[600px] grayscale brightness-200"
-          alt="Super Earth Logo"
-        />
-      </div>
+    <div className="min-h-screen bg-[#0a0f0f] text-white font-sans selection:bg-yellow-400 selection:text-black overflow-hidden flex flex-col items-center justify-center relative">
+      {/* Top and Bottom Glowing Lines (Cyan) */}
+      <div className="absolute top-12 left-0 right-0 h-[4px] bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
+      <div className="absolute bottom-12 left-0 right-0 h-[4px] bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
 
       <AnimatePresence mode="wait">
         {gameState === "idle" && (
@@ -69,12 +59,6 @@ const Index = () => {
             >
               Press any Stratagem Input to Start!
             </motion.p>
-            
-            <div className="absolute bottom-24 flex gap-2 opacity-30">
-              {[...Array(7)].map((_, i) => (
-                <div key={i} className="w-4 h-4 bg-white rotate-45" />
-              ))}
-            </div>
           </motion.div>
         )}
 
@@ -104,17 +88,14 @@ const Index = () => {
             exit={{ opacity: 0 }}
             className="flex flex-col items-center w-full max-w-5xl z-10 px-12"
           >
-            {/* HUD Layout */}
             <div className="w-full grid grid-cols-3 items-center mb-8">
               <div className="flex flex-col items-start">
                 <span className="text-white font-bold text-xl">Round</span>
                 <span className="text-yellow-400 text-5xl font-black leading-none">{level}</span>
               </div>
-
               <div className="flex flex-col items-center">
                 <MissionQueue queue={missionQueue} currentIndex={currentQueueIndex} />
               </div>
-
               <div className="flex flex-col items-end">
                 <span className="text-yellow-400 text-5xl font-black leading-none drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
                   {score}
@@ -123,9 +104,9 @@ const Index = () => {
               </div>
             </div>
 
-            {currentStratagem && (
+            {missionQueue[currentQueueIndex] && (
               <StratagemDisplay 
-                stratagem={currentStratagem} 
+                stratagem={missionQueue[currentQueueIndex]} 
                 currentIndex={inputIndex}
                 isError={lastInputCorrect === false}
               />
@@ -141,12 +122,6 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="mt-8 flex gap-2 opacity-30">
-              {[...Array(7)].map((_, i) => (
-                <div key={i} className="w-3 h-3 bg-white rotate-45" />
-              ))}
-            </div>
-
             <div className="md:hidden mt-8">
               <GameControls onInput={handleInput} />
             </div>
@@ -156,19 +131,56 @@ const Index = () => {
         {gameState === "gameover" && (
           <motion.div 
             key="gameover"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center text-center z-10 cursor-pointer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center w-full max-w-4xl z-10 cursor-pointer"
             onClick={startGame}
           >
-            <h2 className="text-7xl font-black text-red-600 mb-2 drop-shadow-[0_0_20px_rgba(220,38,38,0.5)]">
-              MISSION FAILED
-            </h2>
-            <div className="bg-white/10 p-6 border-2 border-white/20 mb-8">
-              <p className="text-yellow-400 text-xl font-bold mb-1">FINAL SCORE</p>
-              <p className="text-6xl font-black">{score}</p>
+            <div className="relative w-full flex flex-col items-center">
+              {/* Background Logo */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                <img 
+                  src="https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons/reinforce.png" 
+                  className="w-[400px] h-[400px] grayscale brightness-200"
+                  alt="Super Earth Logo"
+                />
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 gap-x-32 gap-y-8 w-full max-w-2xl relative z-10">
+                <div className="text-left">
+                  <p className="text-[#00ff00] text-2xl font-bold tracking-wider drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]">ROUND BONUS</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[#ccff00] text-4xl font-black drop-shadow-[0_0_10px_rgba(204,255,0,0.8)]">{stats.roundBonus}</p>
+                </div>
+
+                <div className="text-left">
+                  <p className="text-[#00ff00] text-2xl font-bold tracking-wider drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]">TIME BONUS</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[#ccff00] text-4xl font-black drop-shadow-[0_0_10px_rgba(204,255,0,0.8)]">{stats.timeBonus}</p>
+                </div>
+
+                <div className="text-left">
+                  <p className="text-[#00ff00] text-2xl font-bold tracking-wider drop-shadow-[0_0_8px_rgba(0,255,0,0.6)]">PERFECT BONUS</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[#ccff00] text-4xl font-black drop-shadow-[0_0_10px_rgba(204,255,0,0.8)]">{stats.perfectBonus}</p>
+                </div>
+
+                <div className="col-span-2 h-[2px] bg-white/20 my-4" />
+
+                <div className="text-left">
+                  <p className="text-[#00ff00] text-3xl font-black tracking-widest drop-shadow-[0_0_10px_rgba(0,255,0,0.8)]">TOTAL SCORE</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[#ccff00] text-5xl font-black drop-shadow-[0_0_15px_rgba(204,255,0,1)]">{stats.totalScore}</p>
+                </div>
+              </div>
+
+              <p className="mt-16 text-white/40 font-bold animate-pulse tracking-widest">CLICK TO REDEPLOY</p>
             </div>
-            <p className="text-white/50 font-bold animate-pulse">CLICK TO REDEPLOY</p>
           </motion.div>
         )}
       </AnimatePresence>
