@@ -20,6 +20,23 @@ import eagleSmoke from "@/assets/icons/eagle/smoke.png";
 import eagleRocketPods from "@/assets/icons/eagle/rocket_pods.png";
 import eagle500kg from "@/assets/icons/eagle/500kg.png";
 
+// Support Icons
+import supportGrenadeLauncher from "@/assets/icons/support/grenade_launcher.png";
+import supportEat from "@/assets/icons/support/eat.png";
+import supportRecoilless from "@/assets/icons/support/recoilless.png";
+import supportSpear from "@/assets/icons/support/spear.png";
+import supportRailgun from "@/assets/icons/support/railgun.png";
+import supportAmr from "@/assets/icons/support/amr.png";
+import supportAutocannon from "@/assets/icons/support/autocannon.png";
+import supportLaserCannon from "@/assets/icons/support/laser_cannon.png";
+import supportQuasar from "@/assets/icons/support/quasar.png";
+import supportArcThrower from "@/assets/icons/support/arc_thrower.png";
+import supportFlamethrower from "@/assets/icons/support/flamethrower.png";
+import supportPatriot from "@/assets/icons/support/patriot.png";
+import supportMachineGun from "@/assets/icons/support/machine_gun.png";
+import supportStalwart from "@/assets/icons/support/stalwart.png";
+import supportHmg from "@/assets/icons/support/hmg.png";
+
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -56,15 +73,21 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Eagle 500kg Bomb", sequence: ["U", "R", "D", "D", "D"], category: "Eagle", iconUrl: eagle500kg },
 
   // --- SUPPORT (Blue) ---
-  { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: `${ICON_BASE}/machine-gun.png` },
-  { name: "Anti-Materiel Rifle", sequence: ["D", "L", "R", "U", "D"], category: "Support", iconUrl: `${ICON_BASE}/anti-materiel-rifle.png` },
-  { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconUrl: `${ICON_BASE}/stalwart.png` },
-  { name: "Expendable Anti-Tank", sequence: ["D", "D", "L", "U", "R"], category: "Support", iconUrl: `${ICON_BASE}/expendable-anti-tank.png` },
-  { name: "Recoilless Rifle", sequence: ["D", "L", "R", "R", "L"], category: "Support", iconUrl: `${ICON_BASE}/recoilless-rifle.png` },
-  { name: "Flamethrower", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: `${ICON_BASE}/flamethrower.png` },
-  { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconUrl: `${ICON_BASE}/autocannon.png` },
-  { name: "Railgun", sequence: ["D", "R", "D", "U", "L", "R"], category: "Support", iconUrl: `${ICON_BASE}/railgun.png` },
-  { name: "Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconUrl: `${ICON_BASE}/spear.png` },
+  { name: "Grenade Launcher", sequence: ["D", "L", "U", "L", "D"], category: "Support", iconUrl: supportGrenadeLauncher },
+  { name: "Expendable Anti-Tank", sequence: ["D", "D", "L", "U", "R"], category: "Support", iconUrl: supportEat },
+  { name: "Recoilless Rifle", sequence: ["D", "L", "R", "R", "L"], category: "Support", iconUrl: supportRecoilless },
+  { name: "Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconUrl: supportSpear },
+  { name: "Railgun", sequence: ["D", "R", "D", "U", "L", "R"], category: "Support", iconUrl: supportRailgun },
+  { name: "Anti-Materiel Rifle", sequence: ["D", "L", "R", "U", "D"], category: "Support", iconUrl: supportAmr },
+  { name: "Autocannon", sequence: ["D", "L", "D", "U", "U", "R"], category: "Support", iconUrl: supportAutocannon },
+  { name: "Laser Cannon", sequence: ["D", "L", "D", "U", "L"], category: "Support", iconUrl: supportLaserCannon },
+  { name: "Quasar Cannon", sequence: ["D", "D", "U", "L", "R"], category: "Support", iconUrl: supportQuasar },
+  { name: "Arc Thrower", sequence: ["D", "R", "D", "U", "L", "L"], category: "Support", iconUrl: supportArcThrower },
+  { name: "Flamethrower", sequence: ["D", "L", "U", "D", "U"], category: "Support", iconUrl: supportFlamethrower },
+  { name: "Patriot Exosuit", sequence: ["L", "D", "R", "U", "L", "D", "D"], category: "Support", iconUrl: supportPatriot },
+  { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: supportMachineGun },
+  { name: "Stalwart", sequence: ["D", "L", "D", "U", "U", "L"], category: "Support", iconUrl: supportStalwart },
+  { name: "Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: supportHmg },
 
   // --- DEFENSIVE (Green) ---
   { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: `${ICON_BASE}/gatling-sentry.png` },
