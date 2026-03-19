@@ -70,6 +70,7 @@ import missionSos from "@/assets/icons/mission/sos_beacon.png";
 import missionResupply from "@/assets/icons/mission/resupply.png";
 import missionSoloSilo from "@/assets/icons/mission/solo_silo.png";
 import missionFlag from "@/assets/icons/mission/one_true_flag.png";
+import missionReinforce from "@/assets/icons/mission/reinforce.png";
 
 export type Direction = "U" | "D" | "L" | "R";
 
@@ -79,8 +80,6 @@ export interface Stratagem {
   category: "Orbital" | "Eagle" | "Support" | "Defensive" | "Mission";
   iconUrl: string;
 }
-
-const ICON_BASE = "https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons";
 
 export const STRATAGEMS: Stratagem[] = [
   // --- ORBITAL (Red) ---
@@ -152,10 +151,10 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Shield Generator Relay", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconUrl: defensiveShield },
 
   // --- MISSION (Yellow) ---
-  { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconUrl: `${ICON_BASE}/reinforce.png` },
+  { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconUrl: missionReinforce },
   { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: missionSos },
   { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: missionResupply },
-  { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: `${ICON_BASE}/hellbomb.png` },
+  { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: "https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons/hellbomb.png" },
   { name: "MS-11 Solo Silo", sequence: ["D", "U", "R", "D", "D"], category: "Mission", iconUrl: missionSoloSilo },
   { name: "CQC-1 One True Flag", sequence: ["D", "L", "R", "D", "U"], category: "Mission", iconUrl: missionFlag },
 ];
