@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
-import GameControls from "@/components/GameControls";
 import { motion, AnimatePresence } from "framer-motion";
+import { MadeWithDyad } from "@/components/made-with-dyad";
 
 const Index = () => {
   const {
@@ -176,6 +176,11 @@ const Index = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Footer */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center z-30">
+          <MadeWithDyad />
+        </div>
       </div>
     </div>
   );
