@@ -31,7 +31,7 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ queue, currentIndex }) => {
             )}
           >
             <StratagemIcon 
-              index={strat.iconIndex} 
+              url={strat.iconUrl} 
               category={strat.category} 
               className={cn(
                 "w-full h-full",

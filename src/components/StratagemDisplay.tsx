@@ -41,7 +41,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentI
         className="flex flex-col items-center text-center"
       >
         <StratagemIcon 
-          index={stratagem.iconIndex} 
+          url={stratagem.iconUrl} 
           category={stratagem.category} 
           className="w-24 h-24 mb-4 border-4"
         />

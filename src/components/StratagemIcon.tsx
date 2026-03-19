@@ -2,25 +2,14 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import stratagemSheet from "@/assets/stratagems_list.png";
 
 interface StratagemIconProps {
-  index: number;
+  url: string;
   category: string;
   className?: string;
 }
 
-const StratagemIcon: React.FC<StratagemIconProps> = ({ index, category, className }) => {
-  // The sprite sheet is a 10x10 grid
-  const cols = 10;
-  const row = Math.floor(index / cols);
-  const col = index % cols;
-  
-  // Calculate percentage positions for background-position
-  // For a 10x10 grid, the steps are 100% / (10 - 1) = 11.11%
-  const posX = (col / (cols - 1)) * 100;
-  const posY = (row / (cols - 1)) * 100;
-
+const StratagemIcon: React.FC<StratagemIconProps> = ({ url, category, className }) => {
   const getCategoryBorder = () => {
     switch (category) {
       case "Orbital": return "border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]";
@@ -34,17 +23,17 @@ const StratagemIcon: React.FC<StratagemIconProps> = ({ index, category, classNam
 
   return (
     <div className={cn(
-      "relative overflow-hidden border-2 rounded-md bg-black/60 aspect-square",
+      "relative overflow-hidden border-2 rounded-md bg-black/60 aspect-square flex items-center justify-center p-1",
       getCategoryBorder(),
       className
     )}>
-      <div 
-        className="absolute inset-0 bg-no-repeat"
-        style={{
-          backgroundImage: `url(${stratagemSheet})`,
-          backgroundSize: '1000%', // 10 columns = 1000% of the container width
-          backgroundPosition: `${posX}% ${posY}%`,
-          imageRendering: 'pixelated'
+      <img 
+        src={url} 
+        alt="Stratagem Icon"
+        className="w-full h-full object-contain"
+        onError={(e) => {
+          // Fallback if image fails to load
+          (e.target as HTMLImageElement).src = "https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons/reinforce.png";
         }}
       />
     </div>
