@@ -105,8 +105,7 @@ export const useStratagemGame = () => {
         const points = currentStratagem.sequence.length * 100;
         setScore(prev => prev + points);
         
-        // Add 1.5 seconds for completing a stratagem, capped at MAX_TIME
-        setTimeLeft(prev => Math.min(MAX_TIME, prev + 1.5));
+        // Time bonus removed as requested
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
@@ -123,7 +122,6 @@ export const useStratagemGame = () => {
       setLastInputCorrect(false);
       setInputIndex(0);
       setMistakesInGame(prev => prev + 1);
-      // Penalty for mistakes removed as requested
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
