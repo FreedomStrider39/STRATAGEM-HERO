@@ -37,6 +37,19 @@ import supportMachineGun from "@/assets/icons/support/machine_gun.png";
 import supportStalwart from "@/assets/icons/support/stalwart.png";
 import supportHmg from "@/assets/icons/support/hmg.png";
 
+// Defensive Icons
+import defensiveMortar from "@/assets/icons/defensive/mortar_sentry.png";
+import defensiveEmsMortar from "@/assets/icons/defensive/ems_mortar_sentry.png";
+import defensiveTesla from "@/assets/icons/defensive/tesla_tower.png";
+import defensiveAntiPersonnel from "@/assets/icons/defensive/anti_personnel_mines.png";
+import defensiveIncendiary from "@/assets/icons/defensive/incendiary_mines.png";
+import defensiveHmgEmplacement from "@/assets/icons/defensive/hmg_emplacement.png";
+import defensiveMachineGun from "@/assets/icons/defensive/machine_gun_sentry.png";
+import defensiveGatling from "@/assets/icons/defensive/gatling_sentry.png";
+import defensiveAutocannon from "@/assets/icons/defensive/autocannon_sentry.png";
+import defensiveRocket from "@/assets/icons/defensive/rocket_sentry.png";
+import defensiveShield from "@/assets/icons/defensive/shield_generator.png";
+
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -90,11 +103,17 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: supportHmg },
 
   // --- DEFENSIVE (Green) ---
-  { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: `${ICON_BASE}/gatling-sentry.png` },
-  { name: "Mortar Sentry", sequence: ["D", "D", "U", "U", "D"], category: "Defensive", iconUrl: `${ICON_BASE}/mortar-sentry.png` },
-  { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L", "U"], category: "Defensive", iconUrl: `${ICON_BASE}/autocannon-sentry.png` },
-  { name: "Rocket Sentry", sequence: ["D", "U", "R", "R", "L"], category: "Defensive", iconUrl: `${ICON_BASE}/rocket-sentry.png` },
-  { name: "EMS Mortar Sentry", sequence: ["D", "D", "D", "U", "D"], category: "Defensive", iconUrl: `${ICON_BASE}/ems-mortar-sentry.png` },
+  { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: defensiveMortar },
+  { name: "EMS Mortar Sentry", sequence: ["D", "U", "R", "D", "R"], category: "Defensive", iconUrl: defensiveEmsMortar },
+  { name: "Tesla Tower", sequence: ["D", "U", "R", "U", "L", "R"], category: "Defensive", iconUrl: defensiveTesla },
+  { name: "Anti-Personnel Minefield", sequence: ["D", "L", "U", "R"], category: "Defensive", iconUrl: defensiveAntiPersonnel },
+  { name: "Incendiary Mines", sequence: ["D", "L", "L", "D"], category: "Defensive", iconUrl: defensiveIncendiary },
+  { name: "HMG Emplacement", sequence: ["D", "U", "L", "R", "R", "L"], category: "Defensive", iconUrl: defensiveHmgEmplacement },
+  { name: "Machine Gun Sentry", sequence: ["D", "U", "R", "R", "U"], category: "Defensive", iconUrl: defensiveMachineGun },
+  { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: defensiveGatling },
+  { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L", "U"], category: "Defensive", iconUrl: defensiveAutocannon },
+  { name: "Rocket Sentry", sequence: ["D", "U", "R", "R", "L"], category: "Defensive", iconUrl: defensiveRocket },
+  { name: "Shield Generator Relay", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconUrl: defensiveShield },
 
   // --- MISSION (Yellow) ---
   { name: "Reinforce", sequence: ["U", "D", "R", "L", "U"], category: "Mission", iconUrl: `${ICON_BASE}/reinforce.png` },
