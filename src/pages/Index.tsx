@@ -112,10 +112,10 @@ const Index = () => {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className="flex items-center justify-center gap-2 bg-green-600/20 border border-green-500/50 py-2 px-4 backdrop-blur-sm"
+                        className="flex items-center justify-center gap-2 bg-orange-600/20 border border-orange-500/50 py-2 px-4 backdrop-blur-sm"
                       >
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
-                        <span className="text-green-400 text-xs md:text-sm font-bold tracking-[0.2em]">
+                        <CheckCircle2 className="w-5 h-5 text-orange-400" />
+                        <span className="text-white text-xs md:text-sm font-bold tracking-[0.2em]">
                           COGNITIVE DISRUPTOR DESTROYED
                         </span>
                       </motion.div>

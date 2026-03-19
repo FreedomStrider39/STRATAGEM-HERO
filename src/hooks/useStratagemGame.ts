@@ -7,7 +7,7 @@ const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
-const DISRUPTOR_REFRESH_MS = 3000;
+const DISRUPTOR_REFRESH_MS = 2500; // Updated to 2.5 seconds
 
 export interface GameStats {
   roundBonus: number;
@@ -50,6 +50,7 @@ export const useStratagemGame = () => {
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
   const disruptorIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const stratagemStartTimeRef = useRef<number>(0);
+  const lastDisruptedRoundRef = useRef<number>(0);
 
   const getRandomDirection = (): Direction => {
     const dirs: Direction[] = ["U", "D", "L", "R"];
@@ -80,6 +81,7 @@ export const useStratagemGame = () => {
     setDisruptedCount(0);
     setDisruptedLimit(0);
     setShowDisruptorDestroyed(false);
+    lastDisruptedRoundRef.current = 0;
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   };
@@ -108,12 +110,15 @@ export const useStratagemGame = () => {
       return;
     }
 
-    const roll = Math.random();
-    const shouldDisrupt = nextLvl >= 2 && roll < 0.4;
+    // Logic for disruption frequency: at least 3 rounds gap and 25% chance
+    const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
+    const canDisrupt = nextLvl >= 4 && roundsSinceLast >= 3;
+    const shouldDisrupt = canDisrupt && Math.random() < 0.25;
 
     if (shouldDisrupt) {
       audioManager.playError();
       setIsDisrupted(true);
+      lastDisruptedRoundRef.current = nextLvl;
       // Disrupt between 2 and 4 stratagems
       const limit = Math.floor(Math.random() * 3) + 2;
       setDisruptedLimit(limit);
