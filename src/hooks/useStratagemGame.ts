@@ -3,17 +3,22 @@ import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 
 const INITIAL_TIME = 10;
 const TIME_BONUS_PER_STRATAGEM = 1.5;
+const STRATAGEMS_PER_LEVEL = 5;
+const BREAK_DURATION = 10;
 
 export const useStratagemGame = () => {
-  const [gameState, setGameState] = useState<"idle" | "playing" | "gameover">("idle");
+  const [gameState, setGameState] = useState<"idle" | "playing" | "break" | "gameover">("idle");
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
+  const [breakTimeLeft, setBreakTimeLeft] = useState(0);
   const [currentStratagem, setCurrentStratagem] = useState<Stratagem | null>(null);
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
+  const [completedInLevel, setCompletedInLevel] = useState(0);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const pickRandomStratagem = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * STRATAGEMS.length);
@@ -25,9 +30,18 @@ export const useStratagemGame = () => {
     setScore(0);
     setLevel(1);
     setTimeLeft(INITIAL_TIME);
+    setCompletedInLevel(0);
     setGameState("playing");
     pickRandomStratagem();
   };
+
+  const startNextLevel = useCallback(() => {
+    setLevel(prev => prev + 1);
+    setCompletedInLevel(0);
+    setTimeLeft(INITIAL_TIME);
+    setGameState("playing");
+    pickRandomStratagem();
+  }, [pickRandomStratagem]);
 
   const handleInput = useCallback((direction: Direction) => {
     if (gameState !== "playing" || !currentStratagem) return;
@@ -42,12 +56,15 @@ export const useStratagemGame = () => {
         setScore(prev => prev + points);
         setTimeLeft(prev => Math.min(prev + TIME_BONUS_PER_STRATAGEM, 15));
         
-        // Level up logic (every 5 stratagems)
-        if ((score + points) % 500 === 0) {
-          setLevel(prev => prev + 1);
+        const nextCompleted = completedInLevel + 1;
+        if (nextCompleted >= STRATAGEMS_PER_LEVEL) {
+          setGameState("break");
+          setBreakTimeLeft(BREAK_DURATION);
+          setCurrentStratagem(null);
+        } else {
+          setCompletedInLevel(nextCompleted);
+          pickRandomStratagem();
         }
-        
-        pickRandomStratagem();
       } else {
         setInputIndex(nextIndex);
       }
@@ -58,15 +75,15 @@ export const useStratagemGame = () => {
 
     // Reset feedback after a short delay
     setTimeout(() => setLastInputCorrect(null), 100);
-  }, [gameState, currentStratagem, inputIndex, pickRandomStratagem, score]);
+  }, [gameState, currentStratagem, inputIndex, pickRandomStratagem, completedInLevel]);
 
+  // Game Timer
   useEffect(() => {
     if (gameState === "playing") {
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
             setGameState("gameover");
-            if (timerRef.current) clearInterval(timerRef.current);
             return 0;
           }
           return prev - 0.1;
@@ -75,11 +92,26 @@ export const useStratagemGame = () => {
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [gameState]);
+
+  // Break Timer
+  useEffect(() => {
+    if (gameState === "break") {
+      breakTimerRef.current = setInterval(() => {
+        setBreakTimeLeft(prev => {
+          if (prev <= 0.1) {
+            startNextLevel();
+            return 0;
+          }
+          return prev - 0.1;
+        });
+      }, 100);
+    } else {
+      if (breakTimerRef.current) clearInterval(breakTimerRef.current);
+    }
+    return () => { if (breakTimerRef.current) clearInterval(breakTimerRef.current); };
+  }, [gameState, startNextLevel]);
 
   // Keyboard support
   useEffect(() => {
@@ -105,9 +137,12 @@ export const useStratagemGame = () => {
     score,
     level,
     timeLeft,
+    breakTimeLeft,
     currentStratagem,
     inputIndex,
     lastInputCorrect,
+    completedInLevel,
+    totalInLevel: STRATAGEMS_PER_LEVEL,
     startGame,
     handleInput
   };

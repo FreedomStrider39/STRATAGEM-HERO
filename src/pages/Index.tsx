@@ -6,7 +6,7 @@ import { getRank } from "@/data/stratagems";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Play, RotateCcw, Shield } from "lucide-react";
+import { Trophy, Play, RotateCcw, Shield, CheckCircle2, Timer } from "lucide-react";
 
 const Index = () => {
   const {
@@ -14,9 +14,12 @@ const Index = () => {
     score,
     level,
     timeLeft,
+    breakTimeLeft,
     currentStratagem,
     inputIndex,
     lastInputCorrect,
+    completedInLevel,
+    totalInLevel,
     startGame,
     handleInput
   } = useStratagemGame();
@@ -90,14 +93,14 @@ const Index = () => {
             className="flex flex-col items-center w-full max-w-2xl z-10"
           >
             {/* Game Stats */}
-            <div className="w-full flex justify-between items-end mb-12 px-4">
+            <div className="w-full flex justify-between items-end mb-8 px-4">
               <div className="flex flex-col">
                 <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.2em]">Score</span>
                 <span className="text-5xl font-black italic tracking-tighter">{score.toLocaleString()}</span>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.2em]">Level</span>
-                <span className="text-5xl font-black italic tracking-tighter">{level}</span>
+                <span className="text-yellow-400 font-black text-xs uppercase tracking-[0.2em]">Level {level}</span>
+                <span className="text-2xl font-black italic tracking-tighter">{completedInLevel} / {totalInLevel}</span>
               </div>
             </div>
 
@@ -126,6 +129,43 @@ const Index = () => {
             <p className="mt-12 text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse">
               Use Arrow Keys or On-Screen Buttons
             </p>
+          </motion.div>
+        )}
+
+        {gameState === "break" && (
+          <motion.div 
+            key="break"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="flex flex-col items-center text-center space-y-8 z-10"
+          >
+            <div className="bg-yellow-400/10 border-2 border-yellow-400 p-8 skew-x-[-6deg] relative overflow-hidden">
+              <div className="absolute inset-0 bg-yellow-400/5 animate-pulse" />
+              <CheckCircle2 className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+              <h2 className="text-5xl font-black italic uppercase tracking-tighter text-yellow-400">
+                Level {level} Complete
+              </h2>
+              <p className="text-white font-bold uppercase tracking-widest mt-2">
+                Tactical Resupply in Progress
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-4">
+              <div className="flex items-center space-x-3 text-2xl font-black italic uppercase">
+                <Timer className="text-yellow-400" />
+                <span>Next Mission in {breakTimeLeft.toFixed(1)}s</span>
+              </div>
+              <Progress 
+                value={(breakTimeLeft / 10) * 100} 
+                className="w-64 h-2 bg-white/10 rounded-none"
+              />
+            </div>
+
+            <div className="p-4 bg-white/5 border border-white/10 w-full max-w-xs">
+              <span className="text-yellow-400 font-black text-xs uppercase tracking-widest block mb-1">Current Score</span>
+              <span className="text-4xl font-black italic">{score.toLocaleString()}</span>
+            </div>
           </motion.div>
         )}
 
