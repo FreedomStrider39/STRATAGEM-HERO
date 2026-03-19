@@ -3,7 +3,7 @@ import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 
 const INITIAL_TIME = 15;
 const MAX_TIME = 20; // Cap the time so it doesn't become infinite
-const BREAK_DURATION = 2;
+const BREAK_DURATION = 4; // Increased from 2 to 4 seconds
 
 export interface GameStats {
   roundBonus: number;
