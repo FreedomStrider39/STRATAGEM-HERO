@@ -114,8 +114,9 @@ export const useStratagemGame = () => {
     }
 
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
-    const canDisrupt = nextLvl >= 5 && roundsSinceLast >= 4;
-    const shouldDisrupt = canDisrupt && Math.random() < 0.25;
+    // Increased frequency: starts at level 3, minimum 2 rounds gap, 40% chance
+    const canDisrupt = nextLvl >= 3 && roundsSinceLast >= 2;
+    const shouldDisrupt = canDisrupt && Math.random() < 0.4;
 
     if (shouldDisrupt) {
       audioManager.playError();
