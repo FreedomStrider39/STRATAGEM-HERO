@@ -1,7 +1,8 @@
 import React from "react";
 import { Stratagem, Direction } from "@/data/stratagems";
+import StratagemIcon from "./StratagemIcon";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface StratagemDisplayProps {
@@ -32,13 +33,18 @@ const ArrowIcon = ({ direction, active, completed }: { direction: Direction, act
 
 const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentIndex, isError }) => {
   return (
-    <div className="flex flex-col items-center space-y-8 w-full max-w-md">
+    <div className="flex flex-col items-center space-y-6 w-full max-w-md">
       <motion.div 
         key={stratagem.name}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center"
+        className="flex flex-col items-center text-center"
       >
+        <StratagemIcon 
+          type={stratagem.iconType} 
+          category={stratagem.category} 
+          className="w-20 h-20 mb-4 border-4"
+        />
         <h2 className="text-3xl font-black text-yellow-400 uppercase tracking-tighter italic">
           {stratagem.name}
         </h2>

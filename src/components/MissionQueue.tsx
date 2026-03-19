@@ -1,6 +1,6 @@
 import React from "react";
 import { Stratagem } from "@/data/stratagems";
-import { Target, Plane, Wrench, Shield, Flag } from "lucide-react";
+import StratagemIcon from "./StratagemIcon";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -8,16 +8,6 @@ interface MissionQueueProps {
   queue: Stratagem[];
   currentIndex: number;
 }
-
-const CategoryIcon = ({ category, className }: { category: string, className?: string }) => {
-  switch (category) {
-    case "Orbital": return <Target className={className} />;
-    case "Eagle": return <Plane className={className} />;
-    case "Support": return <Wrench className={className} />;
-    case "Defensive": return <Shield className={className} />;
-    default: return <Flag className={className} />;
-  }
-};
 
 const MissionQueue: React.FC<MissionQueueProps> = ({ queue, currentIndex }) => {
   return (
@@ -31,24 +21,27 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ queue, currentIndex }) => {
             key={`${strat.name}-${idx}`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ 
-              opacity: isCompleted ? 0.3 : 1, 
-              scale: isCurrent ? 1.1 : 1,
-              borderColor: isCurrent ? "rgb(250 204 21)" : "rgba(255,255,255,0.1)"
+              opacity: isCompleted ? 0.2 : 1, 
+              scale: isCurrent ? 1.2 : 1,
+              zIndex: isCurrent ? 10 : 0
             }}
             className={cn(
-              "flex-shrink-0 w-12 h-12 rounded-lg border-2 flex items-center justify-center transition-all duration-300 relative",
-              isCurrent ? "bg-yellow-400/20 shadow-[0_0_15px_rgba(250,204,21,0.3)]" : "bg-black/40",
-              isCompleted && "grayscale"
+              "flex-shrink-0 w-12 h-12 transition-all duration-300 relative",
+              isCurrent && "drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"
             )}
           >
-            <CategoryIcon 
+            <StratagemIcon 
+              type={strat.iconType} 
               category={strat.category} 
-              className={cn("w-6 h-6", isCurrent ? "text-yellow-400" : "text-gray-500")} 
+              className={cn(
+                "w-full h-full",
+                !isCurrent && "border-white/10 bg-black/40"
+              )}
             />
             {isCurrent && (
               <motion.div 
                 layoutId="active-indicator"
-                className="absolute -bottom-2 w-1 h-1 bg-yellow-400 rounded-full"
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-yellow-400 rounded-full"
               />
             )}
           </motion.div>
