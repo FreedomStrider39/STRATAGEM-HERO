@@ -125,18 +125,18 @@ export const STRATAGEMS: Stratagem[] = [
   
   // --- NEW SUPPORT ---
   { name: "StA-X3 W.A.S.P. Launcher", sequence: ["D", "D", "U", "D", "R"], category: "Support", iconUrl: supportWasp },
-  { name: "CQC-20 Breaching Hammer", sequence: ["D", "L", "R", "D", "U"], category: "Support", iconUrl: supportHammer },
-  { name: "PLAS-45 Epoch", sequence: ["D", "L", "U", "R", "D"], category: "Support", iconUrl: supportEpoch },
+  { name: "CQC-20 Breaching Hammer", sequence: ["D", "L", "R", "L", "U"], category: "Support", iconUrl: supportHammer },
+  { name: "PLAS-45 Epoch", sequence: ["D", "L", "U", "L", "R"], category: "Support", iconUrl: supportEpoch },
   { name: "S-11 Speargun", sequence: ["D", "R", "D", "L", "U", "R"], category: "Support", iconUrl: supportSpeargun },
-  { name: "EAT-700 Expendable Napalm", sequence: ["D", "D", "L", "U", "R", "D"], category: "Support", iconUrl: supportNapalm },
+  { name: "EAT-700 Expendable Napalm", sequence: ["D", "D", "L", "U", "L"], category: "Support", iconUrl: supportNapalm },
   { name: "EAT-411 Leveller", sequence: ["D", "D", "L", "U", "D", "D"], category: "Support", iconUrl: supportLeveller },
-  { name: "GL-52 De-Escalator", sequence: ["D", "L", "U", "R", "L", "D"], category: "Support", iconUrl: supportDeEscalator },
-  { name: "CQC-9 Defoliation Tool", sequence: ["D", "L", "R", "D", "D", "D"], category: "Support", iconUrl: supportDefoliation },
-  { name: "TX-41 Sterilizer", sequence: ["D", "L", "U", "D", "D", "D"], category: "Support", iconUrl: supportSterilizer },
-  { name: "GL-28 Belt-Fed Grenade Launcher", sequence: ["D", "L", "U", "R", "D", "U", "U"], category: "Support", iconUrl: supportBeltFedGl },
-  { name: "B/FLAM-80 Cremator", sequence: ["D", "D", "L", "D", "U", "U", "U"], category: "Support", iconUrl: supportCremator },
-  { name: "M-1000 Maxigun", sequence: ["D", "L", "R", "D", "U", "U", "U"], category: "Support", iconUrl: supportMaxigun },
-  { name: "B/MD C4 Pack", sequence: ["D", "R", "U", "U", "R", "D", "L"], category: "Support", iconUrl: supportC4 },
+  { name: "GL-52 De-Escalator", sequence: ["D", "R", "U", "L", "R"], category: "Support", iconUrl: supportDeEscalator },
+  { name: "CQC-9 Defoliation Tool", sequence: ["D", "L", "R", "D", "R", "D"], category: "Support", iconUrl: supportDefoliation },
+  { name: "TX-41 Sterilizer", sequence: ["D", "L", "U", "D", "L"], category: "Support", iconUrl: supportSterilizer },
+  { name: "GL-28 Belt-Fed Grenade Launcher", sequence: ["D", "L", "U", "R", "U", "U"], category: "Support", iconUrl: supportBeltFedGl },
+  { name: "B/FLAM-80 Cremator", sequence: ["D", "D", "R", "D", "U", "U"], category: "Support", iconUrl: supportCremator },
+  { name: "M-1000 Maxigun", sequence: ["D", "L", "R", "D", "U", "U"], category: "Support", iconUrl: supportMaxigun },
+  { name: "B/MD C4 Pack", sequence: ["D", "R", "U", "U", "R", "D", "R"], category: "Support", iconUrl: supportC4 },
 
   // --- DEFENSIVE (Green) ---
   { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: defensiveMortar },
@@ -156,8 +156,8 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "SOS Beacon", sequence: ["U", "D", "R", "U"], category: "Mission", iconUrl: missionSos },
   { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: missionResupply },
   { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: `${ICON_BASE}/hellbomb.png` },
-  { name: "MS-11 Solo Silo", sequence: ["D", "U", "R", "D", "D", "D"], category: "Mission", iconUrl: missionSoloSilo },
-  { name: "CQC-1 One True Flag", sequence: ["D", "L", "D", "U", "U", "U"], category: "Mission", iconUrl: missionFlag },
+  { name: "MS-11 Solo Silo", sequence: ["D", "U", "R", "D", "D"], category: "Mission", iconUrl: missionSoloSilo },
+  { name: "CQC-1 One True Flag", sequence: ["D", "L", "R", "D", "U"], category: "Mission", iconUrl: missionFlag },
 ];
 
 export const RANKS = [
