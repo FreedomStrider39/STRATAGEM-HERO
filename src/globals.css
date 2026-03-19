@@ -9,6 +9,8 @@
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
     --radius: 0rem;
+    --hd-yellow: 50 98% 52%; /* #facc15 */
+    --hd-cyan: 180 100% 50%; /* #00ffff */
   }
 }
 
@@ -29,17 +31,71 @@
   .animate-shake {
     animation: shake 0.1s ease-in-out 0s 2;
   }
+
+  @keyframes flicker {
+    0% { opacity: 0.97; }
+    5% { opacity: 0.95; }
+    10% { opacity: 0.9; }
+    15% { opacity: 0.95; }
+    20% { opacity: 0.98; }
+    25% { opacity: 0.95; }
+    30% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+
+  .crt-screen {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .crt-screen::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 118, 0.06));
+    z-index: 50;
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+  }
+
+  .crt-screen::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(18, 16, 16, 0.1);
+    opacity: 0;
+    z-index: 50;
+    pointer-events: none;
+    animation: flicker 0.15s infinite;
+  }
 }
 
 body {
-  background-color: black;
+  background-color: #0a0c0c;
   color: white;
   cursor: crosshair;
   font-family: 'Orbitron', sans-serif;
+  overflow: hidden;
 }
 
 h1, h2, h3, span, p {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-style: italic;
+}
+
+.text-glow-yellow {
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.6), 0 0 20px rgba(250, 204, 21, 0.4);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 20px rgba(0, 255, 255, 0.4);
 }
