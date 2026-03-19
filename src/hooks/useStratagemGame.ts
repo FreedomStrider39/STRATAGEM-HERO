@@ -23,7 +23,10 @@ export const useStratagemGame = () => {
   const [breakTimeLeft, setBreakTimeLeft] = useState(0);
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
+  
+  // Challenges
   const [isDisrupted, setIsDisrupted] = useState(false);
+  const [isInterfered, setIsInterfered] = useState(false);
   
   const [fullPool, setFullPool] = useState<Stratagem[]>([]);
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
@@ -68,6 +71,7 @@ export const useStratagemGame = () => {
     setMistakesInGame(0);
     setErrorsThisStratagem(0);
     setIsDisrupted(false);
+    setIsInterfered(false);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   };
@@ -96,16 +100,31 @@ export const useStratagemGame = () => {
       return;
     }
 
-    // Illuminate Cognitive Disruptor Logic - Now starts from Round 2
-    const shouldDisrupt = nextLvl >= 2 && Math.random() < 0.3; 
+    // Challenge Logic
+    const roll = Math.random();
+    
+    // Illuminate Cognitive Disruptor (Scrambled sequences) - 25% chance from Round 2
+    const shouldDisrupt = nextLvl >= 2 && roll < 0.25;
     setIsDisrupted(shouldDisrupt);
+
+    // Atmospheric Interference (Obscured icons) - 20% chance from Round 3
+    const shouldInterfere = nextLvl >= 3 && roll > 0.8;
+    setIsInterfered(shouldInterfere);
 
     if (shouldDisrupt) {
       audioManager.playError(); 
-      nextRound = nextRound.map(strat => ({
-        ...strat,
-        sequence: shuffleArray([...strat.sequence]) as Direction[]
-      }));
+      nextRound = nextRound.map(strat => {
+        let scrambled = shuffleArray([...strat.sequence]) as Direction[];
+        // Ensure it's actually different if possible
+        if (strat.sequence.length > 1 && JSON.stringify(scrambled) === JSON.stringify(strat.sequence)) {
+          scrambled = [...scrambled].reverse() as Direction[];
+        }
+        return { ...strat, sequence: scrambled };
+      });
+    }
+
+    if (shouldInterfere) {
+      audioManager.playHit(); // Static sound feel
     }
 
     setLevel(nextLvl);
@@ -227,6 +246,7 @@ export const useStratagemGame = () => {
     inputIndex,
     lastInputCorrect,
     isDisrupted,
+    isInterfered,
     stats,
     startGame,
     handleInput

@@ -8,6 +8,7 @@ interface StratagemDisplayProps {
   currentIndex: number;
   isError: boolean;
   queue: Stratagem[];
+  isInterfered?: boolean;
 }
 
 const CustomArrow = ({ direction, completed }: { direction: Direction, completed: boolean }) => {
@@ -34,22 +35,28 @@ const CustomArrow = ({ direction, completed }: { direction: Direction, completed
   );
 };
 
-const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentIndex, isError, queue }) => {
+const StratagemDisplay: React.FC<StratagemDisplayProps> = ({ stratagem, currentIndex, isError, queue, isInterfered }) => {
   return (
     <div className="flex flex-col items-center w-full max-w-4xl">
       {/* Top Section: Icon and Queue */}
       <div className="flex items-end gap-4 mb-2">
         {/* Current Icon */}
-        <div className="w-24 h-24 border-4 border-yellow-400 p-1 bg-black/40 relative">
-          <StratagemIcon url={stratagem.iconUrl} category={stratagem.category} className="w-full h-full" />
+        <div className="w-24 h-24 border-4 border-yellow-400 p-1 bg-black/40 relative overflow-hidden">
+          <StratagemIcon url={stratagem.iconUrl} category={stratagem.category} className={cn("w-full h-full", isInterfered && "blur-md opacity-20")} />
+          {isInterfered && (
+            <div className="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uWUqnW9kA/giphy.gif')] opacity-40 mix-blend-screen pointer-events-none" />
+          )}
           <div className="absolute -top-1 -left-1 w-4 h-4 border-t-4 border-l-4 border-yellow-400" />
         </div>
 
         {/* Upcoming Queue */}
         <div className="flex gap-2 pb-1">
           {queue.slice(1, 6).map((nextStrat, idx) => (
-            <div key={idx} className="w-10 h-10 opacity-60 grayscale brightness-75">
-              <StratagemIcon url={nextStrat.iconUrl} category={nextStrat.category} className="w-full h-full" />
+            <div key={idx} className="w-10 h-10 opacity-60 grayscale brightness-75 relative overflow-hidden">
+              <StratagemIcon url={nextStrat.iconUrl} category={nextStrat.category} className={cn("w-full h-full", isInterfered && "blur-sm opacity-10")} />
+              {isInterfered && (
+                <div className="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uWUqnW9kA/giphy.gif')] opacity-20 mix-blend-screen" />
+              )}
             </div>
           ))}
         </div>
