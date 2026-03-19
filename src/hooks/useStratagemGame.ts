@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 
 const INITIAL_TIME = 15;
-const MAX_TIME = 15;
+const MAX_TIME = 20; // Cap the time so it doesn't become infinite
 const BREAK_DURATION = 2;
 
 export interface GameStats {
@@ -37,8 +37,9 @@ export const useStratagemGame = () => {
   const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const generateLevelQueue = useCallback((lvl: number) => {
-    const minCount = 3 + Math.floor(lvl / 2);
-    const maxCount = 5 + lvl;
+    // Randomize count, increasing with level
+    const minCount = Math.floor(3 + lvl * 0.8);
+    const maxCount = Math.floor(5 + lvl * 1.2);
     const count = Math.floor(Math.random() * (maxCount - minCount + 1)) + minCount;
     
     const queue: Stratagem[] = [];
@@ -48,6 +49,7 @@ export const useStratagemGame = () => {
         if (lvl < 6) return s.sequence.length <= 7;
         return true;
       });
+      // Allow duplicates by picking randomly from the pool each time
       queue.push(pool[Math.floor(Math.random() * pool.length)]);
     }
     return queue;
@@ -85,7 +87,7 @@ export const useStratagemGame = () => {
     setMissionQueue(nextQueue);
     setCurrentQueueIndex(0);
     setInputIndex(0);
-    // Reset time to initial for the new level, but it will drain faster
+    // Reset time to initial for the new level
     setTimeLeft(INITIAL_TIME);
     setGameState("playing");
   }, [level, generateLevelQueue]);
@@ -99,11 +101,12 @@ export const useStratagemGame = () => {
       setLastInputCorrect(true);
       const nextInputIdx = inputIndex + 1;
       
-      // NO TIME BONUS HERE - Time only goes down
-      
       if (nextInputIdx === currentStratagem.sequence.length) {
         const points = currentStratagem.sequence.length * 100;
         setScore(prev => prev + points);
+        
+        // Add 1.5 seconds for completing a stratagem, capped at MAX_TIME
+        setTimeLeft(prev => Math.min(MAX_TIME, prev + 1.5));
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
@@ -120,8 +123,8 @@ export const useStratagemGame = () => {
       setLastInputCorrect(false);
       setInputIndex(0);
       setMistakesInGame(prev => prev + 1);
-      // Penalty for mistakes still applies
-      setTimeLeft(prev => Math.max(0, prev - 1.0));
+      // Penalty for mistakes
+      setTimeLeft(prev => Math.max(0, prev - 1.5));
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
@@ -136,10 +139,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Drain rate increases significantly with level
-          // Level 1: 0.1 per tick
-          // Level 5: 0.5 per tick
-          const drainRate = 0.05 + (level * 0.05);
+          // Drain rate starts slower and increases with level
+          const drainRate = 0.03 + (level * 0.04);
           return prev - drainRate;
         });
       }, 100);
@@ -177,7 +178,7 @@ export const useStratagemGame = () => {
     score,
     level,
     timeLeft,
-    maxTime: INITIAL_TIME,
+    maxTime: MAX_TIME,
     breakTimeLeft,
     missionQueue,
     currentQueueIndex,
