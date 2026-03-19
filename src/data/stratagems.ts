@@ -7,7 +7,7 @@ export interface Stratagem {
   iconUrl: string;
 }
 
-const BASE_URL = "https://raw.githubusercontent.com/nvigneux/Helldivers-2-Stratagems-icons-svg/main/icons";
+const BASE_URL = "https://raw.githubusercontent.com/nvigneux/Helldivers-2-Stratagems-icons-svg/master/icons";
 
 export const STRATAGEMS: Stratagem[] = [
   // --- ORBITAL (Red) ---
