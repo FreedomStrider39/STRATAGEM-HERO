@@ -23,6 +23,7 @@ export const useStratagemGame = () => {
   const [breakTimeLeft, setBreakTimeLeft] = useState(0);
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
+  const [isDisrupted, setIsDisrupted] = useState(false);
   
   const [fullPool, setFullPool] = useState<Stratagem[]>([]);
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
@@ -53,7 +54,7 @@ export const useStratagemGame = () => {
 
   const startGame = () => {
     audioManager.playStart();
-    audioManager.startBgm(true); // Force restart music on new game
+    audioManager.startBgm(true);
     const shuffled = shuffleArray(STRATAGEMS);
     const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
@@ -66,6 +67,7 @@ export const useStratagemGame = () => {
     setInputIndex(0);
     setMistakesInGame(0);
     setErrorsThisStratagem(0);
+    setIsDisrupted(false);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   };
@@ -86,12 +88,24 @@ export const useStratagemGame = () => {
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
     const startIdx = (nextLvl - 1) * STRATAGEMS_PER_ROUND;
-    const nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
+    let nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
     
     if (nextRound.length === 0) {
       calculateFinalStats();
       setGameState("gameover");
       return;
+    }
+
+    // Illuminate Cognitive Disruptor Logic
+    const shouldDisrupt = nextLvl >= 4 && Math.random() < 0.3; // 30% chance after round 4
+    setIsDisrupted(shouldDisrupt);
+
+    if (shouldDisrupt) {
+      audioManager.playError(); // Play a warning sound
+      nextRound = nextRound.map(strat => ({
+        ...strat,
+        sequence: shuffleArray([...strat.sequence]) as Direction[]
+      }));
     }
 
     setLevel(nextLvl);
@@ -114,7 +128,6 @@ export const useStratagemGame = () => {
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === currentStratagem.sequence.length) {
-        // Sequence complete
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
@@ -140,12 +153,10 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
-        // Individual correct key press
         audioManager.playHit();
         setInputIndex(nextInputIdx);
       }
     } else {
-      // Mistake
       audioManager.playError();
       setLastInputCorrect(false);
       setInputIndex(0);
@@ -158,7 +169,7 @@ export const useStratagemGame = () => {
 
   useEffect(() => {
     if (gameState === "playing") {
-      audioManager.startBgm(); // Only plays if not already playing
+      audioManager.startBgm();
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
@@ -215,6 +226,7 @@ export const useStratagemGame = () => {
     currentQueueIndex,
     inputIndex,
     lastInputCorrect,
+    isDisrupted,
     stats,
     startGame,
     handleInput

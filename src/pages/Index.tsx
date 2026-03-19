@@ -5,6 +5,7 @@ import GameControls from "@/components/GameControls";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AlertTriangle } from "lucide-react";
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -19,6 +20,7 @@ const Index = () => {
     currentQueueIndex,
     inputIndex,
     lastInputCorrect,
+    isDisrupted,
     stats,
     startGame,
     handleInput
@@ -38,10 +40,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
-      {/* Main Game Container with CRT Effect */}
       <div className="w-full h-screen max-w-[1400px] bg-[#121616] relative flex flex-col items-center justify-center px-4 md:px-12 crt-screen border-x-8 border-[#1a1f1f]">
         
-        {/* Top and Bottom Glowing Lines (Cyan) */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
 
@@ -81,7 +81,6 @@ const Index = () => {
               exit={{ opacity: 0 }}
               className="w-full h-full flex flex-col md:grid md:grid-cols-[250px_1fr_250px] items-center gap-4 z-10 py-12"
             >
-              {/* Left Panel: Round (Desktop) */}
               <div className="hidden md:flex flex-col items-center justify-center border-r-2 border-white/10 h-full">
                 <span className="text-[#4ade80] text-2xl font-bold tracking-[0.2em] mb-2">ROUND</span>
                 <span className="text-yellow-400 text-8xl font-black leading-none text-glow-yellow">
@@ -89,9 +88,24 @@ const Index = () => {
                 </span>
               </div>
 
-              {/* Center: Game Area */}
-              <div className="flex flex-col items-center justify-between h-full w-full max-w-[700px] mx-auto">
-                {/* Mobile Stats Header */}
+              <div className="flex flex-col items-center justify-between h-full w-full max-w-[700px] mx-auto relative">
+                {/* Disruption Warning */}
+                <AnimatePresence>
+                  {isDisrupted && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute top-0 left-0 right-0 flex items-center justify-center gap-2 bg-purple-600/20 border border-purple-500/50 py-2 px-4 z-50 backdrop-blur-sm"
+                    >
+                      <AlertTriangle className="w-5 h-5 text-purple-400 animate-pulse" />
+                      <span className="text-purple-400 text-xs md:text-sm font-bold tracking-[0.2em] animate-pulse">
+                        COGNITIVE DISRUPTOR DETECTED: SEQUENCES SCRAMBLED
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <div className="flex md:hidden w-full justify-between items-end px-4 mb-4">
                   <div className="flex flex-col items-start">
                     <span className="text-[#4ade80] text-xs font-bold tracking-widest">ROUND</span>
@@ -103,7 +117,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-col items-center justify-center w-full">
+                <div className={`flex-1 flex flex-col items-center justify-center w-full ${isDisrupted ? 'animate-flicker' : ''}`}>
                   {missionQueue[currentQueueIndex] && (
                     <StratagemDisplay 
                       stratagem={missionQueue[currentQueueIndex]} 
@@ -114,11 +128,10 @@ const Index = () => {
                   )}
                 </div>
 
-                {/* Timer Bar */}
                 <div className="w-full px-4 mt-8">
                   <div className="relative h-6 md:h-8 bg-black/60 border-2 border-white/20 overflow-hidden">
                     <motion.div 
-                      className="absolute inset-y-0 left-0 bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.8)]"
+                      className={`absolute inset-y-0 left-0 shadow-[0_0_20px_rgba(250,204,21,0.8)] ${isDisrupted ? 'bg-purple-500' : 'bg-yellow-400'}`}
                       style={{ width: `${(timeLeft / maxTime) * 100}%` }}
                       transition={{ duration: 0.1 }}
                     />
@@ -128,7 +141,6 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Mobile Controls */}
                 {isMobile && (
                   <div className="mt-8 scale-90">
                     <GameControls onInput={handleInput} />
@@ -136,7 +148,6 @@ const Index = () => {
                 )}
               </div>
 
-              {/* Right Panel: Score (Desktop) */}
               <div className="hidden md:flex flex-col items-center justify-center border-l-2 border-white/10 h-full">
                 <span className="text-yellow-400 text-8xl font-black leading-none text-glow-yellow">
                   {score}
@@ -222,7 +233,6 @@ const Index = () => {
           )}
         </AnimatePresence>
 
-        {/* Footer */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center z-30 opacity-50">
           <MadeWithDyad />
         </div>
