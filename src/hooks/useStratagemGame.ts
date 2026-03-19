@@ -3,10 +3,10 @@ import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 import { audioManager } from "@/utils/audio";
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
-const INITIAL_TIME = 20; // Reduced from 30
-const MAX_TIME = 20;     // Reduced from 30
+const INITIAL_TIME = 30;
+const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const BASE_TIME_REWARD = 0.8; // Reduced from 1.0
+const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
 const DISRUPTOR_REFRESH_MS = 2500;
 
@@ -114,6 +114,7 @@ export const useStratagemGame = () => {
     }
 
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
+    // Increased frequency: starts at level 3, minimum 2 rounds gap, 40% chance
     const canDisrupt = nextLvl >= 3 && roundsSinceLast >= 2;
     const shouldDisrupt = canDisrupt && Math.random() < 0.4;
 
@@ -121,8 +122,7 @@ export const useStratagemGame = () => {
       audioManager.playError();
       setIsDisrupted(true);
       lastDisruptedRoundRef.current = nextLvl;
-      // Randomly last between 1 to 5 sequences
-      const limit = Math.floor(Math.random() * 5) + 1;
+      const limit = Math.floor(Math.random() * 3) + 2;
       setDisruptedLimit(limit);
       setDisruptedCount(0);
       const firstFake = generateRandomSequence(nextRound[0].sequence.length);
@@ -248,8 +248,7 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Increased drain rate for higher difficulty
-          const drainRate = 0.25 + (level * 0.03);
+          const drainRate = 0.18 + (level * 0.02);
           return prev - drainRate;
         });
       }, 100);
