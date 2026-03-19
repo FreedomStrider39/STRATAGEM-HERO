@@ -71,6 +71,7 @@ import missionResupply from "@/assets/icons/mission/resupply.png";
 import missionSoloSilo from "@/assets/icons/mission/solo_silo.png";
 import missionFlag from "@/assets/icons/mission/one_true_flag.png";
 import missionReinforce from "@/assets/icons/mission/reinforce.png";
+import missionSuperDestroyer from "@/assets/icons/mission/super_destroyer.png";
 
 export type Direction = "U" | "D" | "L" | "R";
 
@@ -157,6 +158,7 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: "https://raw.githubusercontent.com/DmitrySandalov/helldivers-2-stratagems/main/icons/hellbomb.png" },
   { name: "MS-11 Solo Silo", sequence: ["D", "U", "R", "D", "D"], category: "Mission", iconUrl: missionSoloSilo },
   { name: "CQC-1 One True Flag", sequence: ["D", "L", "R", "D", "U"], category: "Mission", iconUrl: missionFlag },
+  { name: "Call In Super Destroyer", sequence: ["U", "U", "D", "D", "L", "R", "L", "R"], category: "Mission", iconUrl: missionSuperDestroyer },
 ];
 
 export const RANKS = [
