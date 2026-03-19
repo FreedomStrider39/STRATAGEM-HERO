@@ -1,3 +1,15 @@
+import orbitalGatling from "@/assets/icons/orbital/gatling.png";
+import orbitalWalking from "@/assets/icons/orbital/walking.png";
+import orbital120mm from "@/assets/icons/orbital/120mm.png";
+import orbital380mm from "@/assets/icons/orbital/380mm.png";
+import orbitalGas from "@/assets/icons/orbital/gas.png";
+import orbitalEms from "@/assets/icons/orbital/ems.png";
+import orbitalSmoke from "@/assets/icons/orbital/smoke.png";
+import orbitalAirburst from "@/assets/icons/orbital/airburst.png";
+import orbitalPrecision from "@/assets/icons/orbital/precision.png";
+import orbitalRailcannon from "@/assets/icons/orbital/railcannon.png";
+import orbitalLaser from "@/assets/icons/orbital/laser.png";
+
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -11,14 +23,17 @@ const ICON_BASE = "https://raw.githubusercontent.com/DmitrySandalov/helldivers-2
 
 export const STRATAGEMS: Stratagem[] = [
   // --- ORBITAL (Red) ---
-  { name: "Orbital Precision Strike", sequence: ["R", "R", "U"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-precision-strike.png` },
-  { name: "Orbital Gatling Barrage", sequence: ["R", "D", "L", "U", "U"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-gatling-barrage.png` },
-  { name: "Orbital Airburst Strike", sequence: ["R", "R", "R"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-airburst-strike.png` },
-  { name: "Orbital 120mm HE Barrage", sequence: ["R", "R", "D", "L", "R", "D"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-120mm-he-barrage.png` },
-  { name: "Orbital 380mm HE Barrage", sequence: ["R", "D", "U", "U", "L", "D", "D"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-380mm-he-barrage.png` },
-  { name: "Orbital Walking Barrage", sequence: ["R", "D", "R", "D", "R", "D"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-walking-barrage.png` },
-  { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-laser.png` },
-  { name: "Orbital Railcannon Strike", sequence: ["R", "U", "D", "D", "R"], category: "Orbital", iconUrl: `${ICON_BASE}/orbital-railcannon-strike.png` },
+  { name: "Orbital Gatling Barrage", sequence: ["R", "D", "L", "U", "U"], category: "Orbital", iconUrl: orbitalGatling },
+  { name: "Orbital Walking Barrage", sequence: ["R", "D", "R", "D", "R", "D"], category: "Orbital", iconUrl: orbitalWalking },
+  { name: "Orbital 120mm HE Barrage", sequence: ["R", "R", "D", "L", "R", "D"], category: "Orbital", iconUrl: orbital120mm },
+  { name: "Orbital 380mm HE Barrage", sequence: ["R", "D", "U", "U", "L", "D", "D"], category: "Orbital", iconUrl: orbital380mm },
+  { name: "Orbital Gas Strike", sequence: ["R", "R", "D", "R"], category: "Orbital", iconUrl: orbitalGas },
+  { name: "Orbital EMS Strike", sequence: ["R", "R", "L", "D"], category: "Orbital", iconUrl: orbitalEms },
+  { name: "Orbital Smoke Strike", sequence: ["R", "R", "D", "U"], category: "Orbital", iconUrl: orbitalSmoke },
+  { name: "Orbital Airburst Strike", sequence: ["R", "R", "R"], category: "Orbital", iconUrl: orbitalAirburst },
+  { name: "Orbital Precision Strike", sequence: ["R", "R", "U"], category: "Orbital", iconUrl: orbitalPrecision },
+  { name: "Orbital Railcannon Strike", sequence: ["R", "U", "D", "D", "R"], category: "Orbital", iconUrl: orbitalRailcannon },
+  { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconUrl: orbitalLaser },
 
   // --- EAGLE (Red/Orange) ---
   { name: "Eagle Strafing Run", sequence: ["U", "R", "R"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-strafing-run.png` },
