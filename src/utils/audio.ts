@@ -1,33 +1,107 @@
 "use client";
 
-const SOUND_URLS = {
-  press: "https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3",
-  success: "https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3",
-  error: "https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3",
-  gameOver: "https://assets.mixkit.co/active_storage/sfx/2535/2535-preview.mp3",
-  start: "https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3",
-};
+import coin1 from "@/assets/audio/coin1.wav";
+import coin2 from "@/assets/audio/coin2.wav";
+import correct1 from "@/assets/audio/correct1.wav";
+import correct2 from "@/assets/audio/correct2.wav";
+import correct3 from "@/assets/audio/correct3.wav";
+import correct4 from "@/assets/audio/correct4.wav";
+import error1 from "@/assets/audio/error1.wav";
+import error2 from "@/assets/audio/error2.wav";
+import error3 from "@/assets/audio/error3.wav";
+import error4 from "@/assets/audio/error4.wav";
+import hit1 from "@/assets/audio/hit1.wav";
+import hit2 from "@/assets/audio/hit2.wav";
+import hit3 from "@/assets/audio/hit3.wav";
+import hit4 from "@/assets/audio/hit4.wav";
+import success1 from "@/assets/audio/success1.wav";
+import success2 from "@/assets/audio/success2.wav";
+import success3 from "@/assets/audio/success3.wav";
+import failure from "@/assets/audio/failure.wav";
+import startSfx from "@/assets/audio/start.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
+  private correctIndex = 0;
+  private errorIndex = 0;
+  private hitIndex = 0;
+  private successIndex = 0;
 
   constructor() {
     if (typeof window !== "undefined") {
-      Object.entries(SOUND_URLS).forEach(([key, url]) => {
-        this.sounds[key] = new Audio(url);
-        this.sounds[key].preload = "auto";
-      });
+      this.loadSound("coin1", coin1);
+      this.loadSound("coin2", coin2);
+      this.loadSound("correct1", correct1);
+      this.loadSound("correct2", correct2);
+      this.loadSound("correct3", correct3);
+      this.loadSound("correct4", correct4);
+      this.loadSound("error1", error1);
+      this.loadSound("error2", error2);
+      this.loadSound("error3", error3);
+      this.loadSound("error4", error4);
+      this.loadSound("hit1", hit1);
+      this.loadSound("hit2", hit2);
+      this.loadSound("hit3", hit3);
+      this.loadSound("hit4", hit4);
+      this.loadSound("success1", success1);
+      this.loadSound("success2", success2);
+      this.loadSound("success3", success3);
+      this.loadSound("failure", failure);
+      this.loadSound("start", startSfx);
     }
   }
 
-  play(soundName: keyof typeof SOUND_URLS) {
-    const sound = this.sounds[soundName];
+  private loadSound(name: string, url: string) {
+    const audio = new Audio(url);
+    audio.preload = "auto";
+    this.sounds[name] = audio;
+  }
+
+  private playSound(name: string) {
+    const sound = this.sounds[name];
     if (sound) {
       sound.currentTime = 0;
-      sound.play().catch(() => {
-        // Ignore errors from browsers blocking auto-play
-      });
+      sound.play().catch(() => {});
     }
+  }
+
+  playStart() {
+    const coin = Math.random() > 0.5 ? "coin1" : "coin2";
+    this.playSound(coin);
+    setTimeout(() => this.playSound("start"), 200);
+  }
+
+  playCorrect() {
+    const names = ["correct1", "correct2", "correct3", "correct4"];
+    this.playSound(names[this.correctIndex]);
+    this.correctIndex = (this.correctIndex + 1) % names.length;
+  }
+
+  playError() {
+    const names = ["error1", "error2", "error3", "error4"];
+    this.playSound(names[this.errorIndex]);
+    this.errorIndex = (this.errorIndex + 1) % names.length;
+  }
+
+  playHit() {
+    const names = ["hit1", "hit2", "hit3", "hit4"];
+    this.playSound(names[this.hitIndex]);
+    this.hitIndex = (this.hitIndex + 1) % names.length;
+  }
+
+  playSuccess() {
+    const names = ["success1", "success2", "success3"];
+    this.playSound(names[this.successIndex]);
+    this.successIndex = (this.successIndex + 1) % names.length;
+  }
+
+  playFailure() {
+    this.playSound("failure");
+  }
+
+  // Generic key press sound if needed, otherwise we use the specific ones
+  playKeyPress() {
+    // Using a very short subtle sound or nothing if not specified
   }
 }
 

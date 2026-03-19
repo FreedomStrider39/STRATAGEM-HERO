@@ -53,7 +53,7 @@ export const useStratagemGame = () => {
   }, []);
 
   const startGame = () => {
-    audioManager.play("start");
+    audioManager.playStart();
     const { queue, count } = generateLevelQueue(1, 0);
     setScore(0);
     setLevel(1);
@@ -97,18 +97,21 @@ export const useStratagemGame = () => {
     const currentStratagem = missionQueue[currentQueueIndex];
 
     if (currentStratagem.sequence[inputIndex] === direction) {
-      audioManager.play("press");
+      // Correct key press
       setLastInputCorrect(true);
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === currentStratagem.sequence.length) {
-        audioManager.play("success");
+        // Completed Stratagem
+        audioManager.playCorrect();
         const points = currentStratagem.sequence.length * 100;
         setScore(prev => prev + points);
         setTimeLeft(prev => Math.min(prev + TIME_REWARD, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
         if (nextQueueIdx >= missionQueue.length) {
+          // End of Level
+          audioManager.playSuccess();
           setGameState("break");
           setBreakTimeLeft(BREAK_DURATION);
         } else {
@@ -119,7 +122,8 @@ export const useStratagemGame = () => {
         setInputIndex(nextInputIdx);
       }
     } else {
-      audioManager.play("error");
+      // Mistake while typing
+      audioManager.playHit();
       setLastInputCorrect(false);
       setInputIndex(0);
       setMistakesInGame(prev => prev + 1);
@@ -133,7 +137,7 @@ export const useStratagemGame = () => {
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
-            audioManager.play("gameOver");
+            audioManager.playFailure();
             calculateFinalStats();
             setGameState("gameover");
             return 0;
