@@ -139,8 +139,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Adjusted drain rate to 2.2 seconds of game time per 1 second of real time
-          const drainRate = 0.22;
+          // Dynamic drain rate: starts at 0.20 and increases by 0.02 every level
+          const drainRate = 0.18 + (level * 0.02);
           return prev - drainRate;
         });
       }, 100);
