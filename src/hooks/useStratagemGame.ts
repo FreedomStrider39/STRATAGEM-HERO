@@ -123,8 +123,7 @@ export const useStratagemGame = () => {
       setLastInputCorrect(false);
       setInputIndex(0);
       setMistakesInGame(prev => prev + 1);
-      // Penalty for mistakes
-      setTimeLeft(prev => Math.max(0, prev - 1.5));
+      // Penalty for mistakes removed as requested
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
