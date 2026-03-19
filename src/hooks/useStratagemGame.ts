@@ -7,7 +7,7 @@ const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
-const DISRUPTOR_REFRESH_MS = 4000;
+const DISRUPTOR_REFRESH_MS = 1500; // Reduced from 4000ms to 1500ms
 
 export interface GameStats {
   roundBonus: number;
