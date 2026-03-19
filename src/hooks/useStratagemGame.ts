@@ -7,7 +7,7 @@ const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
-const DISRUPTOR_REFRESH_MS = 3000; // Updated to 3 seconds
+const DISRUPTOR_REFRESH_MS = 3000;
 
 export interface GameStats {
   roundBonus: number;
@@ -35,7 +35,6 @@ export const useStratagemGame = () => {
   
   const [mistakesInGame, setMistakesInGame] = useState(0);
   const [errorsThisStratagem, setErrorsThisStratagem] = useState(0);
-  stratagemStartTimeRef.current = Date.now();
 
   const [stats, setStats] = useState<GameStats>({
     roundBonus: 0,
