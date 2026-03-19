@@ -53,13 +53,13 @@ const Index = () => {
               className="flex flex-col items-center text-center z-10 cursor-pointer px-6"
               onClick={startGame}
             >
-              <h1 className="text-6xl font-black tracking-tighter text-white mb-4 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+              <h1 className="text-5xl font-bold tracking-tighter text-white mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
                 STRATAGEM HERO
               </h1>
               <motion.p 
                 animate={{ opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="text-yellow-400 text-xl font-bold tracking-tight drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"
+                className="text-yellow-400 text-xl font-bold tracking-widest drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"
               >
                 TAP TO START
               </motion.p>
@@ -74,11 +74,11 @@ const Index = () => {
               exit={{ opacity: 0 }}
               className="flex flex-col items-center text-center z-30 bg-black/80 p-8 border-y-4 border-yellow-400 w-full"
             >
-              <h2 className="text-4xl font-black text-yellow-400 mb-2 italic tracking-tighter">
+              <h2 className="text-4xl font-bold text-yellow-400 mb-2 italic tracking-tighter">
                 LEVEL COMPLETE
               </h2>
               <p className="text-lg font-bold text-white mb-1">PREPARING ROUND {level + 1}</p>
-              <div className="text-3xl font-black text-white animate-pulse">
+              <div className="text-3xl font-bold text-white animate-pulse">
                 {Math.ceil(breakTimeLeft)}s
               </div>
             </motion.div>
@@ -92,17 +92,17 @@ const Index = () => {
               exit={{ opacity: 0 }}
               className="flex flex-col items-center w-full z-10 px-6"
             >
-              <div className="w-full flex justify-between items-center mb-6">
+              <div className="w-full flex justify-between items-center mb-8">
                 <div className="flex flex-col items-start">
-                  <span className="text-white font-bold text-sm">Round</span>
-                  <span className="text-yellow-400 text-3xl font-black leading-none">{level}</span>
+                  <span className="text-white font-bold text-xs opacity-70">Round</span>
+                  <span className="text-yellow-400 text-4xl font-bold leading-none">{level}</span>
                 </div>
                 <MissionQueue queue={missionQueue} currentIndex={currentQueueIndex} />
                 <div className="flex flex-col items-end">
-                  <span className="text-yellow-400 text-3xl font-black leading-none">
+                  <span className="text-yellow-400 text-4xl font-bold leading-none">
                     {score}
                   </span>
-                  <span className="text-white font-bold text-sm tracking-widest">SCORE</span>
+                  <span className="text-white font-bold text-xs tracking-widest opacity-70">SCORE</span>
                 </div>
               </div>
 
@@ -114,17 +114,17 @@ const Index = () => {
                 />
               )}
 
-              <div className="w-full mt-8">
-                <div className="relative h-4 bg-gray-700/50 border border-gray-600 overflow-hidden">
+              <div className="w-full mt-10">
+                <div className="relative h-5 bg-gray-900 border border-gray-700 overflow-hidden">
                   <motion.div 
-                    className="absolute inset-y-0 left-0 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                    className="absolute inset-y-0 left-0 bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.8)]"
                     style={{ width: `${(timeLeft / maxTime) * 100}%` }}
                     transition={{ duration: 0.1 }}
                   />
                 </div>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-10">
                 <GameControls onInput={handleInput} />
               </div>
             </motion.div>
@@ -152,30 +152,30 @@ const Index = () => {
                     <p className="text-[#00ff00] text-sm font-bold tracking-wider">ROUND BONUS</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#ccff00] text-2xl font-black drop-shadow-[0_0_8px_rgba(204,255,0,0.8)]">{stats.roundBonus}</p>
+                    <p className="text-[#ccff00] text-2xl font-bold drop-shadow-[0_0_8px_rgba(204,255,0,0.8)]">{stats.roundBonus}</p>
                   </div>
 
                   <div className="text-left">
                     <p className="text-[#00ff00] text-sm font-bold tracking-wider">TIME BONUS</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#ccff00] text-2xl font-black drop-shadow-[0_0_8px_rgba(204,255,0,0.8)]">{stats.timeBonus}</p>
+                    <p className="text-[#ccff00] text-2xl font-bold drop-shadow-[0_0_8px_rgba(204,255,0,0.8)]">{stats.timeBonus}</p>
                   </div>
 
                   <div className="text-left">
                     <p className="text-[#00ff00] text-sm font-bold tracking-wider">PERFECT BONUS</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#ccff00] text-2xl font-black drop-shadow-[0_0_8px_rgba(204,255,0,0.8)]">{stats.perfectBonus}</p>
+                    <p className="text-[#ccff00] text-2xl font-bold drop-shadow-[0_0_8px_rgba(204,255,0,0.8)]">{stats.perfectBonus}</p>
                   </div>
 
                   <div className="col-span-2 h-[1px] bg-white/20 my-2" />
 
                   <div className="text-left">
-                    <p className="text-[#00ff00] text-xl font-black tracking-widest">TOTAL SCORE</p>
+                    <p className="text-[#00ff00] text-xl font-bold tracking-widest">TOTAL SCORE</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[#ccff00] text-4xl font-black drop-shadow-[0_0_12px_rgba(204,255,0,1)]">{stats.totalScore}</p>
+                    <p className="text-[#ccff00] text-4xl font-bold drop-shadow-[0_0_12px_rgba(204,255,0,1)]">{stats.totalScore}</p>
                   </div>
                 </div>
 
