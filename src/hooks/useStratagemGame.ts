@@ -7,7 +7,7 @@ const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
 const STRATAGEMS_PER_ROUND = 8;
-const DISRUPTOR_REFRESH_MS = 2500; // Updated to 2.5 seconds
+const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
   roundBonus: number;
@@ -81,7 +81,7 @@ export const useStratagemGame = () => {
     setDisruptedCount(0);
     setDisruptedLimit(0);
     setShowDisruptorDestroyed(false);
-    lastDisruptedRoundRef.current = 0;
+    lastDisruptedRoundRef.current = -5; // Ensure it doesn't happen too early
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   };
@@ -110,9 +110,11 @@ export const useStratagemGame = () => {
       return;
     }
 
-    // Logic for disruption frequency: at least 3 rounds gap and 25% chance
+    // Logic for disruption frequency: 
+    // 1. Must be at least Round 5
+    // 2. Must have at least 4 rounds gap since the last disruption ended
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
-    const canDisrupt = nextLvl >= 4 && roundsSinceLast >= 3;
+    const canDisrupt = nextLvl >= 5 && roundsSinceLast >= 4;
     const shouldDisrupt = canDisrupt && Math.random() < 0.25;
 
     if (shouldDisrupt) {
