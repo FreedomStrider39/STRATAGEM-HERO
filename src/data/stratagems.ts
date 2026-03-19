@@ -10,6 +10,16 @@ import orbitalPrecision from "@/assets/icons/orbital/precision.png";
 import orbitalRailcannon from "@/assets/icons/orbital/railcannon.png";
 import orbitalLaser from "@/assets/icons/orbital/laser.png";
 
+// Eagle Icons
+import eagleRearm from "@/assets/icons/eagle/rearm.png";
+import eagleStrafing from "@/assets/icons/eagle/strafing.png";
+import eagleAirstrike from "@/assets/icons/eagle/airstrike.png";
+import eagleCluster from "@/assets/icons/eagle/cluster.png";
+import eagleNapalm from "@/assets/icons/eagle/napalm.png";
+import eagleSmoke from "@/assets/icons/eagle/smoke.png";
+import eagleRocketPods from "@/assets/icons/eagle/rocket_pods.png";
+import eagle500kg from "@/assets/icons/eagle/500kg.png";
+
 export type Direction = "U" | "D" | "L" | "R";
 
 export interface Stratagem {
@@ -36,13 +46,14 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconUrl: orbitalLaser },
 
   // --- EAGLE (Red/Orange) ---
-  { name: "Eagle Strafing Run", sequence: ["U", "R", "R"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-strafing-run.png` },
-  { name: "Eagle Airstrike", sequence: ["U", "R", "D", "R"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-airstrike.png` },
-  { name: "Eagle Cluster Bomb", sequence: ["U", "R", "D", "D", "R"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-cluster-bomb.png` },
-  { name: "Eagle Napalm Airstrike", sequence: ["U", "R", "D", "U"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-napalm-airstrike.png` },
-  { name: "Eagle Smoke Strike", sequence: ["U", "R", "U", "D"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-smoke-strike.png` },
-  { name: "Eagle 110mm Rocket Pods", sequence: ["U", "R", "U", "L"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-110mm-rocket-pods.png` },
-  { name: "Eagle 500kg Bomb", sequence: ["U", "R", "D", "D", "D"], category: "Eagle", iconUrl: `${ICON_BASE}/eagle-500kg-bomb.png` },
+  { name: "Eagle Rearm", sequence: ["U", "U", "L", "U", "R"], category: "Eagle", iconUrl: eagleRearm },
+  { name: "Eagle Strafing Run", sequence: ["U", "R", "R"], category: "Eagle", iconUrl: eagleStrafing },
+  { name: "Eagle Airstrike", sequence: ["U", "R", "D", "R"], category: "Eagle", iconUrl: eagleAirstrike },
+  { name: "Eagle Cluster Bomb", sequence: ["U", "R", "D", "D", "R"], category: "Eagle", iconUrl: eagleCluster },
+  { name: "Eagle Napalm Airstrike", sequence: ["U", "R", "D", "U"], category: "Eagle", iconUrl: eagleNapalm },
+  { name: "Eagle Smoke Strike", sequence: ["U", "R", "U", "D"], category: "Eagle", iconUrl: eagleSmoke },
+  { name: "Eagle 110mm Rocket Pods", sequence: ["U", "R", "U", "L"], category: "Eagle", iconUrl: eagleRocketPods },
+  { name: "Eagle 500kg Bomb", sequence: ["U", "R", "D", "D", "D"], category: "Eagle", iconUrl: eagle500kg },
 
   // --- SUPPORT (Blue) ---
   { name: "Machine Gun", sequence: ["D", "L", "D", "U", "R"], category: "Support", iconUrl: `${ICON_BASE}/machine-gun.png` },
