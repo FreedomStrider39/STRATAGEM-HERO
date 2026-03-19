@@ -84,6 +84,11 @@ body {
   cursor: crosshair;
   font-family: 'Orbitron', sans-serif;
   overflow: hidden;
+  /* Mobile optimizations */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 h1, h2, h3, span, p {
