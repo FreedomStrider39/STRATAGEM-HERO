@@ -20,7 +20,6 @@ import success3 from "@/assets/audio/success3.wav";
 import failure from "@/assets/audio/failure.wav";
 import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
-import playingBgm from "@/assets/audio/playing.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
@@ -52,14 +51,11 @@ class AudioManager {
       this.loadSound("failure", failure);
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
-      
-      this.bgm = new Audio(playingBgm);
-      this.bgm.loop = true;
-      this.bgm.volume = 0.3;
     }
   }
 
   private loadSound(name: string, url: string) {
+    if (!url) return;
     const audio = new Audio(url);
     audio.preload = "auto";
     this.sounds[name] = audio;
