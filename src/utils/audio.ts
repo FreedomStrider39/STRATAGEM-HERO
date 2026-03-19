@@ -18,6 +18,7 @@ import success1 from "@/assets/audio/success1.wav";
 import success2 from "@/assets/audio/success2.wav";
 import success3 from "@/assets/audio/success3.wav";
 import failure from "@/assets/audio/failure.wav";
+import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
 import playingBgm from "@/assets/audio/playing.wav";
 
@@ -48,6 +49,7 @@ class AudioManager {
       this.loadSound("success2", success2);
       this.loadSound("success3", success3);
       this.loadSound("failure", failure);
+      this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
       this.loadSound("playing", playingBgm);
     }
@@ -98,7 +100,7 @@ class AudioManager {
   }
 
   playFailure() {
-    this.playSound("failure");
+    this.playSound("failurefull");
   }
 
   startBgm() {
