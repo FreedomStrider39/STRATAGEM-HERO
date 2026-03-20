@@ -4,8 +4,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig(() => ({
-  // Using relative paths ensures the app works regardless of the subfolder it's hosted in
-  base: "./",
+  // Setting the base path to match your GitHub repository name
+  base: "/STRATAGEM-HERO/",
   server: {
     host: "::",
     port: 8080,
