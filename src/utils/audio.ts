@@ -20,7 +20,7 @@ import success3 from "@/assets/audio/success3.wav";
 import failure from "@/assets/audio/failure.wav";
 import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
-// Importing the playing.wav file as requested
+import readySfx from "@/assets/audio/ready.wav";
 import playingBgm from "@/assets/audio/playing.wav";
 
 class AudioManager {
@@ -53,6 +53,7 @@ class AudioManager {
       this.loadSound("failure", failure);
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
+      this.loadSound("ready", readySfx);
 
       // Initialize BGM with the local playing.wav file
       this.bgm = new Audio(playingBgm);
@@ -93,6 +94,10 @@ class AudioManager {
     const coin = Math.random() > 0.5 ? "coin1" : "coin2";
     this.playSound(coin);
     setTimeout(() => this.playSound("start"), 200);
+  }
+
+  playReady() {
+    this.playSound("ready");
   }
 
   playCorrect() {
