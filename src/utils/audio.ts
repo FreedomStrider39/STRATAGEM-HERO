@@ -20,6 +20,8 @@ import success3 from "@/assets/audio/success3.wav";
 import failure from "@/assets/audio/failure.wav";
 import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
+// Importing the playing.wav file as requested
+import playingBgm from "@/assets/audio/playing.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
@@ -52,8 +54,8 @@ class AudioManager {
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
 
-      // Initialize BGM with a themed track
-      this.bgm = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73053.mp3");
+      // Initialize BGM with the local playing.wav file
+      this.bgm = new Audio(playingBgm);
       this.bgm.loop = true;
       this.bgm.volume = 0.4;
     }
