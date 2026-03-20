@@ -74,7 +74,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   activeSequence 
 }) => {
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl">
+    <div className="flex flex-col items-center w-full max-w-5xl">
       {/* Top Section: Icon and Queue */}
       <div className="flex items-end gap-2 md:gap-4 mb-2">
         <div className={cn(

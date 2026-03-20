@@ -42,7 +42,7 @@ const Index = () => {
 
   return (
     <div className="min-h-[100dvh] bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
-      <div className="w-full h-[100dvh] max-w-[1400px] bg-[#121616] relative flex flex-col items-center justify-center px-4 md:px-12 crt-screen border-x-0 md:border-x-8 border-[#1a1f1f]">
+      <div className="w-full h-[100dvh] max-w-[1600px] bg-[#121616] relative flex flex-col items-center justify-center px-4 md:px-12 crt-screen border-x-0 md:border-x-8 border-[#1a1f1f]">
         
         <div className="absolute top-0 left-0 right-0 h-1 bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
@@ -90,7 +90,7 @@ const Index = () => {
                 </span>
               </div>
 
-              <div className="flex flex-col items-center justify-between h-full w-full max-w-[700px] mx-auto relative">
+              <div className="flex flex-col items-center justify-between h-full w-full max-w-[1000px] mx-auto relative">
                 {/* Challenge Warnings */}
                 <div className="absolute top-0 left-0 right-0 flex flex-col gap-1 z-50">
                   <AnimatePresence>
