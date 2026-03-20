@@ -94,15 +94,8 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full flex flex-col md:grid md:grid-cols-[250px_1fr_250px] items-center gap-2 md:gap-8 z-10 py-4 md:py-12"
+              className="w-full h-full flex flex-col items-center justify-center z-10 py-4 md:py-12"
             >
-              <div className="hidden md:flex flex-col items-center justify-center border-r-2 border-white/10 h-full">
-                <span className="text-[#4ade80] text-2xl font-bold tracking-[0.2em] mb-4">ROUND</span>
-                <span className="text-yellow-400 text-8xl font-black leading-none text-glow-yellow">
-                  {level}
-                </span>
-              </div>
-
               <div className="flex flex-col items-center justify-between h-full w-full max-w-[1100px] mx-auto relative">
                 {/* Challenge Warnings */}
                 <div className="absolute top-0 left-0 right-0 flex flex-col gap-2 z-50">
@@ -136,17 +129,6 @@ const Index = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className="flex md:hidden w-full justify-between items-end px-4 pt-8 mb-2">
-                  <div className="flex flex-col items-start">
-                    <span className="text-[#4ade80] text-[10px] font-bold tracking-widest">ROUND</span>
-                    <span className="text-yellow-400 text-3xl font-black leading-none">{level}</span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-yellow-400 text-3xl font-black leading-none">{score}</span>
-                    <span className="text-[#4ade80] text-[10px] font-bold tracking-widest">SCORE</span>
-                  </div>
-                </div>
-
                 <div className={`flex-1 flex flex-col items-center justify-center w-full ${isDisrupted ? 'animate-flicker' : ''}`}>
                   {missionQueue[currentQueueIndex] && (
                     <StratagemDisplay 
@@ -156,20 +138,19 @@ const Index = () => {
                       queue={missionQueue.slice(currentQueueIndex)}
                       isDisrupted={isDisrupted}
                       activeSequence={activeSequence}
+                      round={level}
+                      score={score}
                     />
                   )}
                 </div>
 
-                <div className="w-full px-4 mt-4 md:mt-6">
-                  <div className="relative h-4 md:h-8 bg-black/60 border-2 md:border-[4px] border-white/20 overflow-hidden">
+                <div className="w-full px-4 mt-4 md:mt-6 max-w-3xl">
+                  <div className="relative h-3 md:h-6 bg-black/60 border-2 md:border-[3px] border-white/20 overflow-hidden">
                     <motion.div 
-                      className={`absolute inset-y-0 left-0 shadow-[0_0_25px_rgba(250,204,21,0.8)] ${isDisrupted ? 'bg-purple-500' : 'bg-yellow-400'}`}
+                      className={`absolute inset-y-0 left-0 shadow-[0_0_15px_rgba(250,204,21,0.8)] ${isDisrupted ? 'bg-purple-500' : 'bg-yellow-400'}`}
                       style={{ width: `${(timeLeft / maxTime) * 100}%` }}
                       transition={{ duration: 0.1 }}
                     />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-[8px] md:text-sm font-bold tracking-[0.5em] text-white/60">REMAINING TIME</span>
-                    </div>
                   </div>
                 </div>
 
@@ -178,13 +159,6 @@ const Index = () => {
                     <GameControls onInput={handleInput} />
                   </div>
                 )}
-              </div>
-
-              <div className="hidden md:flex flex-col items-center justify-center border-l-2 border-white/10 h-full">
-                <span className="text-yellow-400 text-8xl font-black leading-none text-glow-yellow">
-                  {score}
-                </span>
-                <span className="text-[#4ade80] text-2xl font-bold tracking-[0.2em] mt-4">SCORE</span>
               </div>
             </motion.div>
           )}
