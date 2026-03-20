@@ -100,7 +100,7 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Orbital Railcannon Strike", sequence: ["R", "U", "D", "D", "R"], category: "Orbital", iconUrl: orbitalRailcannonSvg },
   { name: "Orbital Laser", sequence: ["R", "D", "U", "R", "D"], category: "Orbital", iconUrl: orbitalLaserSvg },
   { name: "Orbital Illumination Flare", sequence: ["R", "R", "L", "L"], category: "Orbital", iconUrl: orbitalIlluminationFlareSvg },
-  { name: "Orbital Napalm Barrage", sequence: ["R", "R", "D", "L", "U", "U"], category: "Orbital", iconUrl: orbitalNapalmBarrageSvg },
+  { name: "Orbital Napalm Barrage", sequence: ["R", "R", "D", "L", "R", "U"], category: "Orbital", iconUrl: orbitalNapalmBarrageSvg },
 
   // --- EAGLE ---
   { name: "Eagle Rearm", sequence: ["U", "U", "L", "U", "R"], category: "Eagle", iconUrl: eagleRearmSvg },
@@ -141,16 +141,16 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Emancipator Exosuit", sequence: ["L", "D", "R", "U", "L", "D", "U"], category: "Support", iconUrl: emancipatorSvg },
 
   // --- DEFENSIVE ---
-  { name: "Machine Gun Sentry", sequence: ["D", "U", "R", "R", "U"], category: "Defensive", iconUrl: machineGunSentrySvg },
-  { name: "Gatling Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: gatlingSentrySvg },
+  { name: "Machine Gun Sentry", sequence: ["D", "U", "R", "L"], category: "Defensive", iconUrl: machineGunSentrySvg },
+  { name: "Gatling Sentry", sequence: ["D", "U", "R", "D", "L"], category: "Defensive", iconUrl: gatlingSentrySvg },
   { name: "Mortar Sentry", sequence: ["D", "U", "R", "R", "D"], category: "Defensive", iconUrl: mortarSentrySvg },
-  { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L", "U"], category: "Defensive", iconUrl: autocannonSentrySvg },
+  { name: "Autocannon Sentry", sequence: ["D", "U", "R", "U", "L"], category: "Defensive", iconUrl: autocannonSentrySvg },
   { name: "Rocket Sentry", sequence: ["D", "U", "R", "R", "L"], category: "Defensive", iconUrl: rocketSentrySvg },
   { name: "EMS Mortar Sentry", sequence: ["D", "U", "R", "D", "R"], category: "Defensive", iconUrl: emsMortarSentrySvg },
   { name: "Tesla Tower", sequence: ["D", "U", "R", "U", "L", "R"], category: "Defensive", iconUrl: teslaTowerSvg },
   { name: "Anti-Personnel Minefield", sequence: ["D", "L", "U", "R"], category: "Defensive", iconUrl: antiPersonnelMinesSvg },
   { name: "Incendiary Mines", sequence: ["D", "L", "L", "D"], category: "Defensive", iconUrl: incendiaryMinesSvg },
-  { name: "Anti-Tank Mines", sequence: ["D", "L", "L", "U"], category: "Defensive", iconUrl: antiTankMinesSvg },
+  { name: "Anti-Tank Mines", sequence: ["D", "L", "U", "U"], category: "Defensive", iconUrl: antiTankMinesSvg },
   { name: "Shield Generator Relay", sequence: ["D", "D", "L", "R", "L", "R"], category: "Defensive", iconUrl: shieldGeneratorRelaySvg },
   { name: "HMG Emplacement", sequence: ["D", "U", "L", "R", "R", "L"], category: "Defensive", iconUrl: hmgEmplacementSvg },
   { name: "Anti-Tank Emplacement", sequence: ["D", "U", "L", "R", "D", "D"], category: "Defensive", iconUrl: antiTankEmplacementSvg },
@@ -163,7 +163,7 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "Resupply", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: resupplySvg },
   { name: "Hellbomb", sequence: ["D", "U", "L", "D", "U", "R", "D", "U"], category: "Mission", iconUrl: hellbombSvg },
   { name: "SEAF Artillery", sequence: ["R", "U", "U", "D"], category: "Mission", iconUrl: seafArtillerySvg },
-  { name: "Super Earth Flag", sequence: ["D", "D", "U", "R"], category: "Mission", iconUrl: superEarthFlagSvg },
+  { name: "Super Earth Flag", sequence: ["D", "D", "U", "U"], category: "Mission", iconUrl: superEarthFlagSvg },
   { name: "Upload Data", sequence: ["D", "D", "U", "U", "U"], category: "Mission", iconUrl: uploadDataSvg },
 ];
 
