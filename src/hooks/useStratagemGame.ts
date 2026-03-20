@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 import { audioManager } from "@/utils/audio";
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
@@ -64,9 +63,6 @@ export const useStratagemGame = () => {
 
   const startGame = () => {
     audioManager.playStart();
-    audioManager.startBgm(true);
-    Haptics.impact({ style: ImpactStyle.Heavy }).catch(() => {});
-    
     const shuffled = [...STRATAGEMS].sort(() => Math.random() - 0.5);
     const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
@@ -114,9 +110,8 @@ export const useStratagemGame = () => {
     }
 
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
-    // Increased frequency: starts at level 3, minimum 2 rounds gap, 40% chance
-    const canDisrupt = nextLvl >= 3 && roundsSinceLast >= 2;
-    const shouldDisrupt = canDisrupt && Math.random() < 0.4;
+    const canDisrupt = nextLvl >= 5 && roundsSinceLast >= 4;
+    const shouldDisrupt = canDisrupt && Math.random() < 0.25;
 
     if (shouldDisrupt) {
       audioManager.playError();
@@ -172,7 +167,6 @@ export const useStratagemGame = () => {
       
       if (nextInputIdx === activeSequence.length) {
         audioManager.playCorrect();
-        Haptics.notification({ type: 'SUCCESS' as any }).catch(() => {});
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
         const complexityBonus = activeSequence.length * 12;
@@ -220,12 +214,10 @@ export const useStratagemGame = () => {
         }
       } else {
         audioManager.playHit();
-        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
         setInputIndex(nextInputIdx);
       }
     } else {
       audioManager.playError();
-      Haptics.vibrate().catch(() => {});
       setLastInputCorrect(false);
       setInputIndex(0);
       setErrorsThisStratagem(prev => prev + 1);
@@ -237,13 +229,10 @@ export const useStratagemGame = () => {
 
   useEffect(() => {
     if (gameState === "playing") {
-      audioManager.startBgm();
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
-            audioManager.stopBgm();
             audioManager.playFailure();
-            Haptics.notification({ type: 'ERROR' as any }).catch(() => {});
             calculateFinalStats();
             setGameState("gameover");
             return 0;
@@ -253,7 +242,6 @@ export const useStratagemGame = () => {
         });
       }, 100);
     } else if (gameState === "break") {
-      audioManager.stopBgm();
       breakTimerRef.current = setInterval(() => {
         setBreakTimeLeft(prev => {
           if (prev <= 0.1) {
@@ -263,8 +251,6 @@ export const useStratagemGame = () => {
           return prev - 0.1;
         });
       }, 100);
-    } else {
-      audioManager.stopBgm();
     }
 
     return () => {

@@ -27,7 +27,6 @@ class AudioManager {
   private errorIndex = 0;
   private hitIndex = 0;
   private successIndex = 0;
-  private bgm: HTMLAudioElement | null = null;
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -101,23 +100,6 @@ class AudioManager {
 
   playFailure() {
     this.playSound("failurefull");
-  }
-
-  startBgm(forceRestart = false) {
-    if (this.bgm) {
-      if (forceRestart) {
-        this.bgm.currentTime = 0;
-      }
-      if (this.bgm.paused) {
-        this.bgm.play().catch(() => {});
-      }
-    }
-  }
-
-  stopBgm() {
-    if (this.bgm && !this.bgm.paused) {
-      this.bgm.pause();
-    }
   }
 }
 
