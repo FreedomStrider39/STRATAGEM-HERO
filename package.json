@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "homepage": ".",
+  "homepage": "https://freedomstrider39.github.io/STRATAGEM-HERO/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
