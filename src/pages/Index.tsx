@@ -57,8 +57,8 @@ const Index = () => {
     <div className="min-h-[100dvh] bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-[100dvh] max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-4 md:px-12 crt-screen border-x-0 md:border-x-[8px] border-[#1a1f1f]">
         
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#00ffff] shadow-[0_0_20px_rgba(0,255,255,0.8)] z-20" />
+        {/* Glowing Yellow Frame */}
+        <div className="absolute inset-0 border-[3px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_30px_rgba(250,204,21,0.4),0_0_30px_rgba(250,204,21,0.4)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
           {gameState === "idle" && (
@@ -98,7 +98,7 @@ const Index = () => {
             >
               <div className="flex flex-col items-center justify-between h-full w-full max-w-[1100px] mx-auto relative">
                 {/* Challenge Warnings */}
-                <div className="absolute top-0 left-0 right-0 flex flex-col gap-2 z-50">
+                <div className="absolute top-4 left-0 right-0 flex flex-col gap-2 z-50">
                   <AnimatePresence>
                     {isDisrupted && (
                       <motion.div 
