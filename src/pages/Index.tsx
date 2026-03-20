@@ -9,6 +9,8 @@ import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
   const {
     gameState,
     score,
@@ -32,6 +34,16 @@ const Index = () => {
     const saved = localStorage.getItem("stratagem-hero-highscore");
     return saved ? parseInt(saved) : 0;
   });
+
+  useEffect(() => {
+    // Detect if the device has a touch screen (phones/tablets)
+    const checkTouch = () => {
+      setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+    };
+    checkTouch();
+    window.addEventListener("resize", checkTouch);
+    return () => window.removeEventListener("resize", checkTouch);
+  }, []);
 
   useEffect(() => {
     if (gameState === "gameover" && stats.totalScore > highScore) {
@@ -66,7 +78,7 @@ const Index = () => {
                 transition={{ duration: 1.5, repeat: Infinity }}
                 className="text-yellow-400 text-xl md:text-3xl font-bold tracking-[0.4em] text-glow-yellow"
               >
-                {isMobile ? "TAP TO START" : "PRESS ANY KEY TO START"}
+                {isTouchDevice ? "TAP TO START" : "PRESS ANY KEY TO START"}
               </motion.p>
               
               <div className="mt-12 text-white/40 text-xs md:text-sm tracking-widest">
@@ -160,9 +172,9 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* On-screen controls: Strictly only rendered if isMobile is true */}
-                {isMobile && (
-                  <div className="mt-4 mb-8 scale-90 origin-bottom">
+                {/* On-screen controls: Strictly only rendered if it's a touch device AND not on a large screen */}
+                {isTouchDevice && (
+                  <div className="md:hidden mt-4 mb-8 scale-90 origin-bottom">
                     <GameControls onInput={handleInput} />
                   </div>
                 )}
@@ -247,7 +259,7 @@ const Index = () => {
               </div>
 
               <p className="mt-8 md:mt-12 text-white/40 text-xs md:text-base font-bold animate-pulse tracking-[0.3em] md:tracking-[0.5em]">
-                {isMobile ? "TAP TO REDEPLOY" : "CLICK TO REDEPLOY"}
+                {isTouchDevice ? "TAP TO REDEPLOY" : "CLICK TO REDEPLOY"}
               </p>
             </motion.div>
           )}
