@@ -6,7 +6,6 @@ const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
 const BASE_TIME_REWARD = 1.0;
-const STRATAGEMS_PER_ROUND = 8;
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -32,7 +31,6 @@ export const useStratagemGame = () => {
   const [showDisruptorDestroyed, setShowDisruptorDestroyed] = useState(false);
   const [activeSequence, setActiveSequence] = useState<Direction[]>([]);
   
-  const [fullPool, setFullPool] = useState<Stratagem[]>([]);
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
   
@@ -61,13 +59,28 @@ export const useStratagemGame = () => {
     return Array.from({ length }, () => getRandomDirection());
   };
 
+  const getRoundSize = (lvl: number) => {
+    // Base size is 8. After level 5, add 2 more per level.
+    if (lvl <= 5) return 8;
+    return 8 + (lvl - 5) * 2;
+  };
+
+  const generateRound = (size: number) => {
+    const round: Stratagem[] = [];
+    for (let i = 0; i < size; i++) {
+      const randomStrat = STRATAGEMS[Math.floor(Math.random() * STRATAGEMS.length)];
+      round.push(randomStrat);
+    }
+    return round;
+  };
+
   const startGame = () => {
     audioManager.playStart();
     audioManager.startBgm(true);
-    const shuffled = [...STRATAGEMS].sort(() => Math.random() - 0.5);
-    const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
-    setFullPool(shuffled);
+    const firstRoundSize = getRoundSize(1);
+    const firstRound = generateRound(firstRoundSize);
+    
     setScore(0);
     setLevel(1);
     setTimeLeft(INITIAL_TIME);
@@ -101,15 +114,9 @@ export const useStratagemGame = () => {
 
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
-    const startIdx = (nextLvl - 1) * STRATAGEMS_PER_ROUND;
-    const nextRound = fullPool.slice(startIdx, startIdx + STRATAGEMS_PER_ROUND);
+    const nextRoundSize = getRoundSize(nextLvl);
+    const nextRound = generateRound(nextRoundSize);
     
-    if (nextRound.length === 0) {
-      calculateFinalStats();
-      setGameState("gameover");
-      return;
-    }
-
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
     const canDisrupt = nextLvl >= 5 && roundsSinceLast >= 4;
     const shouldDisrupt = canDisrupt && Math.random() < 0.25;
@@ -139,7 +146,7 @@ export const useStratagemGame = () => {
     setTimeLeft(INITIAL_TIME);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
-  }, [level, fullPool, calculateFinalStats]);
+  }, [level, calculateFinalStats]);
 
   useEffect(() => {
     if (gameState === "playing" && isDisrupted) {
