@@ -5,7 +5,7 @@ import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Keyboard } from "lucide-react";
 
 const Index = () => {
   const {
@@ -39,7 +39,6 @@ const Index = () => {
     }
   }, [gameState, stats.totalScore, highScore]);
 
-  // Global key listener for starting the game
   useEffect(() => {
     const handleGlobalKey = () => {
       if (gameState === "idle" || gameState === "gameover") {
@@ -54,7 +53,6 @@ const Index = () => {
     <div className="min-h-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-screen max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-12 crt-screen border-x-[8px] border-[#1a1f1f]">
         
-        {/* Glowing Yellow Frame */}
         <div className="absolute inset-2 border-[4px] border-yellow-400/80 shadow-[inset_0_0_20px_rgba(250,204,21,0.3),0_0_20px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
@@ -70,15 +68,38 @@ const Index = () => {
                 STRATAGEM HERO
               </h1>
               <div className="h-1.5 w-[25rem] bg-yellow-400 mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+              
               <motion.p 
                 animate={{ opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-yellow-400 text-4xl font-bold tracking-[0.4em] text-glow-yellow"
+                className="text-yellow-400 text-4xl font-bold tracking-[0.4em] text-glow-yellow mb-12"
               >
                 PRESS ANY KEY TO START
               </motion.p>
+
+              <div className="flex gap-8 items-center justify-center bg-white/5 border border-white/10 p-6 backdrop-blur-sm">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex gap-1">
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">W</kbd>
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">A</kbd>
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">S</kbd>
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">D</kbd>
+                  </div>
+                  <span className="text-[10px] text-white/40 tracking-widest">MOVEMENT</span>
+                </div>
+                <div className="w-px h-10 bg-white/10" />
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex gap-1">
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">↑</kbd>
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">←</kbd>
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">↓</kbd>
+                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">→</kbd>
+                  </div>
+                  <span className="text-[10px] text-white/40 tracking-widest">ARROWS</span>
+                </div>
+              </div>
               
-              <div className="mt-16 text-white/40 text-xl tracking-widest">
+              <div className="mt-12 text-white/40 text-xl tracking-widest">
                 HIGH SCORE: <span className="text-yellow-400">{highScore}</span>
               </div>
             </motion.div>
@@ -93,7 +114,6 @@ const Index = () => {
               className="w-full h-full flex flex-col items-center justify-center z-10 py-12"
             >
               <div className="flex flex-col items-center justify-between h-full w-full max-w-[1100px] mx-auto relative">
-                {/* Challenge Warnings */}
                 <div className="absolute top-4 left-0 right-0 flex flex-col gap-2 z-50">
                   <AnimatePresence>
                     {isDisrupted && (
