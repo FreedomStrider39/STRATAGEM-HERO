@@ -135,6 +135,7 @@ const Index = () => {
                       stratagem={missionQueue[currentQueueIndex]} 
                       currentIndex={inputIndex}
                       isError={lastInputCorrect === false}
+                      queue={missionQueue.slice(currentQueueIndex)}
                       isDisrupted={isDisrupted}
                       activeSequence={activeSequence}
                       round={level}

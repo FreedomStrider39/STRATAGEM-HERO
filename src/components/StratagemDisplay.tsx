@@ -8,6 +8,7 @@ interface StratagemDisplayProps {
   stratagem: Stratagem;
   currentIndex: number;
   isError: boolean;
+  queue: Stratagem[];
   isDisrupted?: boolean;
   activeSequence: Direction[];
   round: number;
@@ -70,14 +71,15 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   stratagem, 
   currentIndex, 
   isError, 
+  queue,
   isDisrupted,
   activeSequence,
   round,
   score
 }) => {
   return (
-    <div className="flex flex-col items-center w-full max-w-3xl mx-auto">
-      {/* Top Row: Round, Main Icon, Score */}
+    <div className="flex flex-col items-center w-full max-w-4xl mx-auto">
+      {/* Top Row: Round, Main Icon + Queue, Score */}
       <div className="flex items-center justify-between w-full mb-6 md:mb-10 px-4">
         {/* Round Indicator */}
         <div className="flex flex-col items-center w-24 md:w-40">
@@ -85,19 +87,37 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           <span className="text-yellow-400 text-3xl md:text-7xl font-black leading-none text-glow-yellow">{round}</span>
         </div>
 
-        {/* Center: Main Icon */}
-        <div className={cn(
-          "w-20 h-20 md:w-44 md:h-44 border-2 md:border-[6px] p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500",
-          isDisrupted ? "border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.4)]" : "border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]"
-        )}>
-          <StratagemIcon 
-            url={stratagem.iconUrl} 
-            category={stratagem.category} 
-            className={cn(
-              "w-full h-full transition-all duration-500", 
-              isDisrupted && "hue-rotate-[280deg] brightness-150"
-            )} 
-          />
+        {/* Center: Main Icon and Upcoming Queue */}
+        <div className="flex items-end gap-2 md:gap-4">
+          <div className={cn(
+            "w-20 h-20 md:w-44 md:h-44 border-2 md:border-[6px] p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500",
+            isDisrupted ? "border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.4)]" : "border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]"
+          )}>
+            <StratagemIcon 
+              url={stratagem.iconUrl} 
+              category={stratagem.category} 
+              className={cn(
+                "w-full h-full transition-all duration-500", 
+                isDisrupted && "hue-rotate-[280deg] brightness-150"
+              )} 
+            />
+          </div>
+
+          {/* Upcoming Queue Icons */}
+          <div className="flex gap-1 md:gap-2 pb-1 md:pb-2">
+            {queue.slice(1, 5).map((nextStrat, idx) => (
+              <div key={idx} className="w-6 h-6 md:w-14 md:h-14 opacity-30 grayscale brightness-75 relative overflow-hidden border border-white/5">
+                <StratagemIcon 
+                  url={nextStrat.iconUrl} 
+                  category={nextStrat.category} 
+                  className={cn(
+                    "w-full h-full", 
+                    isDisrupted && "hue-rotate-[280deg]"
+                  )} 
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Score Indicator */}
