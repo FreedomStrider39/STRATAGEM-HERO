@@ -49,8 +49,8 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center",
-        completed ? "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" : "text-[#4a4a4a]",
+        "transition-all duration-75 w-8 h-8 md:w-20 md:h-20 flex items-center justify-center",
+        completed ? "text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.9)]" : "text-[#4a4a4a]",
         isDisrupted && !completed && "text-purple-400/70"
       )}
     >
@@ -74,12 +74,12 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   activeSequence 
 }) => {
   return (
-    <div className="flex flex-col items-center w-full max-w-5xl">
+    <div className="flex flex-col items-center w-full max-w-7xl">
       {/* Top Section: Icon and Queue */}
-      <div className="flex items-end gap-2 md:gap-4 mb-2">
+      <div className="flex items-end gap-2 md:gap-8 mb-4">
         <div className={cn(
-          "w-16 h-16 md:w-24 md:h-24 border-2 md:border-4 p-1 bg-black/40 relative overflow-hidden transition-colors duration-500",
-          isDisrupted ? "border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)]" : "border-yellow-400"
+          "w-16 h-16 md:w-48 md:h-48 border-2 md:border-8 p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500",
+          isDisrupted ? "border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.5)]" : "border-yellow-400"
         )}>
           <StratagemIcon 
             url={stratagem.iconUrl} 
@@ -90,14 +90,14 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
             )} 
           />
           <div className={cn(
-            "absolute -top-1 -left-1 w-3 h-3 md:w-4 md:h-4 border-t-2 md:border-t-4 border-l-2 md:border-l-4 transition-colors duration-500",
+            "absolute -top-1 -left-1 w-3 h-3 md:w-8 md:h-8 border-t-2 md:border-t-8 border-l-2 md:border-l-8 transition-colors duration-500",
             isDisrupted ? "border-purple-500" : "border-yellow-400"
           )} />
         </div>
 
-        <div className="flex gap-1 md:gap-2 pb-1">
-          {queue.slice(1, 4).map((nextStrat, idx) => (
-            <div key={idx} className="w-8 h-8 md:w-10 md:h-10 opacity-60 grayscale brightness-75 relative overflow-hidden">
+        <div className="flex gap-1 md:gap-4 pb-2">
+          {queue.slice(1, 5).map((nextStrat, idx) => (
+            <div key={idx} className="w-8 h-8 md:w-20 md:h-20 opacity-60 grayscale brightness-75 relative overflow-hidden border border-white/10">
               <StratagemIcon 
                 url={nextStrat.iconUrl} 
                 category={nextStrat.category} 
@@ -113,11 +113,11 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
       {/* Name Bar */}
       <div className={cn(
-        "w-full py-1 px-4 md:px-8 mb-4 md:mb-6 transition-all duration-500 shadow-[0_0_20px_rgba(0,0,0,0.3)]",
+        "w-full py-1 md:py-4 px-4 md:px-12 mb-4 md:mb-12 transition-all duration-500 shadow-[0_0_40px_rgba(0,0,0,0.5)]",
         isDisrupted ? "bg-purple-900/90 border-y border-purple-500/50" : "bg-yellow-400/90"
       )}>
         <h2 className={cn(
-          "text-sm md:text-xl font-bold text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1.25rem] md:min-h-[1.75rem] flex items-center justify-center",
+          "text-sm md:text-4xl font-black text-center tracking-[0.1em] md:tracking-[0.3em] min-h-[1.25rem] md:min-h-[3rem] flex items-center justify-center",
           isDisrupted ? "text-purple-100" : "text-black"
         )}>
           {isDisrupted ? <IlluminateText /> : stratagem.name}
@@ -126,7 +126,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
       {/* Arrows */}
       <div className={cn(
-        "flex flex-wrap justify-center gap-1 md:gap-2 transition-transform duration-75 mb-4 md:mb-8",
+        "flex flex-wrap justify-center gap-1 md:gap-4 transition-transform duration-75 mb-4 md:mb-12",
         isError && "animate-shake"
       )}>
         {activeSequence.map((dir, idx) => (
