@@ -1,17 +1,16 @@
 {
-  "name": "vite_react_shadcn_ts",
-  "version": "0.0.0",
+  "name": "stratagem-hero-2",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "homepage": ".",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "static-build": "vite build",
-    "mobile:sync": "cap sync",
-    "mobile:open": "cap open android"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
@@ -55,6 +54,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
     "framer-motion": "^12.38.0",
+    "gh-pages": "^6.1.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",

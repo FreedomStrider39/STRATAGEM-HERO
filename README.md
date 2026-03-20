@@ -1,55 +1,34 @@
 # 🎮 Stratagem Hero 2
 
-A standalone training tool inspired by the Stratagem Hero minigame from Helldivers 2.
+A standalone training tool inspired by the Stratagem Hero minigame from Helldivers 2. Optimized for PC and Mobile.
 
-## 🚀 About
-
-Stratagem Hero  2 recreates the core idea of practicing directional input sequences under pressure.
-
-Designed for players who want to improve their speed, accuracy, and consistency when calling stratagems.
-
-I have added a few things that make the game more interesting.
+## 🚀 Live Demo
+[Deploy to GitHub Pages to see your link here!]
 
 ## 🎯 Gameplay
-
 * A sequence of directional inputs appears (⬆️⬇️⬅️➡️)
 * You must input it correctly, in order
 * Speed increases as you progress
-* Mistakes reset your run (or cost time, depending on mode)
+* Mistakes reset your run and cost you precious time
 
-## 🧠 Purpose
+## 🕹️ PC Controls
+* **Arrow Keys** or **WASD** to input directions
+* **Any Key** to start or redeploy
+* **Space** (optional) to start
 
-Practice outside of missions and build real muscle memory so you don’t panic during gameplay.
-
-## 🕹️ Controls
-
-* Arrow keys / touch inputs (depending on platform)
+## 🛠️ Deployment (GitHub Pages)
+1. Initialize a git repository: `git init`
+2. Add your remote: `git remote add origin <your-repo-url>`
+3. Deploy: `npm run deploy`
 
 ## 🔥 Features
-
-* Endless mode with increasing difficulty
-* Score system based on accuracy and speed
-* Instant retry loop
-* Clean, distraction-free interface
-
-## 📦 Download
-
-(Android build coming soon)
-
-## 🛠️ Built With
-
-* Dyad
-
-## 📌 Roadmap
-
-* [ ] New daily challenges Coming soon
-* [ ] Fixes and corrections for some bugs
+* **Endless Mode**: Increasing difficulty and sequence length.
+* **Cognitive Disruptor**: High-level challenge where sequences shift randomly.
+* **Arcade Aesthetics**: CRT screen effects and glowing UI.
+* **High Score**: Local persistence of your best runs.
 
 ## ⚠️ Disclaimer
-
-This project is inspired by Helldivers 2 and its Stratagem Hero minigame.
-It is not affiliated with or endorsed by the original developers.
+This project is a fan-made tribute inspired by Helldivers 2. It is not affiliated with Arrowhead Game Studios or Sony Interactive Entertainment.
 
 ## 🙌 Credits
-
-Made by Freedomstrider39
+Made with ❤️ by Freedomstrider39 using Dyad.
