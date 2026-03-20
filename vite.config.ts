@@ -4,8 +4,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig(() => ({
-  // Explicitly setting the base path to your repository name
-  base: "/STRATAGEM-HERO/",
+  // Resetting base to '/' so the preview works correctly
+  base: "/",
   server: {
     host: "::",
     port: 8080,
