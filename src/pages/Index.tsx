@@ -160,10 +160,12 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* On-screen controls: Hidden on desktop (md:hidden), visible on mobile */}
-                <div className="md:hidden mt-4 mb-8 scale-90 origin-bottom">
-                  <GameControls onInput={handleInput} />
-                </div>
+                {/* On-screen controls: Strictly only rendered if isMobile is true */}
+                {isMobile && (
+                  <div className="mt-4 mb-8 scale-90 origin-bottom">
+                    <GameControls onInput={handleInput} />
+                  </div>
+                )}
               </div>
 
               <div className="hidden md:flex flex-col items-center justify-center border-l-2 border-white/10 h-full">
