@@ -23,6 +23,7 @@ import startSfx from "@/assets/audio/start.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
+  private bgm: HTMLAudioElement | null = null;
   private correctIndex = 0;
   private errorIndex = 0;
   private hitIndex = 0;
@@ -50,6 +51,11 @@ class AudioManager {
       this.loadSound("failure", failure);
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
+
+      // Initialize BGM with a themed track
+      this.bgm = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73053.mp3");
+      this.bgm.loop = true;
+      this.bgm.volume = 0.4;
     }
   }
 
@@ -65,6 +71,19 @@ class AudioManager {
     if (sound) {
       sound.currentTime = 0;
       sound.play().catch(() => {});
+    }
+  }
+
+  startBgm(reset = false) {
+    if (this.bgm) {
+      if (reset) this.bgm.currentTime = 0;
+      this.bgm.play().catch(() => {});
+    }
+  }
+
+  stopBgm() {
+    if (this.bgm) {
+      this.bgm.pause();
     }
   }
 

@@ -63,6 +63,7 @@ export const useStratagemGame = () => {
 
   const startGame = () => {
     audioManager.playStart();
+    audioManager.startBgm(true);
     const shuffled = [...STRATAGEMS].sort(() => Math.random() - 0.5);
     const firstRound = shuffled.slice(0, STRATAGEMS_PER_ROUND);
     
@@ -229,9 +230,11 @@ export const useStratagemGame = () => {
 
   useEffect(() => {
     if (gameState === "playing") {
+      audioManager.startBgm();
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
+            audioManager.stopBgm();
             audioManager.playFailure();
             calculateFinalStats();
             setGameState("gameover");
@@ -242,6 +245,7 @@ export const useStratagemGame = () => {
         });
       }, 100);
     } else if (gameState === "break") {
+      audioManager.stopBgm();
       breakTimerRef.current = setInterval(() => {
         setBreakTimeLeft(prev => {
           if (prev <= 0.1) {
@@ -251,6 +255,8 @@ export const useStratagemGame = () => {
           return prev - 0.1;
         });
       }, 100);
+    } else {
+      audioManager.stopBgm();
     }
 
     return () => {
