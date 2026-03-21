@@ -7,10 +7,12 @@ import { motion } from "framer-motion";
 import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw } from "lucide-react";
 
 interface Entry {
-  username: string;
   score: number;
   level: number;
   created_at: string;
+  profiles: {
+    username: string;
+  };
 }
 
 const Stats = () => {
@@ -24,12 +26,19 @@ const Stats = () => {
     try {
       const { data, error: supabaseError } = await supabase
         .from('leaderboard')
-        .select('username, score, level, created_at')
+        .select(`
+          score, 
+          level, 
+          created_at,
+          profiles (
+            username
+          )
+        `)
         .order('score', { ascending: false })
         .limit(50);
 
       if (supabaseError) throw supabaseError;
-      setEntries(data || []);
+      setEntries((data as any) || []);
       setError(null);
     } catch (err: any) {
       console.error("Fetch error:", err);
@@ -50,7 +59,7 @@ const Stats = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b-2 border-yellow-400/30 pb-6 gap-4">
           <div className="flex items-center gap-3">
             <BarChart3 className="w-8 h-8 text-yellow-400" />
-            <h1 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase">GLOBAL STATS</h1>
+            <h1 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase text-glow-yellow">GLOBAL STATS</h1>
           </div>
           
           <div className="flex items-center gap-4">
@@ -64,7 +73,7 @@ const Stats = () => {
 
             <Link 
               to="/" 
-              className="flex items-center gap-2 bg-yellow-400 text-black px-4 py-2 font-black tracking-widest text-xs uppercase hover:bg-yellow-500 transition-colors"
+              className="flex items-center gap-2 bg-yellow-400 text-black px-4 py-2 font-black tracking-widest text-xs uppercase hover:bg-yellow-500 transition-colors shadow-[0_0_10px_rgba(250,204,21,0.3)]"
             >
               <ArrowLeft size={16} /> BACK
             </Link>
@@ -97,7 +106,7 @@ const Stats = () => {
                   key={idx} 
                   className={`flex items-center justify-between px-4 py-4 border-l-4 transition-all ${
                     idx === 0 
-                      ? 'bg-yellow-400/10 border-yellow-400' 
+                      ? 'bg-yellow-400/10 border-yellow-400 shadow-[inset_0_0_20px_rgba(250,204,21,0.1)]' 
                       : 'bg-white/5 border-white/10'
                   }`}
                 >
@@ -107,13 +116,13 @@ const Stats = () => {
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className={`font-black tracking-widest truncate uppercase ${idx === 0 ? 'text-yellow-400 text-lg md:text-xl' : 'text-white text-sm md:text-lg'}`}>
-                        {entry.username}
+                        {entry.profiles?.username || "UNKNOWN"}
                       </span>
                       <span className="text-[10px] text-white/40 font-bold">LEVEL {entry.level}</span>
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
-                    <span className="text-yellow-400 font-black text-lg md:text-2xl italic tracking-tighter">
+                    <span className="text-yellow-400 font-black text-lg md:text-2xl italic tracking-tighter text-glow-yellow">
                       {entry.score.toLocaleString()}
                     </span>
                     <span className="text-[8px] text-white/20 font-bold">POINTS</span>
