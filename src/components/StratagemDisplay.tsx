@@ -51,7 +51,7 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-8 h-8 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0",
+        "transition-all duration-75 w-7 h-7 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0",
         completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
         isDisrupted && !completed && "text-purple-400/70"
       )}
@@ -78,16 +78,16 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   score
 }) => {
   return (
-    <div className="flex flex-col items-center w-full max-w-5xl mx-auto px-2 h-full justify-center gap-2 md:gap-4">
+    <div className="flex flex-col items-center w-full max-w-5xl mx-auto px-2 h-full justify-center gap-1 md:gap-4">
       {/* Round/Score Row (Mobile) */}
-      <div className="flex md:hidden items-center justify-between w-full px-6 mb-1">
+      <div className="flex md:hidden items-center justify-between w-full px-6 mb-0.5">
         <div className="flex flex-col items-start">
-          <span className="text-white/60 text-[8px] font-bold tracking-[0.2em]">ROUND</span>
-          <span className="text-yellow-400 text-2xl font-black leading-none text-glow-yellow">{round}</span>
+          <span className="text-white/60 text-[7px] font-bold tracking-[0.2em]">ROUND</span>
+          <span className="text-yellow-400 text-xl font-black leading-none text-glow-yellow">{round}</span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-white/60 text-[8px] font-bold tracking-[0.2em]">SCORE</span>
-          <span className="text-yellow-400 text-2xl font-black leading-none text-glow-yellow">{score}</span>
+          <span className="text-white/60 text-[7px] font-bold tracking-[0.2em]">SCORE</span>
+          <span className="text-yellow-400 text-xl font-black leading-none text-glow-yellow">{score}</span>
         </div>
       </div>
 
@@ -100,9 +100,9 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
         </div>
 
         {/* Center: Main Icon and Upcoming Queue */}
-        <div className="flex items-end gap-2 md:gap-4 overflow-hidden">
+        <div className="flex items-end gap-1.5 md:gap-4 overflow-hidden">
           <div className={cn(
-            "w-24 h-24 md:w-40 md:h-40 border-2 md:border-[4px] p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
+            "w-20 h-20 md:w-40 md:h-40 border-2 md:border-[4px] p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
             isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           )}>
             <StratagemIcon 
@@ -118,7 +118,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           {/* Upcoming Queue Icons */}
           <div className="flex gap-1 md:gap-2 pb-1 md:pb-2">
             {queue.slice(1, 4).map((nextStrat, idx) => (
-              <div key={idx} className="w-8 h-8 md:w-16 md:h-16 opacity-30 grayscale brightness-75 relative overflow-hidden border border-white/5 flex-shrink-0">
+              <div key={idx} className="w-7 h-7 md:w-16 md:h-16 opacity-30 grayscale brightness-75 relative overflow-hidden border border-white/5 flex-shrink-0">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 
@@ -141,11 +141,11 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
       {/* Name Bar */}
       <div className={cn(
-        "w-full py-1.5 md:py-3 px-4 md:px-12 transition-all duration-500",
+        "w-full py-1 md:py-3 px-4 md:px-12 transition-all duration-500",
         isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
       )}>
         <h2 className={cn(
-          "text-sm md:text-2xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1.2rem] md:min-h-[2rem] flex items-center justify-center",
+          "text-xs md:text-2xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[2rem] flex items-center justify-center",
           isDisrupted ? "text-purple-100" : "text-black"
         )}>
           {isDisrupted ? <IlluminateText /> : stratagem.name}
