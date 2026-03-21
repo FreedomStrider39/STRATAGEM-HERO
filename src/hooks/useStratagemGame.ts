@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const BASE_TIME_REWARD = 1.0;
+const BASE_TIME_REWARD = 2.5; // Increased from 1.0 to make rewards more impactful
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -53,6 +53,9 @@ export const useStratagemGame = () => {
   const disruptorIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stratagemStartTimeRef = useRef<number>(0);
   const lastDisruptedRoundRef = useRef<number>(0);
+
+  // Use a ref for handleInput to avoid re-adding event listeners on every state change
+  const handleInputRef = useRef<(dir: Direction) => void>(() => {});
 
   const getRandomDirection = (): Direction => {
     const dirs: Direction[] = ["U", "D", "L", "R"];
@@ -196,7 +199,8 @@ export const useStratagemGame = () => {
         const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
-        const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.1);
+        // More generous time reward to ensure net gain when playing well
+        const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.2);
         setTimeLeft(prev => Math.min(prev + timeReward, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
@@ -250,6 +254,11 @@ export const useStratagemGame = () => {
     setTimeout(() => setLastInputCorrect(null), 100);
   }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem, activeSequence, isDisrupted, disruptedCount, disruptedLimit, combo, maxCombo]);
 
+  // Update the ref whenever handleInput changes
+  useEffect(() => {
+    handleInputRef.current = handleInput;
+  }, [handleInput]);
+
   useEffect(() => {
     if (gameState === "playing") {
       timerRef.current = setInterval(() => {
@@ -261,7 +270,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          const drainRate = 0.18 + (level * 0.02);
+          // Slightly more forgiving drain rate in early levels
+          const drainRate = 0.12 + (level * 0.015);
           return prev - drainRate;
         });
       }, 100);
@@ -285,14 +295,14 @@ export const useStratagemGame = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp" || e.key === "w") handleInput("U");
-      if (e.key === "ArrowDown" || e.key === "s") handleInput("D");
-      if (e.key === "ArrowLeft" || e.key === "a") handleInput("L");
-      if (e.key === "ArrowRight" || e.key === "d") handleInput("R");
+      if (e.key === "ArrowUp" || e.key === "w") handleInputRef.current("U");
+      if (e.key === "ArrowDown" || e.key === "s") handleInputRef.current("D");
+      if (e.key === "ArrowLeft" || e.key === "a") handleInputRef.current("L");
+      if (e.key === "ArrowRight" || e.key === "d") handleInputRef.current("R");
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleInput]);
+  }, []); // Empty dependency array means this listener is stable
 
   // Play "Ready" sound when entering idle state
   useEffect(() => {
