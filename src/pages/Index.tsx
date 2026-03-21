@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import TouchControls from "@/components/TouchControls";
+import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Send } from "lucide-react";
 import { getRank } from "@/data/stratagems";
+import { supabase } from "@/lib/supabase";
 
 const Index = () => {
   const {
@@ -35,19 +37,43 @@ const Index = () => {
     return saved ? parseInt(saved) : 0;
   });
 
+  const [username, setUsername] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
   useEffect(() => {
     if (gameState === "gameover" && stats.totalScore > highScore) {
       setHighScore(stats.totalScore);
       localStorage.setItem("stratagem-hero-highscore", stats.totalScore.toString());
     }
+    if (gameState === "idle") {
+      setHasSubmitted(false);
+    }
   }, [gameState, stats.totalScore, highScore]);
+
+  const submitScore = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username || isSubmitting || !supabase) return;
+
+    setIsSubmitting(true);
+    const { error } = await supabase
+      .from('leaderboard')
+      .insert([
+        { username, score: stats.totalScore, level }
+      ]);
+
+    if (!error) {
+      setHasSubmitted(true);
+    }
+    setIsSubmitting(false);
+  };
 
   // Global input listener for starting/restarting the game
   useEffect(() => {
     const handleGlobalInput = (e: KeyboardEvent | TouchEvent | MouseEvent) => {
-      if (gameState === "idle" || gameState === "gameover") {
-        // We don't want to trigger start if they are clicking the "Made with Dyad" link
-        if (e.target instanceof HTMLElement && e.target.closest('a')) return;
+      if (gameState === "idle" || (gameState === "gameover" && hasSubmitted)) {
+        // We don't want to trigger start if they are clicking the "Made with Dyad" link or input
+        if (e.target instanceof HTMLElement && (e.target.closest('a') || e.target.closest('input') || e.target.closest('button'))) return;
         
         startGame();
       }
@@ -62,13 +88,13 @@ const Index = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame]);
+  }, [gameState, startGame, hasSubmitted]);
 
   return (
     <div className="h-dynamic-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f]">
         
-        {/* Full Yellow Frame - Inset on PC to prevent clipping */}
+        {/* Full Yellow Frame */}
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
@@ -78,49 +104,27 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-8"
             >
-              <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
-                STRATAGEM HERO
-              </h1>
-              <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-6 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
-              
-              <motion.p 
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-yellow-400 text-base md:text-4xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-8 md:mb-12"
-              >
-                {('ontouchstart' in window) ? 'TAP TO START' : 'PRESS ANY KEY TO START'}
-              </motion.p>
-
-              <div className="hidden md:flex gap-8 items-center justify-center bg-white/5 border border-white/10 p-6 backdrop-blur-sm">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex gap-1">
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">W</kbd>
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">A</kbd>
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">S</kbd>
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">D</kbd>
-                  </div>
-                  <span className="text-[10px] text-white/40 tracking-widest">MOVEMENT</span>
-                </div>
-                <div className="w-px h-10 bg-white/10" />
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex gap-1">
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">↑</kbd>
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">←</kbd>
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">↓</kbd>
-                    <kbd className="px-3 py-1.5 bg-white/10 border-b-4 border-white/20 rounded text-sm font-bold">→</kbd>
-                  </div>
-                  <span className="text-[10px] text-white/40 tracking-widest">ARROWS</span>
-                </div>
+              <div className="flex flex-col items-center">
+                <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
+                  STRATAGEM HERO
+                </h1>
+                <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-6 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+                
+                <motion.p 
+                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="text-yellow-400 text-base md:text-4xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-4"
+                >
+                  {('ontouchstart' in window) ? 'TAP TO START' : 'PRESS ANY KEY TO START'}
+                </motion.p>
               </div>
 
-              <div className="md:hidden">
-                <TouchControls onInput={() => {}} className="opacity-20 pointer-events-none scale-75" />
-              </div>
+              <Leaderboard />
               
-              <div className="mt-6 md:mt-12 text-white/40 text-xs md:text-xl tracking-widest">
-                HIGH SCORE: <span className="text-yellow-400">{highScore}</span>
+              <div className="text-white/40 text-xs md:text-xl tracking-widest">
+                PERSONAL BEST: <span className="text-yellow-400">{highScore}</span>
               </div>
             </motion.div>
           )}
@@ -258,7 +262,7 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-x-2 md:gap-x-16 gap-y-1 md:gap-y-4 w-full max-w-[800px] bg-black/40 p-3 md:p-6 border md:border-[2px] border-white/10">
+              <div className="grid grid-cols-2 gap-x-2 md:gap-x-16 gap-y-1 md:gap-y-4 w-full max-w-[800px] bg-black/40 p-3 md:p-6 border md:border-[2px] border-white/10 mb-4">
                 <div className="text-left">
                   <p className="text-[#4ade80] text-[8px] md:text-xl font-bold tracking-widest">ROUND BONUS</p>
                 </div>
@@ -288,15 +292,36 @@ const Index = () => {
                 <div className="text-right">
                   <p className="text-yellow-400 text-lg md:text-5xl font-black text-glow-yellow leading-none">{stats.totalScore}</p>
                 </div>
-
-                <div className="col-span-2 flex justify-center mt-1 pt-1 border-t border-white/10">
-                  <p className="text-white/40 text-[8px] md:text-lg tracking-[0.1em]">
-                    HIGH SCORE: <span className="text-yellow-400/60">{highScore}</span>
-                  </p>
-                </div>
               </div>
 
-              <p className="mt-4 md:mt-8 text-white/40 text-[10px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center">
+              {!hasSubmitted ? (
+                <form onSubmit={submitScore} className="w-full max-w-md flex flex-col gap-2 mb-4">
+                  <p className="text-[10px] text-white/60 font-bold tracking-widest text-center">ENTER NAME FOR GLOBAL RECORD</p>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      maxLength={12}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value.toUpperCase())}
+                      placeholder="HELLDIVER NAME"
+                      className="flex-1 bg-white/5 border border-white/20 px-4 py-2 text-yellow-400 font-black tracking-widest focus:outline-none focus:border-yellow-400 transition-colors"
+                    />
+                    <button 
+                      type="submit"
+                      disabled={isSubmitting || !username}
+                      className="bg-yellow-400 text-black px-4 py-2 font-black hover:bg-yellow-500 disabled:opacity-50 transition-colors flex items-center gap-2"
+                    >
+                      {isSubmitting ? "..." : <Send size={18} />}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="bg-green-500/20 border border-green-500/50 px-6 py-2 mb-4">
+                  <p className="text-green-400 text-xs font-black tracking-widest">RECORD SECURED</p>
+                </div>
+              )}
+
+              <p className="text-white/40 text-[10px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center">
                 {('ontouchstart' in window) ? 'TAP TO REDEPLOY' : 'PRESS ANY KEY TO REDEPLOY'}
               </p>
             </motion.div>
