@@ -5,7 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ShieldCheck, ArrowLeft, AlertCircle, Shield } from "lucide-react";
+import { ShieldCheck, ArrowLeft, AlertCircle, Shield, FileText } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -61,9 +61,14 @@ const Login = () => {
               <Shield className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="text-[10px] font-bold leading-tight uppercase tracking-wider">
                 <p className="mb-1">Ton email sert uniquement à créer ton compte et lier tes données de jeu.</p>
-                <Link to="/privacy" className="text-yellow-400 hover:underline block mb-1">
-                  Voir la politique de confidentialité
-                </Link>
+                <div className="flex gap-4">
+                  <Link to="/privacy" className="text-yellow-400 hover:underline">
+                    Confidentialité
+                  </Link>
+                  <Link to="/terms" className="text-yellow-400 hover:underline">
+                    Conditions d'utilisation
+                  </Link>
+                </div>
               </div>
             </div>
 
