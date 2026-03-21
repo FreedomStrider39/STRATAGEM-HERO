@@ -68,7 +68,8 @@ const Index = () => {
     <div className="h-dynamic-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f]">
         
-        <div className="absolute inset-0.5 md:inset-2 border-[1px] md:border-[4px] border-yellow-400/80 shadow-[inset_0_0_10px_rgba(250,204,21,0.2),0_0_10px_rgba(250,204,21,0.2)] pointer-events-none z-50" />
+        {/* Full Yellow Frame */}
+        <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
           {gameState === "idle" && (
@@ -302,7 +303,7 @@ const Index = () => {
           )}
         </AnimatePresence>
 
-        <div className="absolute bottom-0.5 md:bottom-2 left-0 right-0 flex justify-center z-30 opacity-30 scale-[0.4] md:scale-75">
+        <div className="absolute bottom-2 md:bottom-6 left-0 right-0 flex justify-center z-[60] opacity-30 scale-[0.4] md:scale-75">
           <MadeWithDyad />
         </div>
       </div>
