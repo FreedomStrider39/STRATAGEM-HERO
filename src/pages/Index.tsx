@@ -42,6 +42,7 @@ const Index = () => {
     return localStorage.getItem("stratagem-hero-username") || "";
   });
 
+  const [tempUsername, setTempUsername] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -52,25 +53,37 @@ const Index = () => {
     }
     if (gameState === "idle") {
       setHasSubmitted(false);
-      // Refresh username in case it was changed in Auth page
       setSavedUsername(localStorage.getItem("stratagem-hero-username") || "");
     }
   }, [gameState, stats.totalScore, highScore]);
+
+  const handleEnroll = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tempUsername.trim()) return;
+    const name = tempUsername.trim().toUpperCase();
+    localStorage.setItem("stratagem-hero-username", name);
+    setSavedUsername(name);
+  };
 
   const submitScore = async () => {
     if (!savedUsername || isSubmitting || !supabase || hasSubmitted) return;
 
     setIsSubmitting(true);
-    const { error } = await supabase
-      .from('leaderboard')
-      .insert([
-        { username: savedUsername, score: stats.totalScore, level }
-      ]);
+    try {
+      const { error } = await supabase
+        .from('leaderboard')
+        .insert([
+          { username: savedUsername, score: stats.totalScore, level }
+        ]);
 
-    if (!error) {
-      setHasSubmitted(true);
+      if (!error) {
+        setHasSubmitted(true);
+      }
+    } catch (err) {
+      console.error("Score submission failed:", err);
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   useEffect(() => {
@@ -84,6 +97,7 @@ const Index = () => {
       if (!savedUsername) return;
 
       if (gameState === "idle" || (gameState === "gameover" && hasSubmitted)) {
+        // Don't start if clicking interactive elements
         if (e.target instanceof HTMLElement && (e.target.closest('a') || e.target.closest('input') || e.target.closest('button'))) return;
         
         startGame();
@@ -102,29 +116,42 @@ const Index = () => {
   }, [gameState, startGame, hasSubmitted, savedUsername]);
 
   return (
-    <div className="h-dynamic-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
-      <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f]">
+    <div className="min-h-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
+      <div className="w-full h-screen max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f]">
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
           {!savedUsername ? (
             <motion.div 
-              key="no-auth"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4"
+              key="enrollment"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="flex flex-col items-center text-center z-10 px-4 w-full max-w-md"
             >
-              <Shield className="w-20 h-20 text-yellow-400 mb-6 animate-pulse" />
-              <h2 className="text-3xl font-black italic mb-4">UNAUTHORIZED ACCESS</h2>
-              <p className="text-white/60 mb-8 tracking-widest">ENROLLMENT REQUIRED FOR DEPLOYMENT</p>
-              <Link 
-                to="/auth" 
-                className="bg-yellow-400 text-black px-12 py-4 font-black text-xl hover:bg-yellow-500 transition-all shadow-[0_0_20px_rgba(250,204,21,0.4)]"
-              >
-                ENROLL NOW
-              </Link>
+              <Shield className="w-16 h-16 text-yellow-400 mb-6 animate-pulse" />
+              <h2 className="text-2xl md:text-4xl font-black italic mb-2 tracking-tighter">ENROLLMENT REQUIRED</h2>
+              <p className="text-white/60 mb-8 text-xs md:text-sm font-bold tracking-widest">ENTER YOUR HELLDIVER DESIGNATION TO BEGIN</p>
+              
+              <form onSubmit={handleEnroll} className="w-full space-y-4">
+                <input 
+                  autoFocus
+                  type="text" 
+                  maxLength={12}
+                  value={tempUsername}
+                  onChange={(e) => setTempUsername(e.target.value.toUpperCase())}
+                  placeholder="NAME"
+                  className="w-full bg-black/40 border-2 border-white/20 px-6 py-4 text-2xl text-yellow-400 font-black tracking-[0.2em] text-center focus:outline-none focus:border-yellow-400 transition-all"
+                />
+                <button 
+                  type="submit"
+                  disabled={!tempUsername.trim()}
+                  className="w-full bg-yellow-400 text-black py-4 font-black text-xl hover:bg-yellow-500 disabled:opacity-30 transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+                >
+                  CONFIRM DEPLOYMENT <Send size={20} />
+                </button>
+              </form>
             </motion.div>
           ) : gameState === "idle" && (
             <motion.div 
@@ -147,7 +174,7 @@ const Index = () => {
                   </div>
                   <div className="flex gap-4">
                     <Link to="/auth" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
-                      <Edit2 size={12} /> EDIT PROFILE
+                      <Edit2 size={12} /> PROFILE
                     </Link>
                     <Link to="/stats" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
                       <BarChart3 size={12} /> GLOBAL STATS
