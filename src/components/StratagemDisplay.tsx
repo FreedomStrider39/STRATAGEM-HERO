@@ -51,8 +51,8 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-12 h-12 md:w-16 md:h-16 flex items-center justify-center",
-        completed ? "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.9)]" : "text-[#222222]",
+        "transition-all duration-75 w-14 h-14 md:w-20 md:h-20 flex items-center justify-center",
+        completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
         isDisrupted && !completed && "text-purple-400/70"
       )}
     >
@@ -90,7 +90,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
         {/* Center: Main Icon and Upcoming Queue */}
         <div className="flex items-end gap-2 md:gap-4">
           <div className={cn(
-            "w-28 h-28 md:w-44 md:h-44 border-2 md:border-[4px] p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500",
+            "w-32 h-32 md:w-48 md:h-48 border-2 md:border-[4px] p-1 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500",
             isDisrupted ? "border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.4)]" : "border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]"
           )}>
             <StratagemIcon 
@@ -106,7 +106,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           {/* Upcoming Queue Icons - Always visible and larger */}
           <div className="flex gap-1.5 md:gap-3 pb-1 md:pb-2">
             {queue.slice(1, 4).map((nextStrat, idx) => (
-              <div key={idx} className="w-10 h-10 md:w-16 md:h-16 opacity-30 grayscale brightness-75 relative overflow-hidden border border-white/5">
+              <div key={idx} className="w-12 h-12 md:w-20 md:h-20 opacity-30 grayscale brightness-75 relative overflow-hidden border border-white/5">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 
