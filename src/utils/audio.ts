@@ -61,6 +61,7 @@ class AudioManager {
     this.loadSound("start", startSfx);
     this.loadSound("ready", readySfx);
     
+    // This is the BGM file
     this.bgm = new Audio(playingWav);
     this.bgm.loop = true;
     this.bgm.volume = 0.4;
@@ -117,7 +118,7 @@ class AudioManager {
     const coin = Math.random() > 0.5 ? "coin1" : "coin2";
     this.playSound(coin);
     
-    // Play the startup sound
+    // Re-added the startup sound effect
     this.playSound("start");
   }
 
