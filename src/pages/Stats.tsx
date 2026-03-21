@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle, Database, Send, RefreshCw } from "lucide-react";
 
@@ -21,26 +21,20 @@ const Stats = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchLeaderboard = async () => {
-    if (!supabase) {
-      setError("DATABASE NOT CONNECTED");
-      setLoading(false);
-      return;
-    }
-
     setIsRefreshing(true);
     try {
-      const { data, error } = await supabase
+      const { data, error: supabaseError } = await supabase
         .from('leaderboard')
         .select('*')
         .order('score', { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (supabaseError) throw supabaseError;
       if (data) setEntries(data);
       setError(null);
     } catch (err: any) {
       console.error("Fetch error:", err);
-      setError("FAILED TO RETRIEVE INTEL");
+      setError(err.message || "FAILED TO RETRIEVE INTEL");
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -48,21 +42,21 @@ const Stats = () => {
   };
 
   const sendTestSignal = async () => {
-    if (!supabase || isTesting) return;
+    if (isTesting) return;
     setIsTesting(true);
     
     try {
-      const { error } = await supabase
+      const { error: supabaseError } = await supabase
         .from('leaderboard')
         .insert([
           { username: "TEST_DIVER", score: Math.floor(Math.random() * 5000) + 5000, level: 25 }
         ]);
 
-      if (error) throw error;
+      if (supabaseError) throw supabaseError;
       await fetchLeaderboard();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Test signal failed:", err);
-      alert("Test failed! Check if the table 'leaderboard' exists and RLS policies are set.");
+      setError(err.message || "SIGNAL INTERRUPTED");
     } finally {
       setIsTesting(false);
     }
@@ -90,7 +84,7 @@ const Stats = () => {
             </button>
             <button 
               onClick={sendTestSignal}
-              disabled={isTesting || !supabase}
+              disabled={isTesting}
               className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 px-3 py-2 text-[10px] font-black text-yellow-400 hover:bg-yellow-400/20 transition-colors disabled:opacity-50"
             >
               <Send size={14} /> {isTesting ? "SENDING..." : "TEST SIGNAL"}
@@ -115,7 +109,7 @@ const Stats = () => {
             <div>
               <p className="text-red-500 font-black text-xl tracking-[0.2em] mb-2">{error}</p>
               <p className="text-white/40 text-xs max-w-xs mx-auto">
-                THE STRATAGEM NETWORK IS UNREACHABLE. ENSURE THE DATABASE TABLE AND POLICIES ARE CONFIGURED.
+                THE STRATAGEM NETWORK IS EXPERIENCING INTERFERENCE. PLEASE TRY AGAIN.
               </p>
             </div>
             <button 

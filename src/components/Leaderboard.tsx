@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { Users, AlertCircle } from "lucide-react";
 
 interface Entry {
@@ -17,11 +17,6 @@ const Leaderboard = () => {
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      if (!supabase) {
-        setLoading(false);
-        return;
-      }
-
       try {
         const { data, error: supabaseError } = await supabase
           .from('leaderboard')
