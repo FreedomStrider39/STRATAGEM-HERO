@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Users } from "lucide-react";
+import { Trophy, Users, AlertCircle } from "lucide-react";
 
 interface Entry {
   username: string;
@@ -14,26 +14,43 @@ interface Entry {
 const Leaderboard = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      if (!supabase) return;
-      const { data, error } = await supabase
-        .from('leaderboard')
-        .select('username, score, level')
-        .order('score', { ascending: false })
-        .limit(10);
-
-      if (!error && data) {
-        setEntries(data);
+      if (!supabase) {
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+
+      try {
+        const { data, error } = await supabase
+          .from('leaderboard')
+          .select('username, score, level')
+          .order('score', { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+        if (data) setEntries(data);
+      } catch (err) {
+        console.error("Leaderboard fetch failed:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchLeaderboard();
   }, []);
 
   if (loading) return <div className="text-white/20 text-[10px] animate-pulse">LOADING GLOBAL INTEL...</div>;
+
+  if (error) return (
+    <div className="w-full max-w-md bg-red-500/5 border border-red-500/20 p-2 flex items-center gap-2">
+      <AlertCircle className="w-3 h-3 text-red-500" />
+      <span className="text-[8px] text-red-500/80 font-bold">DATABASE TABLE NOT FOUND</span>
+    </div>
+  );
 
   return (
     <div className="w-full max-w-md bg-black/40 border border-white/10 p-4 backdrop-blur-sm">
