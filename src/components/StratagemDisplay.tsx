@@ -51,7 +51,7 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-14 h-14 md:w-24 md:h-24 flex items-center justify-center",
+        "transition-all duration-75 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center",
         completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
         isDisrupted && !completed && "text-purple-400/70"
       )}
@@ -92,7 +92,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
       </div>
 
       {/* Main Icon + Queue Row */}
-      <div className="flex items-center justify-center w-full mb-6 md:mb-16 px-2 md:px-4 gap-4 md:gap-12">
+      <div className="flex items-center justify-center w-full mb-6 md:mb-12 px-2 md:px-4 gap-4 md:gap-12">
         {/* Desktop Round Indicator */}
         <div className="hidden md:flex flex-col items-center w-40">
           <span className="text-white/60 text-lg font-bold tracking-[0.2em]">ROUND</span>
@@ -115,7 +115,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
             />
           </div>
 
-          {/* Upcoming Queue Icons - Now much larger on both mobile and PC */}
+          {/* Upcoming Queue Icons */}
           <div className="flex gap-2 md:gap-4 pb-1 md:pb-3">
             {queue.slice(1, 4).map((nextStrat, idx) => (
               <div key={idx} className="w-14 h-14 md:w-28 md:h-28 opacity-30 grayscale brightness-75 relative overflow-hidden border border-white/5">
@@ -141,7 +141,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
       {/* Name Bar */}
       <div className={cn(
-        "w-full py-3 md:py-6 px-4 md:px-12 mb-6 md:mb-12 transition-all duration-500",
+        "w-full py-3 md:py-6 px-4 md:px-12 mb-6 md:mb-10 transition-all duration-500",
         isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
       )}>
         <h2 className={cn(
@@ -154,7 +154,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
       {/* Arrows */}
       <div className={cn(
-        "flex flex-wrap justify-center gap-3 md:gap-8 transition-transform duration-75 mb-6 md:mb-12",
+        "flex flex-wrap justify-center gap-3 md:gap-4 transition-transform duration-75 mb-6 md:mb-12",
         isError && "animate-shake"
       )}>
         {activeSequence.map((dir, idx) => (
