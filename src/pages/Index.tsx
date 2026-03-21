@@ -8,12 +8,14 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Send, User, Edit2, BarChart3, Shield, Home } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, LogIn, User, Edit2, BarChart3, Shield, Home, LogOut } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthProvider";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const {
     gameState,
     score,
@@ -34,92 +36,65 @@ const Index = () => {
     handleInput
   } = useStratagemGame();
 
-  const [highScore, setHighScore] = useState(() => {
-    const saved = localStorage.getItem("stratagem-hero-highscore");
-    return saved ? parseInt(saved) : 0;
-  });
-
-  const [savedUsername, setSavedUsername] = useState(() => {
-    return localStorage.getItem("stratagem-hero-username") || "";
-  });
-
-  const [tempUsername, setTempUsername] = useState("");
+  const [highScore, setHighScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [username, setUsername] = useState("HELLDIVER");
 
-  // Fetch personal best from cloud on mount or name change
+  // Fetch personal best and profile on mount or user change
   useEffect(() => {
-    const fetchPersonalBest = async () => {
-      if (!supabase || !savedUsername) return;
+    const fetchUserData = async () => {
+      if (!user) return;
       
       try {
-        const { data, error } = await supabase
+        // Fetch profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.id)
+          .maybeSingle();
+        
+        if (profile?.username) setUsername(profile.username);
+
+        // Fetch score
+        const { data: leaderboard } = await supabase
           .from('leaderboard')
           .select('score')
-          .eq('username', savedUsername)
+          .eq('user_id', user.id)
           .maybeSingle();
 
-        if (!error && data) {
-          const cloudScore = data.score;
-          if (cloudScore > highScore) {
-            setHighScore(cloudScore);
-            localStorage.setItem("stratagem-hero-highscore", cloudScore.toString());
-          }
+        if (leaderboard) {
+          setHighScore(leaderboard.score);
         }
       } catch (err) {
-        console.error("Failed to fetch personal best:", err);
+        console.error("Failed to fetch user data:", err);
       }
     };
 
-    fetchPersonalBest();
-  }, [savedUsername]);
-
-  // Update local high score immediately on game over
-  useEffect(() => {
-    if (gameState === "gameover" && stats.totalScore > highScore) {
-      setHighScore(stats.totalScore);
-      localStorage.setItem("stratagem-hero-highscore", stats.totalScore.toString());
-    }
-    if (gameState === "idle") {
-      setHasSubmitted(false);
-      setSavedUsername(localStorage.getItem("stratagem-hero-username") || "");
-    }
-  }, [gameState, stats.totalScore, highScore]);
-
-  const handleEnroll = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!tempUsername.trim()) return;
-    const name = tempUsername.trim().toUpperCase();
-    localStorage.setItem("stratagem-hero-username", name);
-    setSavedUsername(name);
-  };
+    fetchUserData();
+  }, [user]);
 
   const submitScore = async () => {
-    if (!savedUsername || isSubmitting || !supabase || hasSubmitted) return;
+    if (!user || isSubmitting || hasSubmitted) return;
 
     setIsSubmitting(true);
     try {
-      // Check if we should update (only if new score is higher)
-      const { data: existing } = await supabase
-        .from('leaderboard')
-        .select('score')
-        .eq('username', savedUsername)
-        .maybeSingle();
-
-      if (!existing || stats.totalScore > existing.score) {
-        // Upsert handles "insert or update on conflict" automatically
+      // Upsert handles "insert or update on conflict" automatically
+      // We only update if the new score is higher
+      if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
           .upsert(
             { 
-              username: savedUsername, 
+              user_id: user.id, 
               score: stats.totalScore, 
               level: level 
             }, 
-            { onConflict: 'username' }
+            { onConflict: 'user_id' }
           );
           
         if (error) throw error;
+        setHighScore(stats.totalScore);
       }
       
       setHasSubmitted(true);
@@ -132,15 +107,15 @@ const Index = () => {
 
   // Auto-submit score on game over
   useEffect(() => {
-    if (gameState === "gameover" && savedUsername && !hasSubmitted && !isSubmitting) {
+    if (gameState === "gameover" && user && !hasSubmitted && !isSubmitting) {
       submitScore();
     }
-  }, [gameState, savedUsername, hasSubmitted, isSubmitting]);
+  }, [gameState, user, hasSubmitted, isSubmitting]);
 
   // Global input listener to start game
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
-      if (!savedUsername) return;
+      if (!user) return;
 
       const target = e.target as HTMLElement;
       if (target.closest('a') || target.closest('button') || target.closest('input')) {
@@ -161,7 +136,7 @@ const Index = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted, savedUsername]);
+  }, [gameState, startGame, hasSubmitted, user]);
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
@@ -170,36 +145,24 @@ const Index = () => {
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
-          {!savedUsername ? (
+          {!user ? (
             <motion.div 
-              key="enrollment"
+              key="unauthenticated"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col items-center text-center z-10 px-4 w-full max-w-md"
             >
               <Shield className="w-16 h-16 text-yellow-400 mb-6 animate-pulse" />
-              <h2 className="text-2xl md:text-4xl font-black italic mb-2 tracking-tighter">ENROLLMENT REQUIRED</h2>
-              <p className="text-white/60 mb-8 text-xs md:text-sm font-bold tracking-widest">ENTER YOUR HELLDIVER DESIGNATION TO BEGIN</p>
+              <h2 className="text-2xl md:text-4xl font-black italic mb-2 tracking-tighter leading-none">ENROLLMENT REQUIRED</h2>
+              <p className="text-white/60 mb-8 text-xs md:text-sm font-bold tracking-widest">SIGN IN TO SECURE YOUR PROGRESS</p>
               
-              <form onSubmit={handleEnroll} className="w-full space-y-4">
-                <input 
-                  autoFocus
-                  type="text" 
-                  maxLength={12}
-                  value={tempUsername}
-                  onChange={(e) => setTempUsername(e.target.value.toUpperCase())}
-                  placeholder="NAME"
-                  className="w-full bg-black/40 border-2 border-white/20 px-6 py-4 text-2xl text-yellow-400 font-black tracking-[0.2em] text-center focus:outline-none focus:border-yellow-400 transition-all"
-                />
-                <button 
-                  type="submit"
-                  disabled={!tempUsername.trim()}
-                  className="w-full bg-yellow-400 text-black py-4 font-black text-xl hover:bg-yellow-500 disabled:opacity-30 transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(250,204,21,0.4)]"
-                >
-                  CONFIRM DEPLOYMENT <Send size={20} />
-                </button>
-              </form>
+              <Link 
+                to="/login"
+                className="w-full bg-yellow-400 text-black py-4 font-black text-xl hover:bg-yellow-500 transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+              >
+                PROCEED TO LOGIN <LogIn size={20} />
+              </Link>
             </motion.div>
           ) : gameState === "idle" && (
             <motion.div 
@@ -218,15 +181,18 @@ const Index = () => {
                 <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                   <div className="flex items-center gap-3">
                     <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
-                    <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{savedUsername}</span>
+                    <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{username}</span>
                   </div>
                   <div className="flex gap-4">
-                    <Link to="/auth" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
-                      <Edit2 size={12} /> PROFILE
-                    </Link>
                     <Link to="/stats" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
                       <BarChart3 size={12} /> GLOBAL STATS
                     </Link>
+                    <button 
+                      onClick={signOut}
+                      className="text-[10px] md:text-xs font-bold text-red-500/60 hover:text-red-500 flex items-center gap-1 transition-colors"
+                    >
+                      <LogOut size={12} /> SIGN OUT
+                    </button>
                   </div>
                 </div>
 
@@ -410,15 +376,15 @@ const Index = () => {
 
               <div className="flex flex-col items-center gap-4 mb-6">
                 <div className="flex items-center gap-2 text-white/60 text-xs font-bold tracking-widest">
-                  RECORDING AS: <span className="text-yellow-400">{savedUsername}</span>
+                  RECORDING AS: <span className="text-yellow-400">{username}</span>
                 </div>
                 {hasSubmitted ? (
                   <div className="bg-green-500/20 border border-green-500/50 px-6 py-2">
-                    <p className="text-green-400 text-xs font-black tracking-widest">RECORD SECURED</p>
+                    <p className="text-green-400 text-xs font-black tracking-widest uppercase">Record Secured</p>
                   </div>
                 ) : isSubmitting ? (
-                  <div className="animate-pulse text-yellow-400 text-xs font-black tracking-widest">
-                    UPLOADING INTEL...
+                  <div className="animate-pulse text-yellow-400 text-xs font-black tracking-widest uppercase">
+                    Uploading Intel...
                   </div>
                 ) : null}
               </div>
@@ -430,9 +396,9 @@ const Index = () => {
                 
                 <button 
                   onClick={() => window.location.reload()}
-                  className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 py-3 hover:bg-white/10 transition-colors text-xs font-black tracking-widest"
+                  className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 py-3 hover:bg-white/10 transition-colors text-xs font-black tracking-widest uppercase"
                 >
-                  <Home size={16} /> MAIN MENU
+                  <Home size={16} /> Main Menu
                 </button>
               </div>
             </motion.div>
