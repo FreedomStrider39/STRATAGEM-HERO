@@ -4,7 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./components/AuthProvider";
-import Index from "./pages/Index";
+import Welcome from "./pages/Index";
+import Game from "./pages/Game";
 import Stats from "./pages/Stats";
 import Login from "./pages/Login";
 import Auth from "./pages/Auth";
@@ -21,7 +22,8 @@ const App = () => (
         <Sonner />
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Welcome />} />
+            <Route path="/game" element={<Game />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/login" element={<Login />} />
             <Route path="/auth" element={<Auth />} />
