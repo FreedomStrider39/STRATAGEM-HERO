@@ -5,7 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ShieldCheck, ArrowLeft, AlertCircle } from "lucide-react";
+import { ShieldCheck, ArrowLeft, AlertCircle, ExternalLink } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -15,7 +15,6 @@ const Login = () => {
   if (loading) return null;
   if (session) return <Navigate to="/" replace />;
 
-  // Get the current origin for the redirect URL
   const redirectTo = window.location.origin;
 
   return (
@@ -56,11 +55,24 @@ const Login = () => {
             theme="dark"
           />
 
-          <div className="mt-6 p-3 bg-yellow-400/10 border border-yellow-400/20 flex gap-3 items-start">
-            <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
-            <p className="text-[10px] text-yellow-400/80 font-bold leading-tight uppercase">
-              Note: Social login requires manual configuration of Client IDs in your Supabase Dashboard.
+          <div className="mt-6 p-4 bg-red-500/10 border border-red-500/30 flex flex-col gap-3">
+            <div className="flex gap-3 items-start">
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-[10px] text-red-500 font-black leading-tight uppercase">
+                "Provider not enabled" error?
+              </p>
+            </div>
+            <p className="text-[9px] text-white/60 font-bold leading-relaxed uppercase">
+              You must enable Google in your Supabase Dashboard and provide your Google Client ID/Secret for this to work.
             </p>
+            <a 
+              href="https://supabase.com/dashboard/project/oblzusunvgzfaoxkxfma/auth/providers" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[9px] text-yellow-400 font-black flex items-center gap-1 hover:underline"
+            >
+              OPEN SUPABASE SETTINGS <ExternalLink size={10} />
+            </a>
           </div>
 
           <div className="mt-8">
