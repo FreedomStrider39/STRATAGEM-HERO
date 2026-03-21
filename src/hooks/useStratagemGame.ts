@@ -44,9 +44,9 @@ export const useStratagemGame = () => {
     totalScore: 0
   });
   
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const breakTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const disruptorIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const breakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const disruptorIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stratagemStartTimeRef = useRef<number>(0);
   const lastDisruptedRoundRef = useRef<number>(0);
 
@@ -60,7 +60,6 @@ export const useStratagemGame = () => {
   };
 
   const getRoundSize = (lvl: number) => {
-    // Base size is 8. After level 5, add 2 more per level.
     if (lvl <= 5) return 8;
     return 8 + (lvl - 5) * 2;
   };
