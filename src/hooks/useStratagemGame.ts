@@ -25,11 +25,9 @@ export const useStratagemGame = () => {
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
   
-  // Combo & Multiplier
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
   
-  // Challenges
   const [isDisrupted, setIsDisrupted] = useState(false);
   const [disruptedCount, setDisruptedCount] = useState(0);
   const [disruptedLimit, setDisruptedLimit] = useState(0);
@@ -81,7 +79,6 @@ export const useStratagemGame = () => {
 
   const startGame = () => {
     audioManager.playStart();
-    audioManager.startBgm(true);
     
     const firstRoundSize = getRoundSize(1);
     const firstRound = generateRound(firstRoundSize);
@@ -154,7 +151,7 @@ export const useStratagemGame = () => {
     setTimeLeft(INITIAL_TIME);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
-  }, [level, calculateFinalStats]);
+  }, [level]);
 
   useEffect(() => {
     if (gameState === "playing" && isDisrupted) {
@@ -182,6 +179,7 @@ export const useStratagemGame = () => {
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === activeSequence.length) {
+        // Stratagem completed
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
@@ -189,7 +187,6 @@ export const useStratagemGame = () => {
         const speedBonus = Math.max(0, Math.floor((2500 - timeTaken) / 50));
         const errorPenalty = errorsThisStratagem * 15;
         
-        // Combo Multiplier
         const currentCombo = errorsThisStratagem === 0 ? combo + 1 : 0;
         setCombo(currentCombo);
         if (currentCombo > maxCombo) setMaxCombo(currentCombo);
@@ -235,13 +232,16 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
+        // Individual correct key press
+        audioManager.playHit();
         setInputIndex(nextInputIdx);
       }
     } else {
+      // Error
       audioManager.playError();
       setLastInputCorrect(false);
       setInputIndex(0);
-      setCombo(0); // Reset combo on error
+      setCombo(0);
       setErrorsThisStratagem(prev => prev + 1);
       setMistakesInGame(prev => prev + 1);
     }
@@ -251,11 +251,9 @@ export const useStratagemGame = () => {
 
   useEffect(() => {
     if (gameState === "playing") {
-      audioManager.startBgm();
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 0) {
-            audioManager.stopBgm();
             audioManager.playFailure();
             calculateFinalStats();
             setGameState("gameover");
@@ -266,7 +264,6 @@ export const useStratagemGame = () => {
         });
       }, 100);
     } else if (gameState === "break") {
-      audioManager.stopBgm();
       breakTimerRef.current = setInterval(() => {
         setBreakTimeLeft(prev => {
           if (prev <= 0.1) {
@@ -276,8 +273,6 @@ export const useStratagemGame = () => {
           return prev - 0.1;
         });
       }, 100);
-    } else {
-      audioManager.stopBgm();
     }
 
     return () => {
@@ -296,6 +291,13 @@ export const useStratagemGame = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleInput]);
+
+  // Play "Ready" sound when entering idle state
+  useEffect(() => {
+    if (gameState === "idle") {
+      audioManager.playReady();
+    }
+  }, [gameState]);
 
   return {
     gameState,

@@ -17,14 +17,12 @@ import hit4 from "@/assets/audio/hit4.wav";
 import success1 from "@/assets/audio/success1.wav";
 import success2 from "@/assets/audio/success2.wav";
 import success3 from "@/assets/audio/success3.wav";
-import failure from "@/assets/audio/failure.wav";
 import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
 import readySfx from "@/assets/audio/ready.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
-  private bgm: HTMLAudioElement | null = null;
   private correctIndex = 0;
   private errorIndex = 0;
   private hitIndex = 0;
@@ -49,7 +47,6 @@ class AudioManager {
       this.loadSound("success1", success1);
       this.loadSound("success2", success2);
       this.loadSound("success3", success3);
-      this.loadSound("failure", failure);
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
       this.loadSound("ready", readySfx);
@@ -67,20 +64,9 @@ class AudioManager {
     const sound = this.sounds[name];
     if (sound) {
       sound.currentTime = 0;
-      sound.play().catch((err) => console.warn(`Audio play failed for ${name}:`, err));
-    }
-  }
-
-  startBgm(reset = false) {
-    if (this.bgm) {
-      if (reset) this.bgm.currentTime = 0;
-      this.bgm.play().catch(() => {});
-    }
-  }
-
-  stopBgm() {
-    if (this.bgm) {
-      this.bgm.pause();
+      sound.play().catch((err) => {
+        // Silently fail if browser blocks autoplay before interaction
+      });
     }
   }
 
