@@ -5,7 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ShieldCheck, ArrowLeft, AlertCircle } from "lucide-react";
+import { ShieldCheck, ArrowLeft, AlertCircle, Shield } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -56,11 +56,22 @@ const Login = () => {
             theme="dark"
           />
 
-          <div className="mt-6 p-3 bg-yellow-400/10 border border-yellow-400/20 flex gap-3 items-start">
-            <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
-            <p className="text-[10px] text-yellow-400/80 font-bold leading-tight uppercase">
-              Note: Social login requires manual configuration of Client IDs in your Supabase Dashboard.
-            </p>
+          <div className="mt-8 pt-6 border-t border-white/10 space-y-4">
+            <div className="flex gap-3 items-start text-white/40">
+              <Shield className="w-4 h-4 shrink-0 mt-0.5" />
+              <div className="text-[10px] font-bold leading-tight uppercase tracking-wider">
+                <p className="mb-1">Ton email sert uniquement à créer ton compte et lier tes données de jeu.</p>
+                <p className="mb-1">Nous ne partageons pas tes données.</p>
+                <p>Tu peux demander leur suppression à tout moment.</p>
+              </div>
+            </div>
+
+            <div className="p-3 bg-yellow-400/10 border border-yellow-400/20 flex gap-3 items-start">
+              <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+              <p className="text-[10px] text-yellow-400/80 font-bold leading-tight uppercase">
+                Note: Social login requires manual configuration of Client IDs in your Supabase Dashboard.
+              </p>
+            </div>
           </div>
 
           <div className="mt-8">
