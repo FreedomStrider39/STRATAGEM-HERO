@@ -18,6 +18,9 @@ const Leaderboard = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
+      // Adding a random query parameter or a specific filter can sometimes help bypass edge caching
+      // but Supabase JS doesn't support raw query params easily. 
+      // Instead, we'll just perform a fresh select.
       const { data, error: supabaseError } = await supabase
         .from('leaderboard')
         .select('username, score, level')
@@ -25,6 +28,8 @@ const Leaderboard = () => {
         .limit(10);
 
       if (supabaseError) throw supabaseError;
+      
+      console.log("Leaderboard data fetched:", data);
       setEntries(data || []);
       setError(null);
     } catch (err: any) {
@@ -68,7 +73,7 @@ const Leaderboard = () => {
           </div>
         ) : (
           entries.map((entry, idx) => (
-            <div key={idx} className="flex items-center justify-between text-[10px] md:text-xs">
+            <div key={`${entry.username}-${idx}`} className="flex items-center justify-between text-[10px] md:text-xs">
               <div className="flex items-center gap-3">
                 <span className={idx < 3 ? "text-yellow-400 font-black" : "text-white/40"}>
                   #{idx + 1}
