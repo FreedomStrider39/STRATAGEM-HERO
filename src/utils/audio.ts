@@ -63,13 +63,11 @@ class AudioManager {
     this.loadSound("ready", readySfx);
     this.loadSound("stratagem_hero", stratagemHeroSfx);
     
-    // Explicitly using playing.wav for BGM
     this.bgm = new Audio(playingWav);
     this.bgm.loop = true;
     this.bgm.volume = 0.4;
     
     this.initialized = true;
-    console.log("Audio Manager Initialized with playing.wav");
   }
 
   private loadSound(name: string, url: string) {
