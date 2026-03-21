@@ -20,9 +20,11 @@ import success3 from "@/assets/audio/success3.wav";
 import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
 import readySfx from "@/assets/audio/ready.wav";
+import playingBgm from "@/assets/audio/playing.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
+  private bgm: HTMLAudioElement | null = null;
   private correctIndex = 0;
   private errorIndex = 0;
   private hitIndex = 0;
@@ -50,6 +52,11 @@ class AudioManager {
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
       this.loadSound("ready", readySfx);
+      
+      // Initialize BGM
+      this.bgm = new Audio(playingBgm);
+      this.bgm.loop = true;
+      this.bgm.volume = 0.4;
     }
   }
 
@@ -65,8 +72,24 @@ class AudioManager {
     if (sound) {
       sound.currentTime = 0;
       sound.play().catch((err) => {
-        // Silently fail if browser blocks autoplay before interaction
+        console.warn(`Audio play failed for ${name}:`, err);
       });
+    }
+  }
+
+  startBgm() {
+    if (this.bgm) {
+      this.bgm.currentTime = 0;
+      this.bgm.play().catch((err) => {
+        console.warn("BGM play failed:", err);
+      });
+    }
+  }
+
+  stopBgm() {
+    if (this.bgm) {
+      this.bgm.pause();
+      this.bgm.currentTime = 0;
     }
   }
 

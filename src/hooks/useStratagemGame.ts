@@ -79,6 +79,7 @@ export const useStratagemGame = () => {
 
   const startGame = () => {
     audioManager.playStart();
+    audioManager.startBgm();
     
     const firstRoundSize = getRoundSize(1);
     const firstRound = generateRound(firstRoundSize);
@@ -255,6 +256,7 @@ export const useStratagemGame = () => {
         setTimeLeft(prev => {
           if (prev <= 0) {
             audioManager.playFailure();
+            audioManager.stopBgm();
             calculateFinalStats();
             setGameState("gameover");
             return 0;
