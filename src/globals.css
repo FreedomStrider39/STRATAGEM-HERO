@@ -92,7 +92,7 @@ body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  touch-action: manipulation;
+  touch-action: none; /* Prevent all browser gestures during gameplay */
 }
 
 h1, h2, h3, span, p {
@@ -107,4 +107,10 @@ h1, h2, h3, span, p {
 
 .text-glow-cyan {
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+/* Fix for mobile browser address bars */
+.h-dynamic-screen {
+  height: 100vh;
+  height: 100dvh;
 }
