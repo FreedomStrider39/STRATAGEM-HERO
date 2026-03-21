@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const BASE_TIME_REWARD = 0.4; // Reduced from 1.0
+const BASE_TIME_REWARD = 0.4; 
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -66,7 +66,6 @@ export const useStratagemGame = () => {
   };
 
   const getRoundSize = (lvl: number) => {
-    // Starts at 6 for level 1, then 7, 8, etc.
     return 5 + lvl;
   };
 
@@ -197,7 +196,6 @@ export const useStratagemGame = () => {
         const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
-        // Reduced time reward scaling
         const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.05);
         setTimeLeft(prev => Math.min(prev + timeReward, MAX_TIME));
         
@@ -211,7 +209,6 @@ export const useStratagemGame = () => {
             nextIsDisrupted = false;
             setIsDisrupted(false);
             setShowDisruptorDestroyed(true);
-            // Bonus time for destroying disruptor
             setTimeLeft(prev => Math.min(prev + 0.5, MAX_TIME));
             audioManager.playSuccess();
             setTimeout(() => setShowDisruptorDestroyed(false), 3000);
@@ -267,8 +264,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Increased drain rate from 0.12 to 0.18
-          const drainRate = 0.18 + (level * 0.015);
+          // Significantly increased drain rate and level scaling
+          const drainRate = 0.35 + (level * 0.04);
           return prev - drainRate;
         });
       }, 100);
