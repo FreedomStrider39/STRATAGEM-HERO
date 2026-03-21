@@ -5,7 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ShieldCheck, ArrowLeft } from "lucide-react";
+import { ShieldCheck, ArrowLeft, AlertCircle } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -14,6 +14,9 @@ const Login = () => {
 
   if (loading) return null;
   if (session) return <Navigate to="/" replace />;
+
+  // Get the current origin for the redirect URL
+  const redirectTo = window.location.origin;
 
   return (
     <div className="min-h-screen bg-[#0a0c0c] text-white flex items-center justify-center p-4 crt-screen">
@@ -34,7 +37,8 @@ const Login = () => {
 
           <Auth
             supabaseClient={supabase}
-            providers={["google"]} // Steam requires manual config in Supabase dashboard
+            providers={["google"]}
+            redirectTo={redirectTo}
             appearance={{
               theme: ThemeSupa,
               variables: {
@@ -51,6 +55,13 @@ const Login = () => {
             }}
             theme="dark"
           />
+
+          <div className="mt-6 p-3 bg-yellow-400/10 border border-yellow-400/20 flex gap-3 items-start">
+            <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+            <p className="text-[10px] text-yellow-400/80 font-bold leading-tight uppercase">
+              Note: Social login requires manual configuration of Client IDs in your Supabase Dashboard.
+            </p>
+          </div>
 
           <div className="mt-8">
             <Link 
