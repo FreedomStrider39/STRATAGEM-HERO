@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Send, User, Edit2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Send, User, Edit2, BarChart3, Shield } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 
@@ -41,8 +42,6 @@ const Index = () => {
     return localStorage.getItem("stratagem-hero-username") || "";
   });
 
-  const [tempUsername, setTempUsername] = useState("");
-  const [isEditingName, setIsEditingName] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -53,17 +52,10 @@ const Index = () => {
     }
     if (gameState === "idle") {
       setHasSubmitted(false);
+      // Refresh username in case it was changed in Auth page
+      setSavedUsername(localStorage.getItem("stratagem-hero-username") || "");
     }
   }, [gameState, stats.totalScore, highScore]);
-
-  const handleSaveUsername = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!tempUsername.trim()) return;
-    const name = tempUsername.trim().toUpperCase();
-    setSavedUsername(name);
-    localStorage.setItem("stratagem-hero-username", name);
-    setIsEditingName(false);
-  };
 
   const submitScore = async () => {
     if (!savedUsername || isSubmitting || !supabase || hasSubmitted) return;
@@ -81,18 +73,15 @@ const Index = () => {
     setIsSubmitting(false);
   };
 
-  // Auto-submit score when game ends if we have a username
   useEffect(() => {
     if (gameState === "gameover" && savedUsername && !hasSubmitted && !isSubmitting) {
       submitScore();
     }
   }, [gameState, savedUsername, hasSubmitted, isSubmitting]);
 
-  // Global input listener for starting/restarting the game
   useEffect(() => {
     const handleGlobalInput = (e: KeyboardEvent | TouchEvent | MouseEvent) => {
-      // Don't start if we don't have a username or are editing it
-      if (!savedUsername || isEditingName) return;
+      if (!savedUsername) return;
 
       if (gameState === "idle" || (gameState === "gameover" && hasSubmitted)) {
         if (e.target instanceof HTMLElement && (e.target.closest('a') || e.target.closest('input') || e.target.closest('button'))) return;
@@ -110,57 +99,32 @@ const Index = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted, savedUsername, isEditingName]);
+  }, [gameState, startGame, hasSubmitted, savedUsername]);
 
   return (
     <div className="h-dynamic-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f]">
         
-        {/* Full Yellow Frame */}
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
-          {(!savedUsername || isEditingName) ? (
+          {!savedUsername ? (
             <motion.div 
-              key="setup"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.1 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full max-w-md"
+              key="no-auth"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center text-center z-10 px-4"
             >
-              <div className="mb-8">
-                <User className="w-16 h-16 text-yellow-400 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
-                <h2 className="text-2xl md:text-4xl font-black italic tracking-tighter mb-2">IDENTIFICATION REQUIRED</h2>
-                <p className="text-white/60 text-xs md:text-sm font-bold tracking-widest">ENTER YOUR HELLDIVER DESIGNATION</p>
-              </div>
-
-              <form onSubmit={handleSaveUsername} className="w-full flex flex-col gap-4">
-                <input 
-                  autoFocus
-                  type="text" 
-                  maxLength={12}
-                  value={tempUsername}
-                  onChange={(e) => setTempUsername(e.target.value.toUpperCase())}
-                  placeholder="NAME"
-                  className="w-full bg-white/5 border-2 border-white/20 px-6 py-4 text-2xl text-yellow-400 font-black tracking-[0.2em] text-center focus:outline-none focus:border-yellow-400 transition-all placeholder:text-white/10"
-                />
-                <button 
-                  type="submit"
-                  disabled={!tempUsername.trim()}
-                  className="bg-yellow-400 text-black px-8 py-4 font-black text-xl hover:bg-yellow-500 disabled:opacity-30 transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
-                >
-                  CONFIRM DEPLOYMENT <Send size={20} />
-                </button>
-                {savedUsername && (
-                  <button 
-                    type="button"
-                    onClick={() => setIsEditingName(false)}
-                    className="text-white/40 text-xs font-bold tracking-widest hover:text-white transition-colors"
-                  >
-                    CANCEL
-                  </button>
-                )}
-              </form>
+              <Shield className="w-20 h-20 text-yellow-400 mb-6 animate-pulse" />
+              <h2 className="text-3xl font-black italic mb-4">UNAUTHORIZED ACCESS</h2>
+              <p className="text-white/60 mb-8 tracking-widest">ENROLLMENT REQUIRED FOR DEPLOYMENT</p>
+              <Link 
+                to="/auth" 
+                className="bg-yellow-400 text-black px-12 py-4 font-black text-xl hover:bg-yellow-500 transition-all shadow-[0_0_20px_rgba(250,204,21,0.4)]"
+              >
+                ENROLL NOW
+              </Link>
             </motion.div>
           ) : gameState === "idle" && (
             <motion.div 
@@ -168,26 +132,27 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-6 md:gap-8"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-6"
             >
               <div className="flex flex-col items-center">
                 <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
                   STRATAGEM HERO
                 </h1>
-                <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-4 md:mb-6 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+                <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-4 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
-                <div className="flex items-center gap-3 mb-6 md:mb-8 group">
-                  <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">ACTIVE HELLDIVER:</span>
-                  <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{savedUsername}</span>
-                  <button 
-                    onClick={() => {
-                      setTempUsername(savedUsername);
-                      setIsEditingName(true);
-                    }}
-                    className="p-1 text-white/20 hover:text-yellow-400 transition-colors"
-                  >
-                    <Edit2 size={14} />
-                  </button>
+                <div className="flex flex-col items-center gap-2 mb-8">
+                  <div className="flex items-center gap-3">
+                    <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
+                    <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{savedUsername}</span>
+                  </div>
+                  <div className="flex gap-4">
+                    <Link to="/auth" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
+                      <Edit2 size={12} /> EDIT PROFILE
+                    </Link>
+                    <Link to="/stats" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
+                      <BarChart3 size={12} /> GLOBAL STATS
+                    </Link>
+                  </div>
                 </div>
 
                 <motion.p 
@@ -216,7 +181,6 @@ const Index = () => {
               className="w-full h-full flex flex-col items-center justify-between z-10 py-1 md:py-8"
             >
               <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full">
-                {/* Status Alerts */}
                 <div className="h-6 md:h-8 flex flex-col gap-1 mb-1">
                   <AnimatePresence>
                     {isDisrupted && (
@@ -248,7 +212,6 @@ const Index = () => {
                   </AnimatePresence>
                 </div>
 
-                {/* Main Game Area */}
                 <div className={`flex-1 flex flex-col items-center justify-center w-full relative ${isDisrupted ? 'animate-flicker' : ''}`}>
                   {missionQueue[currentQueueIndex] && (
                     <StratagemDisplay 
@@ -263,7 +226,6 @@ const Index = () => {
                     />
                   )}
                   
-                  {/* Combo Display */}
                   <AnimatePresence>
                     {combo > 1 && (
                       <motion.div
@@ -282,7 +244,6 @@ const Index = () => {
                   </AnimatePresence>
                 </div>
 
-                {/* Controls & Timer */}
                 <div className="w-full flex flex-col items-center gap-1 md:gap-2">
                   <div className="w-full px-2 max-w-2xl">
                     <div className="relative h-2 md:h-4 bg-black/60 border md:border-[2px] border-white/20 overflow-hidden">
