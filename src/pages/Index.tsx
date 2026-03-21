@@ -7,7 +7,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Send } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Send, User, Edit2 } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 
@@ -37,7 +37,12 @@ const Index = () => {
     return saved ? parseInt(saved) : 0;
   });
 
-  const [username, setUsername] = useState("");
+  const [savedUsername, setSavedUsername] = useState(() => {
+    return localStorage.getItem("stratagem-hero-username") || "";
+  });
+
+  const [tempUsername, setTempUsername] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -51,15 +56,23 @@ const Index = () => {
     }
   }, [gameState, stats.totalScore, highScore]);
 
-  const submitScore = async (e: React.FormEvent) => {
+  const handleSaveUsername = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || isSubmitting || !supabase) return;
+    if (!tempUsername.trim()) return;
+    const name = tempUsername.trim().toUpperCase();
+    setSavedUsername(name);
+    localStorage.setItem("stratagem-hero-username", name);
+    setIsEditingName(false);
+  };
+
+  const submitScore = async () => {
+    if (!savedUsername || isSubmitting || !supabase || hasSubmitted) return;
 
     setIsSubmitting(true);
     const { error } = await supabase
       .from('leaderboard')
       .insert([
-        { username, score: stats.totalScore, level }
+        { username: savedUsername, score: stats.totalScore, level }
       ]);
 
     if (!error) {
@@ -68,11 +81,20 @@ const Index = () => {
     setIsSubmitting(false);
   };
 
+  // Auto-submit score when game ends if we have a username
+  useEffect(() => {
+    if (gameState === "gameover" && savedUsername && !hasSubmitted && !isSubmitting) {
+      submitScore();
+    }
+  }, [gameState, savedUsername, hasSubmitted, isSubmitting]);
+
   // Global input listener for starting/restarting the game
   useEffect(() => {
     const handleGlobalInput = (e: KeyboardEvent | TouchEvent | MouseEvent) => {
+      // Don't start if we don't have a username or are editing it
+      if (!savedUsername || isEditingName) return;
+
       if (gameState === "idle" || (gameState === "gameover" && hasSubmitted)) {
-        // We don't want to trigger start if they are clicking the "Made with Dyad" link or input
         if (e.target instanceof HTMLElement && (e.target.closest('a') || e.target.closest('input') || e.target.closest('button'))) return;
         
         startGame();
@@ -88,7 +110,7 @@ const Index = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted]);
+  }, [gameState, startGame, hasSubmitted, savedUsername, isEditingName]);
 
   return (
     <div className="h-dynamic-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
@@ -98,20 +120,76 @@ const Index = () => {
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         <AnimatePresence mode="wait">
-          {gameState === "idle" && (
+          {(!savedUsername || isEditingName) ? (
+            <motion.div 
+              key="setup"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              className="flex flex-col items-center text-center z-10 px-4 w-full max-w-md"
+            >
+              <div className="mb-8">
+                <User className="w-16 h-16 text-yellow-400 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
+                <h2 className="text-2xl md:text-4xl font-black italic tracking-tighter mb-2">IDENTIFICATION REQUIRED</h2>
+                <p className="text-white/60 text-xs md:text-sm font-bold tracking-widest">ENTER YOUR HELLDIVER DESIGNATION</p>
+              </div>
+
+              <form onSubmit={handleSaveUsername} className="w-full flex flex-col gap-4">
+                <input 
+                  autoFocus
+                  type="text" 
+                  maxLength={12}
+                  value={tempUsername}
+                  onChange={(e) => setTempUsername(e.target.value.toUpperCase())}
+                  placeholder="NAME"
+                  className="w-full bg-white/5 border-2 border-white/20 px-6 py-4 text-2xl text-yellow-400 font-black tracking-[0.2em] text-center focus:outline-none focus:border-yellow-400 transition-all placeholder:text-white/10"
+                />
+                <button 
+                  type="submit"
+                  disabled={!tempUsername.trim()}
+                  className="bg-yellow-400 text-black px-8 py-4 font-black text-xl hover:bg-yellow-500 disabled:opacity-30 transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(250,204,21,0.3)]"
+                >
+                  CONFIRM DEPLOYMENT <Send size={20} />
+                </button>
+                {savedUsername && (
+                  <button 
+                    type="button"
+                    onClick={() => setIsEditingName(false)}
+                    className="text-white/40 text-xs font-bold tracking-widest hover:text-white transition-colors"
+                  >
+                    CANCEL
+                  </button>
+                )}
+              </form>
+            </motion.div>
+          ) : gameState === "idle" && (
             <motion.div 
               key="idle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-8"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-6 md:gap-8"
             >
               <div className="flex flex-col items-center">
                 <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
                   STRATAGEM HERO
                 </h1>
-                <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-6 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+                <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-4 md:mb-6 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
+                <div className="flex items-center gap-3 mb-6 md:mb-8 group">
+                  <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">ACTIVE HELLDIVER:</span>
+                  <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{savedUsername}</span>
+                  <button 
+                    onClick={() => {
+                      setTempUsername(savedUsername);
+                      setIsEditingName(true);
+                    }}
+                    className="p-1 text-white/20 hover:text-yellow-400 transition-colors"
+                  >
+                    <Edit2 size={14} />
+                  </button>
+                </div>
+
                 <motion.p 
                   animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
@@ -294,32 +372,20 @@ const Index = () => {
                 </div>
               </div>
 
-              {!hasSubmitted ? (
-                <form onSubmit={submitScore} className="w-full max-w-md flex flex-col gap-2 mb-4">
-                  <p className="text-[10px] text-white/60 font-bold tracking-widest text-center">ENTER NAME FOR GLOBAL RECORD</p>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      maxLength={12}
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value.toUpperCase())}
-                      placeholder="HELLDIVER NAME"
-                      className="flex-1 bg-white/5 border border-white/20 px-4 py-2 text-yellow-400 font-black tracking-widest focus:outline-none focus:border-yellow-400 transition-colors"
-                    />
-                    <button 
-                      type="submit"
-                      disabled={isSubmitting || !username}
-                      className="bg-yellow-400 text-black px-4 py-2 font-black hover:bg-yellow-500 disabled:opacity-50 transition-colors flex items-center gap-2"
-                    >
-                      {isSubmitting ? "..." : <Send size={18} />}
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="bg-green-500/20 border border-green-500/50 px-6 py-2 mb-4">
-                  <p className="text-green-400 text-xs font-black tracking-widest">RECORD SECURED</p>
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <div className="flex items-center gap-2 text-white/60 text-xs font-bold tracking-widest">
+                  RECORDING AS: <span className="text-yellow-400">{savedUsername}</span>
                 </div>
-              )}
+                {hasSubmitted ? (
+                  <div className="bg-green-500/20 border border-green-500/50 px-6 py-2">
+                    <p className="text-green-400 text-xs font-black tracking-widest">RECORD SECURED</p>
+                  </div>
+                ) : isSubmitting ? (
+                  <div className="animate-pulse text-yellow-400 text-xs font-black tracking-widest">
+                    UPLOADING INTEL...
+                  </div>
+                ) : null}
+              </div>
 
               <p className="text-white/40 text-[10px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center">
                 {('ontouchstart' in window) ? 'TAP TO REDEPLOY' : 'PRESS ANY KEY TO REDEPLOY'}
