@@ -25,6 +25,7 @@ const Stats = () => {
       const { data, error: supabaseError } = await supabase
         .from('leaderboard')
         .select('*')
+        .neq('username', 'TEST_DIVER') // Filter out test accounts
         .order('score', { ascending: false })
         .limit(50);
 
