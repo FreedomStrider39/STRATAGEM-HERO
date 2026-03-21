@@ -42,14 +42,26 @@ const Index = () => {
     }
   }, [gameState, stats.totalScore, highScore]);
 
+  // Global input listener for starting/restarting the game
   useEffect(() => {
-    const handleGlobalKey = () => {
+    const handleGlobalInput = (e: KeyboardEvent | TouchEvent | MouseEvent) => {
       if (gameState === "idle" || gameState === "gameover") {
+        // We don't want to trigger start if they are clicking the "Made with Dyad" link
+        if (e.target instanceof HTMLElement && e.target.closest('a')) return;
+        
         startGame();
       }
     };
-    window.addEventListener("keydown", handleGlobalKey);
-    return () => window.removeEventListener("keydown", handleGlobalKey);
+
+    window.addEventListener("keydown", handleGlobalInput);
+    window.addEventListener("mousedown", handleGlobalInput);
+    window.addEventListener("touchstart", handleGlobalInput, { passive: true });
+
+    return () => {
+      window.removeEventListener("keydown", handleGlobalInput);
+      window.removeEventListener("mousedown", handleGlobalInput);
+      window.removeEventListener("touchstart", handleGlobalInput);
+    };
   }, [gameState, startGame]);
 
   return (
@@ -65,8 +77,7 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => startGame()}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center cursor-pointer"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center"
             >
               <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
                 STRATAGEM HERO
@@ -232,8 +243,7 @@ const Index = () => {
               key="gameover"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              onClick={() => startGame()}
-              className="flex flex-col items-center justify-center w-full h-full z-10 px-4 overflow-y-auto max-h-full py-2 md:py-8 cursor-pointer"
+              className="flex flex-col items-center justify-center w-full h-full z-10 px-4 overflow-y-auto max-h-full py-2 md:py-8"
             >
               <h2 className="text-2xl md:text-7xl font-black text-red-500 mb-2 md:mb-8 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none">
                 MISSION FAILED
