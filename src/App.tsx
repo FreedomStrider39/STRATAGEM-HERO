@@ -10,7 +10,6 @@ import Login from "./pages/Login";
 import Auth from "./pages/Auth";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
-import Welcome from "./pages/Welcome";
 
 const queryClient = new QueryClient();
 
@@ -22,8 +21,7 @@ const App = () => (
         <Sonner />
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/game" element={<Index />} />
+            <Route path="/" element={<Index />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/login" element={<Login />} />
             <Route path="/auth" element={<Auth />} />
