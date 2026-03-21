@@ -31,8 +31,7 @@ const Index = () => {
     stats,
     combo,
     startGame,
-    handleInput,
-    setGameState // Assuming we might need to manually reset state
+    handleInput
   } = useStratagemGame();
 
   const [highScore, setHighScore] = useState(() => {
@@ -48,7 +47,7 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  // Fetch personal best from Supabase on load
+  // Fetch personal best from Supabase on load or when username changes
   useEffect(() => {
     const fetchPersonalBest = async () => {
       if (!supabase || !savedUsername) return;
@@ -144,7 +143,7 @@ const Index = () => {
   }, [gameState, startGame, hasSubmitted, savedUsername]);
 
   return (
-    <div className="h-dynamic-screen w-full bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
+    <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
