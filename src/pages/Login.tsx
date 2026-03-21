@@ -61,8 +61,9 @@ const Login = () => {
               <Shield className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="text-[10px] font-bold leading-tight uppercase tracking-wider">
                 <p className="mb-1">Ton email sert uniquement à créer ton compte et lier tes données de jeu.</p>
-                <p className="mb-1">Nous ne partageons pas tes données.</p>
-                <p>Tu peux demander leur suppression à tout moment.</p>
+                <Link to="/privacy" className="text-yellow-400 hover:underline block mb-1">
+                  Voir la politique de confidentialité
+                </Link>
               </div>
             </div>
 
