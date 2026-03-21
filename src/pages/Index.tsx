@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, LogIn, User, Edit2, BarChart3, Shield, Home, LogOut, Settings, Info } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, LogIn, User, Edit2, BarChart3, Shield, Home, LogOut, Settings, Info, FileText } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -118,8 +118,7 @@ const Index = () => {
 
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
-      if (isProfileLoading) return;
-
+      // Don't block input if profile is loading, just the game start
       const target = e.target as HTMLElement;
       if (target.closest('a') || target.closest('button') || target.closest('input')) {
         return;
@@ -139,15 +138,7 @@ const Index = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted, isProfileLoading]);
-
-  if (authLoading) {
-    return (
-      <div className="fixed inset-0 bg-[#0a0c0c] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent animate-spin" />
-      </div>
-    );
-  }
+  }, [gameState, startGame, hasSubmitted]);
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
@@ -170,9 +161,12 @@ const Index = () => {
                 </h1>
                 <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-4 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
-                <div className="max-w-md mb-6 px-4">
-                  <p className="text-white/80 text-[10px] md:text-xs font-bold tracking-widest uppercase leading-relaxed">
-                    The ultimate training simulator for Helldivers. Master your stratagem inputs to ensure victory for Super Earth.
+                <div className="max-w-xl mb-6 px-4 bg-white/5 p-4 border border-white/10">
+                  <h2 className="text-yellow-400 text-xs font-black tracking-widest mb-2 uppercase">Mission Objective</h2>
+                  <p className="text-white/80 text-[10px] md:text-sm font-bold tracking-widest uppercase leading-relaxed">
+                    Stratagem Hero is a training simulator designed for Helldivers to master their combat inputs. 
+                    Practice the directional sequences required to call in orbital strikes, support weapons, and reinforcements. 
+                    Improve your speed and accuracy to ensure victory for Super Earth.
                   </p>
                 </div>
 
@@ -201,9 +195,9 @@ const Index = () => {
                   ) : (
                     <Link 
                       to="/login"
-                      className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/40 px-4 py-2 text-yellow-400 text-[10px] md:text-xs font-black tracking-widest hover:bg-yellow-400 hover:text-black transition-all"
+                      className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/40 px-6 py-3 text-yellow-400 text-xs md:text-sm font-black tracking-widest hover:bg-yellow-400 hover:text-black transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)]"
                     >
-                      <LogIn size={14} /> ENROLL TO SAVE PROGRESS
+                      <LogIn size={16} /> ENROLL TO SAVE PROGRESS
                     </Link>
                   )}
                 </div>
@@ -225,17 +219,24 @@ const Index = () => {
                 </div>
               )}
 
-              {/* Footer for Google Verification */}
-              <div className="mt-8 flex flex-wrap justify-center gap-6 border-t border-white/10 pt-6 w-full max-w-md">
-                <Link to="/privacy" className="text-[9px] md:text-[10px] text-white/30 hover:text-yellow-400 font-bold tracking-widest uppercase transition-colors">
-                  Privacy Policy
-                </Link>
-                <Link to="/terms" className="text-[9px] md:text-[10px] text-white/30 hover:text-yellow-400 font-bold tracking-widest uppercase transition-colors">
-                  Terms of Use
-                </Link>
-                <span className="text-[9px] md:text-[10px] text-white/20 font-bold tracking-widest uppercase">
-                  © 2024 Stratagem Hero
-                </span>
+              {/* Footer for Google Verification - Made more prominent */}
+              <div className="mt-12 flex flex-col items-center gap-4 border-t border-white/10 pt-8 w-full max-w-2xl">
+                <div className="flex flex-wrap justify-center gap-8">
+                  <Link to="/privacy" className="flex items-center gap-2 text-xs text-yellow-400 hover:text-yellow-300 font-black tracking-widest uppercase transition-colors">
+                    <Shield size={14} /> Privacy Policy
+                  </Link>
+                  <Link to="/terms" className="flex items-center gap-2 text-xs text-yellow-400 hover:text-yellow-300 font-black tracking-widest uppercase transition-colors">
+                    <FileText size={14} /> Terms of Use
+                  </Link>
+                </div>
+                <div className="text-center space-y-1">
+                  <p className="text-[10px] text-white/40 font-bold tracking-widest uppercase">
+                    © 2024 Stratagem Hero - Fan-made training tool
+                  </p>
+                  <p className="text-[8px] text-white/20 font-bold tracking-widest uppercase max-w-xs mx-auto">
+                    This application is not affiliated with Arrowhead Game Studios or Sony Interactive Entertainment.
+                  </p>
+                </div>
               </div>
             </motion.div>
           )}
