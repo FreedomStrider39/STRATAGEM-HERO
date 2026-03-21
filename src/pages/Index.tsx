@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Send, User, Edit2, BarChart3, Shield } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Send, User, Edit2, BarChart3, Shield, Home } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 
 const Index = () => {
+  const navigate = useNavigate();
   const {
     gameState,
     score,
@@ -30,7 +31,8 @@ const Index = () => {
     stats,
     combo,
     startGame,
-    handleInput
+    handleInput,
+    setGameState // Assuming we might need to manually reset state
   } = useStratagemGame();
 
   const [highScore, setHighScore] = useState(() => {
@@ -45,6 +47,30 @@ const Index = () => {
   const [tempUsername, setTempUsername] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  // Fetch personal best from Supabase on load
+  useEffect(() => {
+    const fetchPersonalBest = async () => {
+      if (!supabase || !savedUsername) return;
+      
+      const { data, error } = await supabase
+        .from('leaderboard')
+        .select('score')
+        .eq('username', savedUsername)
+        .order('score', { ascending: false })
+        .limit(1);
+
+      if (!error && data && data.length > 0) {
+        const cloudScore = data[0].score;
+        if (cloudScore > highScore) {
+          setHighScore(cloudScore);
+          localStorage.setItem("stratagem-hero-highscore", cloudScore.toString());
+        }
+      }
+    };
+
+    fetchPersonalBest();
+  }, [savedUsername]);
 
   useEffect(() => {
     if (gameState === "gameover" && stats.totalScore > highScore) {
@@ -96,7 +122,6 @@ const Index = () => {
     const handleGlobalInput = (e: any) => {
       if (!savedUsername) return;
 
-      // Check if we should ignore this input (clicking links, buttons, or inputs)
       const target = e.target as HTMLElement;
       if (target.closest('a') || target.closest('button') || target.closest('input')) {
         return;
@@ -119,8 +144,8 @@ const Index = () => {
   }, [gameState, startGame, hasSubmitted, savedUsername]);
 
   return (
-    <div className="min-h-screen bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
-      <div className="w-full h-screen max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f]">
+    <div className="h-dynamic-screen w-full bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
+      <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
@@ -162,7 +187,7 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-6"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-4 md:gap-6"
             >
               <div className="flex flex-col items-center">
                 <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
@@ -170,7 +195,7 @@ const Index = () => {
                 </h1>
                 <div className="h-1 w-24 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-4 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
-                <div className="flex flex-col items-center gap-2 mb-8">
+                <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                   <div className="flex items-center gap-3">
                     <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
                     <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{savedUsername}</span>
@@ -208,9 +233,9 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full flex flex-col items-center justify-between z-10 py-1 md:py-8"
+              className="w-full h-full flex flex-col items-center justify-between z-10 py-1 md:py-8 overflow-hidden"
             >
-              <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full">
+              <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full overflow-hidden">
                 <div className="h-6 md:h-8 flex flex-col gap-1 mb-1">
                   <AnimatePresence>
                     {isDisrupted && (
@@ -242,7 +267,7 @@ const Index = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className={`flex-1 flex flex-col items-center justify-center w-full relative ${isDisrupted ? 'animate-flicker' : ''}`}>
+                <div className={`flex-1 flex flex-col items-center justify-center w-full relative ${isDisrupted ? 'animate-flicker' : ''} overflow-hidden`}>
                   {missionQueue[currentQueueIndex] && (
                     <StratagemDisplay 
                       stratagem={missionQueue[currentQueueIndex]} 
@@ -274,7 +299,7 @@ const Index = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className="w-full flex flex-col items-center gap-1 md:gap-2">
+                <div className="w-full flex flex-col items-center gap-1 md:gap-2 mt-auto">
                   <div className="w-full px-2 max-w-2xl">
                     <div className="relative h-2 md:h-4 bg-black/60 border md:border-[2px] border-white/20 overflow-hidden">
                       <motion.div 
@@ -378,9 +403,18 @@ const Index = () => {
                 ) : null}
               </div>
 
-              <p className="text-white/40 text-[10px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center">
-                {('ontouchstart' in window) ? 'TAP TO REDEPLOY' : 'PRESS ANY KEY TO REDEPLOY'}
-              </p>
+              <div className="flex flex-col gap-4 w-full max-w-xs">
+                <p className="text-white/40 text-[10px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center">
+                  {('ontouchstart' in window) ? 'TAP TO REDEPLOY' : 'PRESS ANY KEY TO REDEPLOY'}
+                </p>
+                
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 py-3 hover:bg-white/10 transition-colors text-xs font-black tracking-widest"
+                >
+                  <Home size={16} /> MAIN MENU
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
