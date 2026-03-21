@@ -61,13 +61,11 @@ class AudioManager {
     this.loadSound("start", startSfx);
     this.loadSound("ready", readySfx);
     
-    // This is the BGM file
     this.bgm = new Audio(playingWav);
     this.bgm.loop = true;
     this.bgm.volume = 0.4;
     
     this.initialized = true;
-    console.log("BGM initialized with playing.wav");
   }
 
   private loadSound(name: string, url: string) {
@@ -112,15 +110,15 @@ class AudioManager {
   }
 
   playStart() {
-    // Stop the "ready" sound if it's still playing
+    // Stop the "ready" sound immediately
     this.stopSound("ready");
     
-    // Play a quick coin sound
+    // Play the coin sound
     const coin = Math.random() > 0.5 ? "coin1" : "coin2";
     this.playSound(coin);
     
-    // We no longer play start.wav or stratagem_hero.wav here 
-    // to prevent clashing with the BGM (playing.wav)
+    // Play the startup sound
+    this.playSound("start");
   }
 
   playReady() {
