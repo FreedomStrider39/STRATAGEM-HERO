@@ -13,6 +13,7 @@ export interface GameStats {
   timeBonus: number;
   perfectBonus: number;
   totalScore: number;
+  maxCombo: number;
 }
 
 export const useStratagemGame = () => {
@@ -23,6 +24,10 @@ export const useStratagemGame = () => {
   const [breakTimeLeft, setBreakTimeLeft] = useState(0);
   const [inputIndex, setInputIndex] = useState(0);
   const [lastInputCorrect, setLastInputCorrect] = useState<boolean | null>(null);
+  
+  // Combo & Multiplier
+  const [combo, setCombo] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0);
   
   // Challenges
   const [isDisrupted, setIsDisrupted] = useState(false);
@@ -41,7 +46,8 @@ export const useStratagemGame = () => {
     roundBonus: 0,
     timeBonus: 0,
     perfectBonus: 0,
-    totalScore: 0
+    totalScore: 0,
+    maxCombo: 0
   });
   
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -89,6 +95,8 @@ export const useStratagemGame = () => {
     setActiveSequence(firstRound[0].sequence);
     setMistakesInGame(0);
     setErrorsThisStratagem(0);
+    setCombo(0);
+    setMaxCombo(0);
     setIsDisrupted(false);
     setDisruptedCount(0);
     setDisruptedLimit(0);
@@ -107,9 +115,10 @@ export const useStratagemGame = () => {
       roundBonus: rBonus,
       timeBonus: tBonus,
       perfectBonus: pBonus,
-      totalScore: score + rBonus + tBonus + pBonus
+      totalScore: score + rBonus + tBonus + pBonus,
+      maxCombo: maxCombo
     });
-  }, [level, timeLeft, mistakesInGame, score]);
+  }, [level, timeLeft, mistakesInGame, score, maxCombo]);
 
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
@@ -180,7 +189,13 @@ export const useStratagemGame = () => {
         const speedBonus = Math.max(0, Math.floor((2500 - timeTaken) / 50));
         const errorPenalty = errorsThisStratagem * 15;
         
-        const points = Math.max(5, complexityBonus + speedBonus - errorPenalty);
+        // Combo Multiplier
+        const currentCombo = errorsThisStratagem === 0 ? combo + 1 : 0;
+        setCombo(currentCombo);
+        if (currentCombo > maxCombo) setMaxCombo(currentCombo);
+        
+        const multiplier = 1 + (currentCombo * 0.1);
+        const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
         const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.1);
@@ -220,22 +235,19 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
-        audioManager.playError();
-        setLastInputCorrect(false);
-        setInputIndex(0);
-        setErrorsThisStratagem(prev => prev + 1);
-        setMistakesInGame(prev => prev + 1);
+        setInputIndex(nextInputIdx);
       }
     } else {
       audioManager.playError();
       setLastInputCorrect(false);
       setInputIndex(0);
+      setCombo(0); // Reset combo on error
       setErrorsThisStratagem(prev => prev + 1);
       setMistakesInGame(prev => prev + 1);
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
-  }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem, activeSequence, isDisrupted, disruptedCount, disruptedLimit]);
+  }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem, activeSequence, isDisrupted, disruptedCount, disruptedLimit, combo, maxCombo]);
 
   useEffect(() => {
     if (gameState === "playing") {
@@ -300,6 +312,7 @@ export const useStratagemGame = () => {
     showDisruptorDestroyed,
     activeSequence,
     stats,
+    combo,
     startGame,
     handleInput
   };

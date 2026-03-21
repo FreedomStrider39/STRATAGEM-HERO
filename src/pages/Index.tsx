@@ -6,7 +6,7 @@ import StratagemDisplay from "@/components/StratagemDisplay";
 import TouchControls from "@/components/TouchControls";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 
 const Index = () => {
@@ -25,6 +25,7 @@ const Index = () => {
     showDisruptorDestroyed,
     activeSequence,
     stats,
+    combo,
     startGame,
     handleInput
   } = useStratagemGame();
@@ -164,6 +165,24 @@ const Index = () => {
                       score={score}
                     />
                   )}
+                  
+                  {/* Combo Display */}
+                  <AnimatePresence>
+                    {combo > 1 && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 1.5 }}
+                        className="absolute top-1/2 right-4 md:right-12 flex flex-col items-center"
+                      >
+                        <div className="flex items-center gap-2 text-yellow-400">
+                          <Zap className="w-6 h-6 md:w-10 md:h-10 fill-yellow-400" />
+                          <span className="text-3xl md:text-6xl font-black italic text-glow-yellow">x{combo}</span>
+                        </div>
+                        <span className="text-[10px] md:text-sm font-bold tracking-[0.3em] text-white/60">COMBO</span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="w-full flex flex-col items-center gap-4 md:gap-8">
@@ -239,10 +258,10 @@ const Index = () => {
                 </div>
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-sm md:text-3xl font-bold tracking-widest">PERFECT BONUS</p>
+                  <p className="text-[#4ade80] text-sm md:text-3xl font-bold tracking-widest">MAX COMBO</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-2xl md:text-5xl font-black">{stats.perfectBonus}</p>
+                  <p className="text-yellow-400 text-2xl md:text-5xl font-black">{stats.maxCombo}</p>
                 </div>
 
                 <div className="col-span-2 h-[2px] bg-white/20 my-2 md:my-6" />
