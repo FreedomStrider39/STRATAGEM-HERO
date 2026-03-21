@@ -93,13 +93,16 @@ const Index = () => {
   }, [gameState, savedUsername, hasSubmitted, isSubmitting]);
 
   useEffect(() => {
-    const handleGlobalInput = (e: KeyboardEvent | TouchEvent | MouseEvent) => {
+    const handleGlobalInput = (e: any) => {
       if (!savedUsername) return;
 
+      // Check if we should ignore this input (clicking links, buttons, or inputs)
+      const target = e.target as HTMLElement;
+      if (target.closest('a') || target.closest('button') || target.closest('input')) {
+        return;
+      }
+
       if (gameState === "idle" || (gameState === "gameover" && hasSubmitted)) {
-        // Don't start if clicking interactive elements
-        if (e.target instanceof HTMLElement && (e.target.closest('a') || e.target.closest('input') || e.target.closest('button'))) return;
-        
         startGame();
       }
     };
