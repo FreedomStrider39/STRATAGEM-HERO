@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Users, AlertCircle } from "lucide-react";
+import { Users, AlertCircle } from "lucide-react";
 
 interface Entry {
   username: string;
@@ -14,7 +13,7 @@ interface Entry {
 const Leaderboard = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -24,17 +23,17 @@ const Leaderboard = () => {
       }
 
       try {
-        const { data, error } = await supabase
+        const { data, error: supabaseError } = await supabase
           .from('leaderboard')
           .select('username, score, level')
           .order('score', { ascending: false })
           .limit(10);
 
-        if (error) throw error;
+        if (supabaseError) throw supabaseError;
         if (data) setEntries(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Leaderboard fetch failed:", err);
-        setError(true);
+        setError(err.message || "CONNECTION ERROR");
       } finally {
         setLoading(false);
       }
@@ -48,7 +47,7 @@ const Leaderboard = () => {
   if (error) return (
     <div className="w-full max-w-md bg-red-500/5 border border-red-500/20 p-2 flex items-center gap-2">
       <AlertCircle className="w-3 h-3 text-red-500" />
-      <span className="text-[8px] text-red-500/80 font-bold">DATABASE TABLE NOT FOUND</span>
+      <span className="text-[8px] text-red-500/80 font-bold uppercase">{error}</span>
     </div>
   );
 
