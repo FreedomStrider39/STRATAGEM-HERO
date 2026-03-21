@@ -1,21 +1,20 @@
--- Create the leaderboard table
-create table leaderboard (
-  id uuid default gen_random_uuid() primary key,
-  username text not null,
-  score integer not null,
-  level integer not null,
-  created_at timestamp with time zone default now()
+-- STRATAGEM HERO 2 - DATABASE SETUP
+-- This script initializes the global leaderboard system.
+
+-- 1. Table Definition
+CREATE TABLE public.leaderboard (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  username TEXT NOT NULL UNIQUE,
+  score INTEGER NOT NULL DEFAULT 0,
+  level INTEGER NOT NULL DEFAULT 1,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Enable Row Level Security (RLS)
-alter table leaderboard enable row level security;
+-- 2. Security Configuration
+ALTER TABLE public.leaderboard ENABLE ROW LEVEL SECURITY;
 
--- Allow anyone to read the leaderboard
-create policy "Allow public read access"
-  on leaderboard for select
-  using (true);
-
--- Allow anyone to submit their scores
-create policy "Allow public insert access"
-  on leaderboard for insert
-  with check (true);
+-- 3. Access Policies
+CREATE POLICY "leaderboard_read_policy" ON public.leaderboard FOR SELECT USING (true);
+CREATE POLICY "leaderboard_insert_policy" ON public.leaderboard FOR INSERT WITH CHECK (true);
+CREATE POLICY "leaderboard_update_policy" ON public.leaderboard FOR UPDATE USING (true);
+CREATE POLICY "leaderboard_delete_policy" ON public.leaderboard FOR DELETE USING (true);
