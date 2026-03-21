@@ -221,8 +221,11 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
-        audioManager.playHit();
-        setInputIndex(nextInputIdx);
+        audioManager.playError();
+        setLastInputCorrect(false);
+        setInputIndex(0);
+        setErrorsThisStratagem(prev => prev + 1);
+        setMistakesInGame(prev => prev + 1);
       }
     } else {
       audioManager.playError();
