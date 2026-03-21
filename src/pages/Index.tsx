@@ -55,11 +55,10 @@ const Index = () => {
         .from('leaderboard')
         .select('score')
         .eq('username', savedUsername)
-        .order('score', { ascending: false })
-        .limit(1);
+        .maybeSingle();
 
-      if (!error && data && data.length > 0) {
-        const cloudScore = data[0].score;
+      if (!error && data) {
+        const cloudScore = data.score;
         if (cloudScore > highScore) {
           setHighScore(cloudScore);
           localStorage.setItem("stratagem-hero-highscore", cloudScore.toString());
@@ -94,32 +93,28 @@ const Index = () => {
 
     setIsSubmitting(true);
     try {
-      // Check for any existing records for this username
-      const { data: existingRows } = await supabase
+      // Use upsert with the unique constraint on 'username'
+      // This will either insert a new row or update the existing one for this user
+      // We check the score first to ensure we only update if it's a new personal best
+      const { data: existing } = await supabase
         .from('leaderboard')
-        .select('id, score')
-        .eq('username', savedUsername);
+        .select('score')
+        .eq('username', savedUsername)
+        .maybeSingle();
 
-      if (existingRows && existingRows.length > 0) {
-        // Sort to find the absolute best existing score
-        const bestRecord = [...existingRows].sort((a, b) => b.score - a.score)[0];
-        
-        if (stats.totalScore > bestRecord.score) {
-          // Update the best record with the new higher score
+      if (existing) {
+        if (stats.totalScore > existing.score) {
           await supabase
             .from('leaderboard')
             .update({ score: stats.totalScore, level })
-            .eq('id', bestRecord.id);
+            .eq('username', savedUsername);
         }
-        
-        // If there were multiple records (duplicates), we could delete the others here,
-        // but updating the best one is sufficient for the leaderboard display.
       } else {
-        // Create new record if none exists
         await supabase
           .from('leaderboard')
           .insert([{ username: savedUsername, score: stats.totalScore, level }]);
       }
+      
       setHasSubmitted(true);
     } catch (err) {
       console.error("Score submission failed:", err);
