@@ -65,7 +65,8 @@ const Index = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4"
+              onClick={() => startGame()}
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center cursor-pointer"
             >
               <h1 className="text-3xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
                 STRATAGEM HERO
@@ -102,8 +103,8 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="md:hidden" onClick={() => startGame()}>
-                <TouchControls onInput={handleInput} className="opacity-20 pointer-events-none scale-75" />
+              <div className="md:hidden">
+                <TouchControls onInput={() => {}} className="opacity-20 pointer-events-none scale-75" />
               </div>
               
               <div className="mt-6 md:mt-12 text-white/40 text-xs md:text-xl tracking-widest">
@@ -231,7 +232,8 @@ const Index = () => {
               key="gameover"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center w-full z-10 px-4 overflow-y-auto max-h-full py-2 md:py-8"
+              onClick={() => startGame()}
+              className="flex flex-col items-center justify-center w-full h-full z-10 px-4 overflow-y-auto max-h-full py-2 md:py-8 cursor-pointer"
             >
               <h2 className="text-2xl md:text-7xl font-black text-red-500 mb-2 md:mb-8 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none">
                 MISSION FAILED
