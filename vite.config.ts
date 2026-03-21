@@ -14,6 +14,10 @@ export default defineConfig(() => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Explicitly alias react and react-dom to the project's node_modules
+      // to prevent multiple versions from being loaded by dependencies
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
     // Force deduplication of React to prevent "useState" null errors
     dedupe: ["react", "react-dom"],
