@@ -15,5 +15,7 @@ export default defineConfig(() => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    // Force deduplication of React to prevent "useState" null errors
+    dedupe: ["react", "react-dom"],
   },
 }));
