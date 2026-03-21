@@ -46,94 +46,81 @@ const Stats = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0c0c] text-white p-4 md:p-12 crt-screen overflow-y-auto font-sans">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b-2 border-yellow-400/30 pb-6 gap-6">
-          <div className="flex items-center gap-4">
-            <BarChart3 className="w-10 h-10 text-yellow-400" />
-            <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter text-white uppercase">GLOBAL WAR EFFORT</h1>
+      <div className="max-w-4xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b-2 border-yellow-400/30 pb-6 gap-4">
+          <div className="flex items-center gap-3">
+            <BarChart3 className="w-8 h-8 text-yellow-400" />
+            <h1 className="text-2xl md:text-4xl font-black italic tracking-tighter uppercase">GLOBAL STATS</h1>
           </div>
           
           <div className="flex items-center gap-4">
             <button 
               onClick={fetchLeaderboard}
               disabled={isRefreshing}
-              className="flex items-center gap-2 bg-white/5 border border-white/20 px-4 py-2 text-xs font-black hover:bg-white/10 transition-colors disabled:opacity-50 uppercase tracking-widest"
+              className="p-2 text-white/40 hover:text-yellow-400 transition-colors disabled:opacity-50"
             >
-              <RefreshCw size={16} className={isRefreshing ? "animate-spin" : ""} /> REFRESH
+              <RefreshCw size={20} className={isRefreshing ? "animate-spin" : ""} />
             </button>
 
             <Link 
               to="/" 
-              className="flex items-center gap-2 text-white/60 hover:text-yellow-400 transition-colors font-black tracking-widest text-xs md:text-sm ml-4 uppercase"
+              className="flex items-center gap-2 bg-yellow-400 text-black px-4 py-2 font-black tracking-widest text-xs uppercase hover:bg-yellow-500 transition-colors"
             >
-              <ArrowLeft size={20} /> RETURN
+              <ArrowLeft size={16} /> BACK
             </Link>
           </div>
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-32 gap-6">
-            <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent animate-spin" />
-            <p className="text-yellow-400 font-black tracking-[0.4em] animate-pulse text-xl">DECRYPTING INTEL...</p>
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="w-10 h-10 border-2 border-yellow-400 border-t-transparent animate-spin" />
+            <p className="text-yellow-400 font-black tracking-widest animate-pulse text-xs">DECRYPTING...</p>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-6 border-2 border-red-500/20 bg-red-500/5 p-12 text-center">
-            <AlertCircle className="w-20 h-20 text-red-500" />
-            <p className="text-red-500 font-black text-2xl tracking-[0.2em] mb-4 uppercase">{error}</p>
-            <button 
-              onClick={fetchLeaderboard}
-              className="bg-white/10 border border-white/20 px-8 py-4 font-black text-sm hover:bg-white/20 transition-all uppercase tracking-widest"
-            >
-              RETRY CONNECTION
-            </button>
+          <div className="flex flex-col items-center justify-center py-12 gap-4 border border-red-500/20 bg-red-500/5 p-8 text-center">
+            <AlertCircle className="w-12 h-12 text-red-500" />
+            <p className="text-red-500 font-black text-sm tracking-widest uppercase">{error}</p>
           </div>
         ) : (
-          <div className="w-full">
-            <div className="grid grid-cols-12 px-8 py-4 text-xs md:text-sm font-black text-white/30 tracking-[0.2em] uppercase mb-4">
-              <div className="col-span-2">RANK</div>
-              <div className="col-span-5">HELLDIVER</div>
-              <div className="col-span-2 text-center">LEVEL</div>
-              <div className="col-span-3 text-right">SCORE</div>
-            </div>
-
-            <div className="space-y-3">
-              {entries.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-32 gap-6 bg-white/5 border border-white/10">
-                  <Database className="w-16 h-16 text-white/10" />
-                  <p className="text-white/20 font-black tracking-[0.3em] italic text-xl uppercase">NO DATA RECORDED IN THIS SECTOR</p>
-                </div>
-              ) : (
-                entries.map((entry, idx) => (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.03 }}
-                    key={idx} 
-                    className={`grid grid-cols-12 items-center px-8 py-5 md:py-6 border-l-4 transition-all ${
-                      idx === 0 
-                        ? 'bg-yellow-400/5 border-yellow-400 shadow-[inset_0_0_20px_rgba(250,204,21,0.1)]' 
-                        : 'bg-white/5 border-white/10 hover:bg-white/10'
-                    }`}
-                  >
-                    <div className="col-span-2 font-black text-lg md:text-2xl italic text-white/80">
-                      {idx === 0 ? <Trophy className="text-yellow-400 w-8 h-8" /> : `#${idx + 1}`}
-                    </div>
-                    <div className="col-span-5 flex items-center gap-4">
-                      <div className={`w-2 h-2 rotate-45 ${idx < 3 ? 'bg-yellow-400' : 'bg-white/20'}`} />
-                      <span className={`font-black tracking-[0.15em] truncate uppercase ${idx === 0 ? 'text-yellow-400 text-xl md:text-3xl' : 'text-white text-lg md:text-2xl'}`}>
+          <div className="space-y-2">
+            {entries.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-4 bg-white/5 border border-white/10">
+                <Database className="w-12 h-12 text-white/10" />
+                <p className="text-white/20 font-black tracking-widest italic text-sm uppercase">NO DATA RECORDED</p>
+              </div>
+            ) : (
+              entries.map((entry, idx) => (
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.02 }}
+                  key={idx} 
+                  className={`flex items-center justify-between px-4 py-4 border-l-4 transition-all ${
+                    idx === 0 
+                      ? 'bg-yellow-400/10 border-yellow-400' 
+                      : 'bg-white/5 border-white/10'
+                  }`}
+                >
+                  <div className="flex items-center gap-4 min-w-0">
+                    <span className="font-black text-sm md:text-lg italic text-white/40 w-8">
+                      #{idx + 1}
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className={`font-black tracking-widest truncate uppercase ${idx === 0 ? 'text-yellow-400 text-lg md:text-xl' : 'text-white text-sm md:text-lg'}`}>
                         {entry.username}
                       </span>
+                      <span className="text-[10px] text-white/40 font-bold">LEVEL {entry.level}</span>
                     </div>
-                    <div className="col-span-2 text-center font-black text-white/40 text-sm md:text-xl">
-                      {entry.level}
-                    </div>
-                    <div className="col-span-3 text-right font-black text-yellow-400 text-xl md:text-4xl italic tracking-tighter">
+                  </div>
+                  <div className="text-right flex flex-col items-end">
+                    <span className="text-yellow-400 font-black text-lg md:text-2xl italic tracking-tighter">
                       {entry.score.toLocaleString()}
-                    </div>
-                  </motion.div>
-                ))
-              )}
-            </div>
+                    </span>
+                    <span className="text-[8px] text-white/20 font-bold">POINTS</span>
+                  </div>
+                </motion.div>
+              ))
+            )}
           </div>
         )}
       </div>
