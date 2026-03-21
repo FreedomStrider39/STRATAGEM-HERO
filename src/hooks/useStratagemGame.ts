@@ -264,8 +264,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Significantly increased drain rate and level scaling
-          const drainRate = 0.35 + (level * 0.04);
+          // Reverted to previous balanced drain rate
+          const drainRate = 0.18 + (level * 0.015);
           return prev - drainRate;
         });
       }, 100);

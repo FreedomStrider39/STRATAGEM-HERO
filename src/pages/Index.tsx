@@ -47,7 +47,6 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  // Fetch personal best from Supabase on load or when username changes
   useEffect(() => {
     const fetchPersonalBest = async () => {
       if (!supabase || !savedUsername) return;
@@ -95,15 +94,28 @@ const Index = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
+      // Check if user already has a record
+      const { data: existing } = await supabase
         .from('leaderboard')
-        .insert([
-          { username: savedUsername, score: stats.totalScore, level }
-        ]);
+        .select('id, score')
+        .eq('username', savedUsername)
+        .maybeSingle();
 
-      if (!error) {
-        setHasSubmitted(true);
+      if (existing) {
+        // Only update if the new score is higher
+        if (stats.totalScore > existing.score) {
+          await supabase
+            .from('leaderboard')
+            .update({ score: stats.totalScore, level })
+            .eq('id', existing.id);
+        }
+      } else {
+        // Create new record if none exists
+        await supabase
+          .from('leaderboard')
+          .insert([{ username: savedUsername, score: stats.totalScore, level }]);
       }
+      setHasSubmitted(true);
     } catch (err) {
       console.error("Score submission failed:", err);
     } finally {
