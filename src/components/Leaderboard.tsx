@@ -21,7 +21,7 @@ const Leaderboard = () => {
         const { data, error: supabaseError } = await supabase
           .from('leaderboard')
           .select('username, score, level')
-          .neq('username', 'TEST_DIVER') // Filter out test accounts
+          .not('username', 'ilike', '%TEST%') // Aggressive filter for test accounts
           .order('score', { ascending: false })
           .limit(10);
 

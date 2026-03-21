@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw, Radio } from "lucide-react";
+import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw } from "lucide-react";
 
 interface Entry {
   username: string;
@@ -63,10 +63,6 @@ const Stats = () => {
               className="flex items-center gap-2 bg-white/5 border border-white/20 px-4 py-2 text-xs font-black hover:bg-white/10 transition-colors disabled:opacity-50 uppercase tracking-widest"
             >
               <RefreshCw size={16} className={isRefreshing ? "animate-spin" : ""} /> REFRESH
-            </button>
-            
-            <button className="flex items-center gap-2 bg-yellow-400/5 border border-yellow-400/40 px-4 py-2 text-xs font-black text-yellow-400 hover:bg-yellow-400/10 transition-colors uppercase tracking-widest">
-              <Radio size={16} /> TEST SIGNAL
             </button>
 
             <Link 
