@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const BASE_TIME_REWARD = 2.5; // Increased from 1.0 to make rewards more impactful
+const BASE_TIME_REWARD = 1.0; // Reduced from 2.5 to match user request
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -199,8 +199,8 @@ export const useStratagemGame = () => {
         const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
-        // More generous time reward to ensure net gain when playing well
-        const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.2);
+        // Reduced time reward to ~1.0-1.5s as requested
+        const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.1);
         setTimeLeft(prev => Math.min(prev + timeReward, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
