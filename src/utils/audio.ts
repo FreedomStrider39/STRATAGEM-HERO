@@ -67,7 +67,7 @@ class AudioManager {
     const sound = this.sounds[name];
     if (sound) {
       sound.currentTime = 0;
-      sound.play().catch(() => {});
+      sound.play().catch((err) => console.warn(`Audio play failed for ${name}:`, err));
     }
   }
 
