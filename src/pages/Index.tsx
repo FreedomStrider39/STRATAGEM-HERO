@@ -93,26 +93,28 @@ const Index = () => {
 
     setIsSubmitting(true);
     try {
-      // Use upsert with the unique constraint on 'username'
-      // This will either insert a new row or update the existing one for this user
-      // We check the score first to ensure we only update if it's a new personal best
+      // Check if we should even try to update (only if new score is higher)
       const { data: existing } = await supabase
         .from('leaderboard')
         .select('score')
         .eq('username', savedUsername)
         .maybeSingle();
 
-      if (existing) {
-        if (stats.totalScore > existing.score) {
-          await supabase
-            .from('leaderboard')
-            .update({ score: stats.totalScore, level })
-            .eq('username', savedUsername);
-        }
-      } else {
-        await supabase
+      if (!existing || stats.totalScore > existing.score) {
+        // Use upsert which handles "insert or update on conflict" automatically
+        // This relies on the UNIQUE constraint we just added to the database
+        const { error } = await supabase
           .from('leaderboard')
-          .insert([{ username: savedUsername, score: stats.totalScore, level }]);
+          .upsert(
+            { 
+              username: savedUsername, 
+              score: stats.totalScore, 
+              level: level 
+            }, 
+            { onConflict: 'username' }
+          );
+          
+        if (error) throw error;
       }
       
       setHasSubmitted(true);
