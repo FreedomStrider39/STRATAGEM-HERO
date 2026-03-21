@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle } from "lucide-react";
+import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle, Database } from "lucide-react";
 
 interface Entry {
   username: string;
@@ -19,35 +19,53 @@ const Stats = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchLeaderboard = async () => {
       if (!supabase) {
-        setError("DATABASE NOT CONNECTED");
-        setLoading(false);
+        if (isMounted) {
+          setError("DATABASE NOT CONNECTED");
+          setLoading(false);
+        }
         return;
       }
 
       try {
-        const { data, error } = await supabase
+        // Add a timeout to the fetch to prevent hanging
+        const fetchPromise = supabase
           .from('leaderboard')
           .select('*')
           .order('score', { ascending: false })
           .limit(50);
 
-        if (error) throw error;
-        if (data) setEntries(data);
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("TIMEOUT")), 8000)
+        );
+
+        const result = await Promise.race([fetchPromise, timeoutPromise]) as any;
+
+        if (result instanceof Error) throw result;
+        if (result.error) throw result.error;
+        
+        if (isMounted && result.data) {
+          setEntries(result.data);
+        }
       } catch (err: any) {
         console.error("Fetch error:", err);
-        setError("FAILED TO RETRIEVE INTEL");
+        if (isMounted) {
+          setError(err.message === "TIMEOUT" ? "CONNECTION TIMED OUT" : "FAILED TO RETRIEVE INTEL");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchLeaderboard();
+    return () => { isMounted = false; };
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0c0c] text-white p-4 md:p-8 crt-screen">
+    <div className="min-h-screen bg-[#0a0c0c] text-white p-4 md:p-8 crt-screen overflow-y-auto">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8 border-b-2 border-yellow-400 pb-4">
           <div className="flex items-center gap-4">
@@ -68,10 +86,22 @@ const Stats = () => {
             <p className="text-yellow-400 font-black tracking-[0.3em] animate-pulse">DECRYPTING INTEL...</p>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4 border-2 border-red-500/20 bg-red-500/5 p-8">
-            <AlertCircle className="w-12 h-12 text-red-500" />
-            <p className="text-red-500 font-black tracking-[0.2em]">{error}</p>
-            <p className="text-white/40 text-xs text-center max-w-xs">PLEASE ENSURE SUPABASE INTEGRATION IS CONFIGURED IN THE EDITOR.</p>
+          <div className="flex flex-col items-center justify-center py-20 gap-6 border-2 border-red-500/20 bg-red-500/5 p-8 text-center">
+            <AlertCircle className="w-16 h-16 text-red-500" />
+            <div>
+              <p className="text-red-500 font-black text-xl tracking-[0.2em] mb-2">{error}</p>
+              <p className="text-white/40 text-xs max-w-xs mx-auto">
+                {error === "DATABASE NOT CONNECTED" 
+                  ? "PLEASE ENSURE SUPABASE INTEGRATION IS CONFIGURED IN THE EDITOR." 
+                  : "THE STRATAGEM NETWORK IS CURRENTLY UNREACHABLE. PLEASE TRY AGAIN LATER."}
+              </p>
+            </div>
+            {error === "DATABASE NOT CONNECTED" && (
+              <div className="p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-sm">
+                <p className="text-yellow-400 text-[10px] font-bold mb-2">REQUIRED ACTION:</p>
+                <p className="text-white/80 text-[10px]">CLICK THE 'ADD SUPABASE' BUTTON IN THE CHAT TO CONNECT THE DATABASE.</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="grid gap-4">
@@ -84,7 +114,10 @@ const Stats = () => {
 
             <div className="space-y-2">
               {entries.length === 0 ? (
-                <p className="text-center py-12 text-white/20 font-bold tracking-widest italic">NO DATA RECORDED IN THIS SECTOR</p>
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <Database className="w-12 h-12 text-white/10" />
+                  <p className="text-white/20 font-bold tracking-widest italic">NO DATA RECORDED IN THIS SECTOR</p>
+                </div>
               ) : (
                 entries.map((entry, idx) => (
                   <motion.div 
