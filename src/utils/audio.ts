@@ -20,7 +20,7 @@ import success3 from "../assets/audio/success3.wav";
 import failureFull from "../assets/audio/failurefull.wav";
 import startSfx from "../assets/audio/start.wav";
 import readySfx from "../assets/audio/ready.wav";
-import playingBgm from "../assets/audio/playing.wav";
+import playingWav from "../assets/audio/playing.wav";
 import stratagemHeroSfx from "../assets/audio/stratagem_hero.wav";
 
 class AudioManager {
@@ -63,12 +63,13 @@ class AudioManager {
     this.loadSound("ready", readySfx);
     this.loadSound("stratagem_hero", stratagemHeroSfx);
     
-    this.bgm = new Audio(playingBgm);
+    // Explicitly using playing.wav for BGM
+    this.bgm = new Audio(playingWav);
     this.bgm.loop = true;
     this.bgm.volume = 0.4;
     
     this.initialized = true;
-    console.log("Audio Manager Initialized");
+    console.log("Audio Manager Initialized with playing.wav");
   }
 
   private loadSound(name: string, url: string) {
@@ -83,7 +84,6 @@ class AudioManager {
     if (sound) {
       sound.currentTime = 0;
       sound.play().catch((err) => {
-        // Silently fail if browser blocks autoplay
         console.debug(`Audio play failed for ${name}:`, err);
       });
     }
