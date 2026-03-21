@@ -43,6 +43,11 @@
     100% { opacity: 1; }
   }
 
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
   .crt-screen {
     position: relative;
     overflow: hidden;
@@ -70,11 +75,10 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background: rgba(18, 16, 16, 0.1);
-    opacity: 0;
-    z-index: 50;
+    background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+    z-index: 51;
     pointer-events: none;
-    animation: flicker 0.15s infinite;
+    animation: scanline 8s linear infinite;
   }
 }
 
