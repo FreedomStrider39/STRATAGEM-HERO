@@ -94,21 +94,26 @@ const Index = () => {
 
     setIsSubmitting(true);
     try {
-      // Check if user already has a record
-      const { data: existing } = await supabase
+      // Check for any existing records for this username
+      const { data: existingRows } = await supabase
         .from('leaderboard')
         .select('id, score')
-        .eq('username', savedUsername)
-        .maybeSingle();
+        .eq('username', savedUsername);
 
-      if (existing) {
-        // Only update if the new score is higher
-        if (stats.totalScore > existing.score) {
+      if (existingRows && existingRows.length > 0) {
+        // Sort to find the absolute best existing score
+        const bestRecord = [...existingRows].sort((a, b) => b.score - a.score)[0];
+        
+        if (stats.totalScore > bestRecord.score) {
+          // Update the best record with the new higher score
           await supabase
             .from('leaderboard')
             .update({ score: stats.totalScore, level })
-            .eq('id', existing.id);
+            .eq('id', bestRecord.id);
         }
+        
+        // If there were multiple records (duplicates), we could delete the others here,
+        // but updating the best one is sufficient for the leaderboard display.
       } else {
         // Create new record if none exists
         await supabase
