@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle, Database } from "lucide-react";
+import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle, Database, Send } from "lucide-react";
 
 interface Entry {
   username: string;
@@ -17,51 +17,56 @@ const Stats = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isTesting, setIsTesting] = useState(false);
+
+  const fetchLeaderboard = async () => {
+    if (!supabase) {
+      setError("DATABASE NOT CONNECTED");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('leaderboard')
+        .select('*')
+        .order('score', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+      if (data) setEntries(data);
+      setError(null);
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+      setError("FAILED TO RETRIEVE INTEL");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendTestSignal = async () => {
+    if (!supabase || isTesting) return;
+    setIsTesting(true);
+    
+    try {
+      const { error } = await supabase
+        .from('leaderboard')
+        .insert([
+          { username: "TEST_DIVER", score: 9999, level: 50 }
+        ]);
+
+      if (error) throw error;
+      await fetchLeaderboard();
+    } catch (err) {
+      console.error("Test signal failed:", err);
+      alert("Test failed! Check if the table 'leaderboard' exists and RLS policies are set.");
+    } finally {
+      setIsTesting(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchLeaderboard = async () => {
-      if (!supabase) {
-        if (isMounted) {
-          setError("DATABASE NOT CONNECTED");
-          setLoading(false);
-        }
-        return;
-      }
-
-      try {
-        // Add a timeout to the fetch to prevent hanging
-        const fetchPromise = supabase
-          .from('leaderboard')
-          .select('*')
-          .order('score', { ascending: false })
-          .limit(50);
-
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error("TIMEOUT")), 8000)
-        );
-
-        const result = await Promise.race([fetchPromise, timeoutPromise]) as any;
-
-        if (result instanceof Error) throw result;
-        if (result.error) throw result.error;
-        
-        if (isMounted && result.data) {
-          setEntries(result.data);
-        }
-      } catch (err: any) {
-        console.error("Fetch error:", err);
-        if (isMounted) {
-          setError(err.message === "TIMEOUT" ? "CONNECTION TIMED OUT" : "FAILED TO RETRIEVE INTEL");
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
     fetchLeaderboard();
-    return () => { isMounted = false; };
   }, []);
 
   return (
@@ -72,12 +77,21 @@ const Stats = () => {
             <BarChart3 className="w-8 h-8 text-yellow-400" />
             <h1 className="text-2xl md:text-4xl font-black italic tracking-tighter">GLOBAL WAR EFFORT</h1>
           </div>
-          <Link 
-            to="/" 
-            className="flex items-center gap-2 text-white/60 hover:text-yellow-400 transition-colors font-bold tracking-widest text-xs md:text-sm"
-          >
-            <ArrowLeft size={18} /> RETURN
-          </Link>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={sendTestSignal}
+              disabled={isTesting || !supabase}
+              className="hidden md:flex items-center gap-2 bg-white/5 border border-white/20 px-3 py-1 text-[10px] font-black hover:bg-white/10 transition-colors disabled:opacity-50"
+            >
+              <Send size={12} /> {isTesting ? "SENDING..." : "SEND TEST SIGNAL"}
+            </button>
+            <Link 
+              to="/" 
+              className="flex items-center gap-2 text-white/60 hover:text-yellow-400 transition-colors font-bold tracking-widest text-xs md:text-sm"
+            >
+              <ArrowLeft size={18} /> RETURN
+            </Link>
+          </div>
         </div>
 
         {loading ? (
@@ -92,16 +106,10 @@ const Stats = () => {
               <p className="text-red-500 font-black text-xl tracking-[0.2em] mb-2">{error}</p>
               <p className="text-white/40 text-xs max-w-xs mx-auto">
                 {error === "DATABASE NOT CONNECTED" 
-                  ? "PLEASE ENSURE SUPABASE INTEGRATION IS CONFIGURED IN THE EDITOR." 
-                  : "THE STRATAGEM NETWORK IS CURRENTLY UNREACHABLE. PLEASE TRY AGAIN LATER."}
+                  ? "PLEASE ENSURE SUPABASE INTEGRATION IS CONFIGURED." 
+                  : "THE STRATAGEM NETWORK IS UNREACHABLE. CHECK YOUR TABLE AND POLICIES."}
               </p>
             </div>
-            {error === "DATABASE NOT CONNECTED" && (
-              <div className="p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-sm">
-                <p className="text-yellow-400 text-[10px] font-bold mb-2">REQUIRED ACTION:</p>
-                <p className="text-white/80 text-[10px]">CLICK THE 'ADD SUPABASE' BUTTON IN THE CHAT TO CONNECT THE DATABASE.</p>
-              </div>
-            )}
           </div>
         ) : (
           <div className="grid gap-4">
