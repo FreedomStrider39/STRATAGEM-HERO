@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle, Database, Send, RefreshCw } from "lucide-react";
+import { Trophy, ArrowLeft, BarChart3, Shield, AlertCircle, Database, RefreshCw } from "lucide-react";
 
 interface Entry {
   username: string;
@@ -17,7 +17,6 @@ const Stats = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isTesting, setIsTesting] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchLeaderboard = async () => {
@@ -41,27 +40,6 @@ const Stats = () => {
     }
   };
 
-  const sendTestSignal = async () => {
-    if (isTesting) return;
-    setIsTesting(true);
-    
-    try {
-      const { error: supabaseError } = await supabase
-        .from('leaderboard')
-        .insert([
-          { username: "TEST_DIVER", score: Math.floor(Math.random() * 5000) + 5000, level: 25 }
-        ]);
-
-      if (supabaseError) throw supabaseError;
-      await fetchLeaderboard();
-    } catch (err: any) {
-      console.error("Test signal failed:", err);
-      setError(err.message || "SIGNAL INTERRUPTED");
-    } finally {
-      setIsTesting(false);
-    }
-  };
-
   useEffect(() => {
     fetchLeaderboard();
   }, []);
@@ -81,13 +59,6 @@ const Stats = () => {
               className="flex items-center gap-2 bg-white/5 border border-white/20 px-3 py-2 text-[10px] font-black hover:bg-white/10 transition-colors disabled:opacity-50"
             >
               <RefreshCw size={14} className={isRefreshing ? "animate-spin" : ""} /> REFRESH
-            </button>
-            <button 
-              onClick={sendTestSignal}
-              disabled={isTesting}
-              className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 px-3 py-2 text-[10px] font-black text-yellow-400 hover:bg-yellow-400/20 transition-colors disabled:opacity-50"
-            >
-              <Send size={14} /> {isTesting ? "SENDING..." : "TEST SIGNAL"}
             </button>
             <Link 
               to="/" 
