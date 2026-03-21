@@ -21,6 +21,7 @@ import failureFull from "@/assets/audio/failurefull.wav";
 import startSfx from "@/assets/audio/start.wav";
 import readySfx from "@/assets/audio/ready.wav";
 import playingBgm from "@/assets/audio/playing.wav";
+import stratagemHeroSfx from "@/assets/audio/stratagem_hero.wav";
 
 class AudioManager {
   private sounds: Record<string, HTMLAudioElement> = {};
@@ -52,6 +53,7 @@ class AudioManager {
       this.loadSound("failurefull", failureFull);
       this.loadSound("start", startSfx);
       this.loadSound("ready", readySfx);
+      this.loadSound("stratagem_hero", stratagemHeroSfx);
       
       // Initialize BGM
       this.bgm = new Audio(playingBgm);
@@ -97,6 +99,7 @@ class AudioManager {
     const coin = Math.random() > 0.5 ? "coin1" : "coin2";
     this.playSound(coin);
     setTimeout(() => this.playSound("start"), 200);
+    setTimeout(() => this.playSound("stratagem_hero"), 1000);
   }
 
   playReady() {
