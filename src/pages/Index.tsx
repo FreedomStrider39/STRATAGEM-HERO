@@ -8,14 +8,14 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, LogIn, User, Edit2, BarChart3, Shield, Home, LogOut } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, LogIn, User, Edit2, BarChart3, Shield, Home, LogOut, Settings } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading: authLoading } = useAuth();
   const {
     gameState,
     score,
@@ -39,12 +39,16 @@ const Index = () => {
   const [highScore, setHighScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [username, setUsername] = useState("HELLDIVER");
+  const [username, setUsername] = useState("");
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
 
   // Fetch personal best and profile on mount or user change
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!user) return;
+      if (!user) {
+        setIsProfileLoading(false);
+        return;
+      }
       
       try {
         // Fetch profile
@@ -54,7 +58,12 @@ const Index = () => {
           .eq('id', user.id)
           .maybeSingle();
         
-        if (profile?.username) setUsername(profile.username);
+        if (profile?.username) {
+          setUsername(profile.username);
+        } else {
+          // If no username is set, redirect to enrollment
+          navigate("/auth");
+        }
 
         // Fetch score
         const { data: leaderboard } = await supabase
@@ -68,19 +77,22 @@ const Index = () => {
         }
       } catch (err) {
         console.error("Failed to fetch user data:", err);
+      } finally {
+        setIsProfileLoading(false);
       }
     };
 
-    fetchUserData();
-  }, [user]);
+    if (!authLoading) {
+      fetchUserData();
+    }
+  }, [user, authLoading, navigate]);
 
   const submitScore = async () => {
     if (!user || isSubmitting || hasSubmitted) return;
 
     setIsSubmitting(true);
     try {
-      // Upsert handles "insert or update on conflict" automatically
-      // We only update if the new score is higher
+      // Only update if the new score is higher
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
@@ -115,7 +127,7 @@ const Index = () => {
   // Global input listener to start game
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
-      if (!user) return;
+      if (!user || isProfileLoading) return;
 
       const target = e.target as HTMLElement;
       if (target.closest('a') || target.closest('button') || target.closest('input')) {
@@ -136,7 +148,15 @@ const Index = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted, user]);
+  }, [gameState, startGame, hasSubmitted, user, isProfileLoading]);
+
+  if (authLoading || (user && isProfileLoading)) {
+    return (
+      <div className="fixed inset-0 bg-[#0a0c0c] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
@@ -182,6 +202,9 @@ const Index = () => {
                   <div className="flex items-center gap-3">
                     <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
                     <span className="text-white text-sm md:text-2xl font-black italic tracking-widest">{username}</span>
+                    <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
+                      <Edit2 size={16} />
+                    </Link>
                   </div>
                   <div className="flex gap-4">
                     <Link to="/stats" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors">
