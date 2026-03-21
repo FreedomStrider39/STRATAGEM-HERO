@@ -5,7 +5,7 @@ import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Keyboard } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 const Index = () => {
   const {
