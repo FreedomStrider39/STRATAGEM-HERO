@@ -22,20 +22,18 @@ const Stats = () => {
   const fetchLeaderboard = async () => {
     setIsRefreshing(true);
     try {
-      // Using a more aggressive filter to catch any variation of "TEST"
       const { data, error: supabaseError } = await supabase
         .from('leaderboard')
-        .select('*')
-        .not('username', 'ilike', '%TEST%') 
+        .select('username, score, level, created_at')
         .order('score', { ascending: false })
         .limit(50);
 
       if (supabaseError) throw supabaseError;
-      if (data) setEntries(data);
+      setEntries(data || []);
       setError(null);
     } catch (err: any) {
       console.error("Fetch error:", err);
-      setError(err.message || "FAILED TO RETRIEVE INTEL");
+      setError("FAILED TO RETRIEVE INTEL");
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -49,7 +47,6 @@ const Stats = () => {
   return (
     <div className="min-h-screen bg-[#0a0c0c] text-white p-4 md:p-12 crt-screen overflow-y-auto font-sans">
       <div className="max-w-5xl mx-auto">
-        {/* Header Section matching screenshot */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b-2 border-yellow-400/30 pb-6 gap-6">
           <div className="flex items-center gap-4">
             <BarChart3 className="w-10 h-10 text-yellow-400" />
@@ -82,12 +79,7 @@ const Stats = () => {
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-20 gap-6 border-2 border-red-500/20 bg-red-500/5 p-12 text-center">
             <AlertCircle className="w-20 h-20 text-red-500" />
-            <div>
-              <p className="text-red-500 font-black text-2xl tracking-[0.2em] mb-4 uppercase">{error}</p>
-              <p className="text-white/40 text-sm max-w-md mx-auto font-bold tracking-widest">
-                THE STRATAGEM NETWORK IS EXPERIENCING INTERFERENCE. PLEASE TRY AGAIN.
-              </p>
-            </div>
+            <p className="text-red-500 font-black text-2xl tracking-[0.2em] mb-4 uppercase">{error}</p>
             <button 
               onClick={fetchLeaderboard}
               className="bg-white/10 border border-white/20 px-8 py-4 font-black text-sm hover:bg-white/20 transition-all uppercase tracking-widest"
@@ -97,7 +89,6 @@ const Stats = () => {
           </div>
         ) : (
           <div className="w-full">
-            {/* Table Headers */}
             <div className="grid grid-cols-12 px-8 py-4 text-xs md:text-sm font-black text-white/30 tracking-[0.2em] uppercase mb-4">
               <div className="col-span-2">RANK</div>
               <div className="col-span-5">HELLDIVER</div>
