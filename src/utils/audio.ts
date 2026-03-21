@@ -63,11 +63,13 @@ class AudioManager {
     this.loadSound("ready", readySfx);
     this.loadSound("stratagem_hero", stratagemHeroSfx);
     
+    // This is the BGM file
     this.bgm = new Audio(playingWav);
     this.bgm.loop = true;
     this.bgm.volume = 0.4;
     
     this.initialized = true;
+    console.log("BGM initialized with playing.wav");
   }
 
   private loadSound(name: string, url: string) {
@@ -107,7 +109,7 @@ class AudioManager {
     const coin = Math.random() > 0.5 ? "coin1" : "coin2";
     this.playSound(coin);
     setTimeout(() => this.playSound("start"), 200);
-    setTimeout(() => this.playSound("stratagem_hero"), 1000);
+    // Removed the delayed stratagem_hero sound to avoid confusion with BGM
   }
 
   playReady() {
