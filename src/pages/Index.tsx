@@ -47,28 +47,34 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
+  // Fetch personal best from cloud on mount or name change
   useEffect(() => {
     const fetchPersonalBest = async () => {
       if (!supabase || !savedUsername) return;
       
-      const { data, error } = await supabase
-        .from('leaderboard')
-        .select('score')
-        .eq('username', savedUsername)
-        .maybeSingle();
+      try {
+        const { data, error } = await supabase
+          .from('leaderboard')
+          .select('score')
+          .eq('username', savedUsername)
+          .maybeSingle();
 
-      if (!error && data) {
-        const cloudScore = data.score;
-        if (cloudScore > highScore) {
-          setHighScore(cloudScore);
-          localStorage.setItem("stratagem-hero-highscore", cloudScore.toString());
+        if (!error && data) {
+          const cloudScore = data.score;
+          if (cloudScore > highScore) {
+            setHighScore(cloudScore);
+            localStorage.setItem("stratagem-hero-highscore", cloudScore.toString());
+          }
         }
+      } catch (err) {
+        console.error("Failed to fetch personal best:", err);
       }
     };
 
     fetchPersonalBest();
   }, [savedUsername]);
 
+  // Update local high score immediately on game over
   useEffect(() => {
     if (gameState === "gameover" && stats.totalScore > highScore) {
       setHighScore(stats.totalScore);
@@ -93,7 +99,7 @@ const Index = () => {
 
     setIsSubmitting(true);
     try {
-      // Check if we should even try to update (only if new score is higher)
+      // Check if we should update (only if new score is higher)
       const { data: existing } = await supabase
         .from('leaderboard')
         .select('score')
@@ -101,8 +107,7 @@ const Index = () => {
         .maybeSingle();
 
       if (!existing || stats.totalScore > existing.score) {
-        // Use upsert which handles "insert or update on conflict" automatically
-        // This relies on the UNIQUE constraint we just added to the database
+        // Upsert handles "insert or update on conflict" automatically
         const { error } = await supabase
           .from('leaderboard')
           .upsert(
@@ -125,12 +130,14 @@ const Index = () => {
     }
   };
 
+  // Auto-submit score on game over
   useEffect(() => {
     if (gameState === "gameover" && savedUsername && !hasSubmitted && !isSubmitting) {
       submitScore();
     }
   }, [gameState, savedUsername, hasSubmitted, isSubmitting]);
 
+  // Global input listener to start game
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
       if (!savedUsername) return;
