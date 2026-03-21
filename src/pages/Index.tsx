@@ -6,7 +6,8 @@ import StratagemDisplay from "@/components/StratagemDisplay";
 import TouchControls from "@/components/TouchControls";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy } from "lucide-react";
+import { getRank } from "@/data/stratagems";
 
 const Index = () => {
   const {
@@ -210,9 +211,17 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="flex flex-col items-center justify-center w-full z-10 px-4 overflow-y-auto max-h-full py-8"
             >
-              <h2 className="text-4xl md:text-7xl font-black text-red-500 mb-8 md:mb-12 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none">
+              <h2 className="text-4xl md:text-7xl font-black text-red-500 mb-4 md:mb-8 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none">
                 MISSION FAILED
               </h2>
+
+              <div className="flex items-center gap-4 mb-6 bg-yellow-400/10 border border-yellow-400/30 px-6 py-3">
+                <Trophy className="text-yellow-400 w-6 h-6 md:w-8 md:h-8" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] md:text-xs text-white/60 font-bold tracking-widest">CURRENT RANK</span>
+                  <span className="text-lg md:text-2xl font-black text-yellow-400 italic">{getRank(level)}</span>
+                </div>
+              </div>
 
               <div className="grid grid-cols-2 gap-x-8 md:gap-x-32 gap-y-4 md:gap-y-8 w-full max-w-[1100px] bg-black/40 p-6 md:p-12 border-2 md:border-[4px] border-white/10">
                 <div className="text-left">

@@ -4,8 +4,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig(() => ({
-  // Resetting base to '/' so the preview works correctly
-  base: "/",
+  // Using relative base path so it works on GitHub Pages subfolders and the preview
+  base: "./",
   server: {
     host: "::",
     port: 8080,
