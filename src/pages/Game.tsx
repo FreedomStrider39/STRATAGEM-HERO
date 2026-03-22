@@ -57,7 +57,8 @@ const Game = () => {
       if (window.innerWidth < 768) {
         setScale(1);
       } else {
-        setScale(Math.max(0.6, Math.min(newScale, 1.2)));
+        // Allow scaling to fit the window height
+        setScale(Math.max(0.5, newScale));
       }
     };
 
@@ -208,8 +209,8 @@ const Game = () => {
       {/* Main Container - No max-width, fills screen */}
       <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
         
-        {/* Yellow Border Frame */}
-        <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
+        {/* Yellow Border Frame - Now inset-0 to touch edges */}
+        <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         {(gameState === "playing" || gameState === "break") && (
           <button 
@@ -221,8 +222,11 @@ const Game = () => {
           </button>
         )}
 
-        {/* Content Area - Matches Border Inset */}
-        <div className="absolute inset-0 md:inset-4 z-10 flex flex-col overflow-hidden">
+        {/* Content Area - Scales to fit browser window */}
+        <div 
+          className="w-full h-full z-10 flex flex-col overflow-hidden origin-center"
+          style={{ transform: `scale(${scale})` }}
+        >
           <AnimatePresence mode="wait">
             {gameState === "idle" && (
               <motion.div 
