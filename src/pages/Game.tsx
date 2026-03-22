@@ -46,6 +46,29 @@ const Game = () => {
   
   const submissionTriggeredRef = useRef(false);
 
+  // Scaling logic to handle browser zoom
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const handleResize = () => {
+      // We target a base height to ensure the UI fits vertically
+      // and scales proportionally. 1080 is a good reference.
+      const targetHeight = 1080;
+      const currentHeight = window.innerHeight;
+      const newScale = currentHeight / targetHeight;
+      
+      // On mobile, we might want a different scaling factor or just 1
+      if (window.innerWidth < 768) {
+        setScale(1);
+      } else {
+        setScale(Math.max(0.5, Math.min(newScale, 1.5)));
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) {
