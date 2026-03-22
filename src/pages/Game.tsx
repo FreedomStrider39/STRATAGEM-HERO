@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -41,6 +41,7 @@ const Game = () => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [username, setUsername] = useState("");
   const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [globalRank, setGlobalRank] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -83,6 +84,22 @@ const Game = () => {
     }
   }, [user, authLoading, navigate]);
 
+  const fetchGlobalRank = async () => {
+    if (!user) return;
+    try {
+      // Count how many users have a higher score than the current high score
+      const { count, error } = await supabase
+        .from('leaderboard')
+        .select('*', { count: 'exact', head: true })
+        .gt('score', stats.totalScore > highScore ? stats.totalScore : highScore);
+      
+      if (error) throw error;
+      setGlobalRank((count || 0) + 1);
+    } catch (err) {
+      console.error("Failed to fetch global rank:", err);
+    }
+  };
+
   const submitScore = async () => {
     if (!user || isSubmitting || hasSubmitted) return;
 
@@ -104,6 +121,7 @@ const Game = () => {
         setHighScore(stats.totalScore);
       }
       
+      await fetchGlobalRank();
       setHasSubmitted(true);
     } catch (err) {
       console.error("Score submission failed:", err);
@@ -159,7 +177,7 @@ const Game = () => {
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
-        {/* Abort Mission Button - Moved to corner to avoid overlap */}
+        {/* Abort Mission Button */}
         {(gameState === "playing" || gameState === "break") && (
           <button 
             onClick={() => window.location.reload()}
@@ -234,7 +252,6 @@ const Game = () => {
               className="w-full h-full flex flex-col items-center justify-between z-10 overflow-hidden"
             >
               <div className="w-full flex-1 flex flex-col overflow-hidden">
-                {/* Status Bar - Reduced margin to move everything up */}
                 <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-12 md:mt-24">
                   <AnimatePresence>
                     {isDisrupted && (
@@ -266,7 +283,6 @@ const Game = () => {
                   </AnimatePresence>
                 </div>
 
-                {/* Main Display Area */}
                 <div className={`flex-1 flex flex-col items-center justify-center w-full relative ${isDisrupted ? 'animate-flicker' : ''} overflow-hidden`}>
                   {missionQueue[currentQueueIndex] && (
                     <StratagemDisplay 
@@ -299,7 +315,6 @@ const Game = () => {
                   </AnimatePresence>
                 </div>
 
-                {/* Progress Bar and Controls */}
                 <div className="w-full flex flex-col items-center gap-4 mt-auto shrink-0">
                   <div className="w-full px-6 max-w-3xl">
                     <div className="relative h-2 md:h-5 bg-black/60 border md:border-[3px] border-white/20 overflow-hidden">
@@ -349,12 +364,24 @@ const Game = () => {
                 Mission Failed
               </h2>
 
-              <div className="flex items-center gap-3 md:gap-6 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-8 py-2 shrink-0">
-                <Trophy className="text-yellow-400 w-4 h-4 md:w-8 md:h-8" />
-                <div className="flex flex-col">
-                  <span className="text-[8px] md:text-xs text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
-                  <span className="text-sm md:text-2xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
+              <div className="flex flex-wrap justify-center gap-3 md:gap-6">
+                <div className="flex items-center gap-3 md:gap-6 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-8 py-2">
+                  <Trophy className="text-yellow-400 w-4 h-4 md:w-8 md:h-8" />
+                  <div className="flex flex-col">
+                    <span className="text-[8px] md:text-xs text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
+                    <span className="text-sm md:text-2xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
+                  </div>
                 </div>
+
+                {globalRank !== null && (
+                  <div className="flex items-center gap-3 md:gap-6 bg-cyan-400/10 border border-cyan-400/30 px-4 md:px-8 py-2">
+                    <Globe className="text-cyan-400 w-4 h-4 md:w-8 md:h-8" />
+                    <div className="flex flex-col">
+                      <span className="text-[8px] md:text-xs text-white/60 font-bold tracking-widest uppercase">Global Position</span>
+                      <span className="text-sm md:text-2xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-x-8 md:gap-x-24 gap-y-2 md:gap-y-4 w-full max-w-[700px] bg-black/40 p-4 md:p-10 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
