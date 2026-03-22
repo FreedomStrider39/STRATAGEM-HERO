@@ -53,7 +53,7 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-7 h-7 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0",
+        "transition-all duration-75 w-7 h-7 md:w-10 md:h-10 flex items-center justify-center flex-shrink-0",
         completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
         isDisrupted && !completed && "text-purple-400/70"
       )}
@@ -98,7 +98,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
         {/* Icon and Queue */}
         <div className="flex items-center justify-center gap-3 md:gap-6">
           <div className={cn(
-            "w-32 h-32 md:w-48 md:h-48 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
+            "w-32 h-32 md:w-40 md:h-40 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
             isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           )}>
             <StratagemIcon 
@@ -113,7 +113,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
           <div className="flex flex-col gap-2 md:gap-3 opacity-30">
             {queue.slice(1, 4).map((nextStrat, idx) => (
-              <div key={idx} className="w-8 h-8 md:w-12 md:h-12 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
+              <div key={idx} className="w-8 h-8 md:w-10 md:h-10 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 

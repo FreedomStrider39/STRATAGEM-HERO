@@ -173,7 +173,7 @@ const Game = () => {
 
   if (authLoading || isProfileLoading) {
     return (
-      <div className="h-screen w-screen bg-[#0a0c0c] flex items-center justify-center">
+      <div className="fixed inset-0 bg-[#0a0c0c] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
       </div>
     );
@@ -184,10 +184,10 @@ const Game = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
+    <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
+      <div className="w-full h-full max-w-5xl mx-auto bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[4px] border-[#1a1f1f] overflow-hidden">
         
-        <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
+        <div className="absolute inset-0 md:inset-2 border-[2px] md:border-[4px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         {(gameState === "playing" || gameState === "break") && (
           <button 
