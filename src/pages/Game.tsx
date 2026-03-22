@@ -397,82 +397,86 @@ const Game = () => {
                 key="gameover"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center w-full h-full z-10 px-6 overflow-hidden py-4 gap-4 md:gap-8"
+                className="flex flex-col items-center justify-center w-full h-full z-10 px-6 py-8 overflow-hidden"
               >
-                <h2 className="text-3xl md:text-8xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none shrink-0 uppercase">
-                  Mission Failed
-                </h2>
+                <div className="flex flex-col items-center gap-6 md:gap-10 w-full max-w-4xl">
+                  <h2 className="text-4xl md:text-8xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none uppercase text-center">
+                    Mission Failed
+                  </h2>
 
-                <div className="flex flex-wrap justify-center gap-3 md:gap-6">
-                  <div className="flex items-center gap-3 md:gap-6 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-8 py-2 md:py-4">
-                    <Trophy className="text-yellow-400 w-4 h-4 md:w-8 md:h-8" />
-                    <div className="flex flex-col">
-                      <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
-                      <span className="text-sm md:text-2xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
-                    </div>
-                  </div>
-
-                  {globalRank !== null && (
-                    <div className="flex items-center gap-3 md:gap-6 bg-cyan-400/10 border border-cyan-400/30 px-4 md:px-8 py-2 md:py-4">
-                      <Globe className="text-cyan-400 w-4 h-4 md:w-8 md:h-8" />
+                  <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+                    <div className="flex items-center gap-3 md:gap-6 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-8 py-2 md:py-4">
+                      <Trophy className="text-yellow-400 w-4 h-4 md:w-8 md:h-8" />
                       <div className="flex flex-col">
-                        <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Global Position</span>
-                        <span className="text-sm md:text-2xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
+                        <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
+                        <span className="text-sm md:text-2xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
                       </div>
                     </div>
-                  )}
-                </div>
 
-                <div className="flex flex-col gap-2 md:gap-4 w-full max-w-[260px] md:max-w-[420px] bg-black/40 p-4 md:p-10 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Round Bonus</span>
-                    <span className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.roundBonus}</span>
+                    {globalRank !== null && (
+                      <div className="flex items-center gap-3 md:gap-6 bg-cyan-400/10 border border-cyan-400/30 px-4 md:px-8 py-2 md:py-4">
+                        <Globe className="text-cyan-400 w-4 h-4 md:w-8 md:h-8" />
+                        <div className="flex flex-col">
+                          <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Global Position</span>
+                          <span className="text-sm md:text-2xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Time Bonus</span>
-                    <span className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.timeBonus}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Max Combo</span>
-                    <span className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.maxCombo}</span>
-                  </div>
-
-                  <div className="w-full h-[1px] bg-white/20 my-1 md:my-2" />
-
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase">Total Score</span>
-                    <span className="text-yellow-400 text-lg md:text-5xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-1 shrink-0">
-                  <div className="flex items-center gap-1 text-white/60 text-[10px] md:text-sm font-bold tracking-widest uppercase">
-                    Recording As: <span className="text-yellow-400">{username || "UNASSIGNED"}</span>
-                  </div>
-                  {hasSubmitted ? (
-                    <div className="bg-green-500/20 border border-green-500/50 px-4 py-0.5">
-                      <p className="text-green-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">Record Secured</p>
+                  <div className="flex flex-col gap-3 md:gap-5 w-full max-w-[220px] md:max-w-[360px] bg-black/60 p-5 md:p-10 border-2 md:border-[4px] border-white/10 shadow-2xl">
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Round Bonus</span>
+                      <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.roundBonus}</span>
                     </div>
-                  ) : isSubmitting ? (
-                    <div className="animate-pulse text-yellow-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">
-                      Uploading Intel...
-                    </div>
-                  ) : null}
-                </div>
 
-                <div className="flex flex-col gap-2 w-full max-w-[200px] md:max-w-md items-center shrink-0">
-                  <p className="text-white/40 text-[10px] md:text-xl font-bold animate-pulse tracking-[0.1em] text-center uppercase">
-                    {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
-                  </p>
-                  
-                  <button 
-                    onClick={() => window.location.reload()}
-                    className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-4 py-1.5 md:py-3 hover:bg-white/10 transition-colors text-[10px] md:text-sm font-black tracking-widest uppercase"
-                  >
-                    <Home size={14} className="md:w-5 md:h-5" /> Main Menu
-                  </button>
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Time Bonus</span>
+                      <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.timeBonus}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Max Combo</span>
+                      <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.maxCombo}</span>
+                    </div>
+
+                    <div className="w-full h-[1px] bg-white/20 my-1 md:my-2" />
+
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase">Total Score</span>
+                      <span className="text-yellow-400 text-lg md:text-4xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="flex items-center gap-1 text-white/60 text-[10px] md:text-sm font-bold tracking-widest uppercase">
+                        Recording As: <span className="text-yellow-400">{username || "UNASSIGNED"}</span>
+                      </div>
+                      {hasSubmitted ? (
+                        <div className="bg-green-500/20 border border-green-500/50 px-4 py-0.5">
+                          <p className="text-green-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">Record Secured</p>
+                        </div>
+                      ) : isSubmitting ? (
+                        <div className="animate-pulse text-yellow-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">
+                          Uploading Intel...
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className="flex flex-col items-center gap-3">
+                      <p className="text-white/40 text-[10px] md:text-xl font-bold animate-pulse tracking-[0.1em] text-center uppercase">
+                        {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
+                      </p>
+                      
+                      <button 
+                        onClick={() => window.location.reload()}
+                        className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-4 py-1.5 md:py-3 hover:bg-white/10 transition-colors text-[10px] md:text-sm font-black tracking-widest uppercase"
+                      >
+                        <Home size={14} className="md:w-5 md:h-5" /> Main Menu
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}
