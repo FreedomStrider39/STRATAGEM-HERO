@@ -9,7 +9,7 @@ interface Entry {
   level: number;
   profiles: {
     username: string;
-  };
+  } | null;
 }
 
 const Leaderboard = () => {
@@ -69,7 +69,7 @@ const Leaderboard = () => {
         </button>
       </div>
       
-      <div className="space-y-2 max-h-[200px] overflow-y-auto no-scrollbar">
+      <div className="space-y-2 max-h-[180px] overflow-y-auto no-scrollbar">
         {entries.length === 0 ? (
           <div className="py-4 text-center">
             <p className="text-[10px] text-white/20 italic uppercase tracking-widest">NO DATA RECORDED IN THIS SECTOR</p>

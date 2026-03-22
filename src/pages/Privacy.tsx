@@ -36,8 +36,8 @@ const Privacy = () => {
 
           <div className="pt-8 border-t border-white/10">
             <Link 
-              to="/login" 
-              className="flex items-center justify-center gap-2 text-yellow-400 hover:text-yellow-500 transition-colors text-xs font-black tracking-widest uppercase"
+              to="/" 
+              className="flex items-center justify-center gap-2 text-yellow-400 hover:text-yellow-300 transition-colors text-xs font-black tracking-widest uppercase"
             >
               <ArrowLeft size={16} /> Return to Enrollment
             </Link>

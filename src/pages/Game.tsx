@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -159,14 +159,14 @@ const Game = () => {
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
-        {/* Discrete Return to Menu Button */}
+        {/* Return to Menu Button during gameplay */}
         {gameState === "playing" && (
           <button 
             onClick={() => window.location.reload()}
-            className="absolute top-4 left-4 md:top-10 md:left-10 z-[60] text-white/20 hover:text-yellow-400 transition-colors flex items-center gap-1 md:gap-2 group"
+            className="absolute top-4 left-4 md:top-10 md:left-10 z-[60] bg-black/40 border border-white/10 px-3 py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
           >
-            <X size={14} className="md:w-5 md:h-5" />
-            <span className="text-[8px] md:text-xs font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity uppercase">Abort Mission</span>
+            <ArrowLeft size={14} className="md:w-4 md:h-4" />
+            <span className="text-[8px] md:text-[10px] font-black tracking-widest uppercase">Abort Mission</span>
           </button>
         )}
 
