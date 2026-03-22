@@ -185,9 +185,9 @@ const Game = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      <div className="w-full h-full max-w-5xl mx-auto bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
+      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
         
-        <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
+        <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         {(gameState === "playing" || gameState === "break") && (
           <button 
@@ -260,7 +260,7 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full flex flex-col items-center justify-center z-10 overflow-hidden p-0 md:p-4"
+              className="w-full h-full flex flex-col items-center justify-center z-10 overflow-hidden p-0"
             >
               <div className="w-full h-full flex flex-col overflow-hidden">
                 <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-4 md:mt-8">
