@@ -424,26 +424,26 @@ const Game = () => {
                     )}
                   </div>
 
-                  <div className="flex flex-col gap-3 md:gap-5 w-full max-w-[220px] md:max-w-[360px] bg-black/60 p-5 md:p-10 border-2 md:border-[4px] border-white/10 shadow-2xl">
+                  <div className="flex flex-col justify-center gap-3 md:gap-5 w-full max-w-[280px] md:max-w-[450px] bg-black/60 p-6 md:p-10 border-2 md:border-[4px] border-white/10 shadow-2xl min-h-[200px] md:min-h-[300px]">
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Round Bonus</span>
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase whitespace-nowrap">Round Bonus</span>
                       <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.roundBonus}</span>
                     </div>
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Time Bonus</span>
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase whitespace-nowrap">Time Bonus</span>
                       <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.timeBonus}</span>
                     </div>
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Max Combo</span>
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase whitespace-nowrap">Max Combo</span>
                       <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.maxCombo}</span>
                     </div>
 
                     <div className="w-full h-[1px] bg-white/20 my-1 md:my-2" />
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase">Total Score</span>
+                      <span className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase whitespace-nowrap">Total Score</span>
                       <span className="text-yellow-400 text-lg md:text-4xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</span>
                     </div>
                   </div>
