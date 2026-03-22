@@ -159,11 +159,11 @@ const Game = () => {
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
-        {/* Abort Mission Button - Positioned carefully */}
+        {/* Abort Mission Button - Positioned higher up */}
         {gameState === "playing" && (
           <button 
             onClick={() => window.location.reload()}
-            className="absolute top-16 left-6 md:top-10 md:left-10 z-[60] bg-black/60 border border-white/10 px-3 py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
+            className="absolute top-10 left-1/2 -translate-x-1/2 z-[60] bg-black/60 border border-white/10 px-3 py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
           >
             <ArrowLeft size={14} className="md:w-4 md:h-4" />
             <span className="text-[8px] md:text-[10px] font-black tracking-widest uppercase">Abort Mission</span>
@@ -234,8 +234,8 @@ const Game = () => {
               className="w-full h-full flex flex-col items-center justify-between z-10 overflow-hidden"
             >
               <div className="w-full flex-1 flex flex-col overflow-hidden">
-                {/* Status Bar */}
-                <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-20 md:mt-24">
+                {/* Status Bar - Reduced margin to move everything up */}
+                <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-12 md:mt-24">
                   <AnimatePresence>
                     {isDisrupted && (
                       <motion.div 
