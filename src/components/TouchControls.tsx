@@ -18,17 +18,17 @@ const TouchControls: React.FC<TouchControlsProps> = ({ onInput, className }) => 
         onInput(dir);
       }}
       className={cn(
-        "w-14 h-14 md:w-24 md:h-24 bg-white/5 border-2 border-white/20 flex items-center justify-center active:bg-yellow-400 active:text-black active:border-yellow-400 active:scale-95 transition-all rounded-none touch-none shadow-[0_0_10px_rgba(255,255,255,0.05)]",
+        "w-16 h-16 md:w-28 md:h-28 bg-white/5 border-2 border-white/20 flex items-center justify-center active:bg-yellow-400 active:text-black active:border-yellow-400 active:scale-95 transition-all rounded-none touch-none shadow-[0_0_15px_rgba(255,255,255,0.05)]",
         gridClass
       )}
     >
-      <Icon size={28} className="md:w-10 md:h-10" strokeWidth={3} />
+      <Icon size={32} className="md:w-12 md:h-12" strokeWidth={3} />
     </button>
   );
 
   return (
-    <div className={cn("flex flex-col items-center gap-1 p-2 md:p-6 bg-black/40 border-t border-white/5 backdrop-blur-sm pb-6 md:pb-6", className)}>
-      <div className="grid grid-cols-3 gap-1">
+    <div className={cn("flex flex-col items-center gap-2 p-4 md:p-8 bg-black/60 border-t border-white/10 backdrop-blur-md pb-8 md:pb-12", className)}>
+      <div className="grid grid-cols-3 gap-2">
         <div />
         <Button dir="U" icon={ChevronUp} gridClass="col-start-2" />
         <div />
