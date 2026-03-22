@@ -7,9 +7,7 @@ import { Users, AlertCircle, RefreshCw } from "lucide-react";
 interface Entry {
   score: number;
   level: number;
-  profiles: {
-    username: string;
-  } | null;
+  username: string;
 }
 
 const Leaderboard = () => {
@@ -20,25 +18,43 @@ const Leaderboard = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      const { data, error: supabaseError } = await supabase
+      // Fetch leaderboard data
+      const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
-        .select(`
-          score, 
-          level,
-          profiles (
-            username
-          )
-        `)
+        .select('score, level, user_id')
         .order('score', { ascending: false })
         .limit(10);
 
-      if (supabaseError) throw supabaseError;
-      
-      setEntries((data as any) || []);
+      if (scoreError) throw scoreError;
+      if (!scores || scores.length === 0) {
+        setEntries([]);
+        return;
+      }
+
+      // Fetch profiles for these users to get usernames
+      const userIds = scores.map(s => s.user_id);
+      const { data: profiles, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, username')
+        .in('id', userIds);
+
+      if (profileError) throw profileError;
+
+      // Map usernames back to scores
+      const combinedData = scores.map(score => {
+        const profile = profiles?.find(p => p.id === score.user_id);
+        return {
+          score: score.score,
+          level: score.level,
+          username: profile?.username || "UNKNOWN"
+        };
+      });
+
+      setEntries(combinedData);
       setError(null);
     } catch (err: any) {
       console.error("Leaderboard fetch failed:", err);
-      setError("CONNECTION ERROR");
+      setError("INTEL OFFLINE");
     } finally {
       setLoading(false);
     }
@@ -48,7 +64,7 @@ const Leaderboard = () => {
     fetchLeaderboard();
   }, []);
 
-  if (loading && entries.length === 0) return <div className="text-white/20 text-[10px] animate-pulse">LOADING GLOBAL INTEL...</div>;
+  if (loading && entries.length === 0) return <div className="text-white/20 text-[10px] animate-pulse">DECRYPTING GLOBAL INTEL...</div>;
 
   if (error) return (
     <div className="w-full max-w-md bg-red-500/5 border border-red-500/20 p-2 flex items-center gap-2">
@@ -72,8 +88,7 @@ const Leaderboard = () => {
       <div className="space-y-2 max-h-[180px] overflow-y-auto no-scrollbar">
         {entries.length === 0 ? (
           <div className="py-4 text-center">
-            <p className="text-[10px] text-white/20 italic uppercase tracking-widest">NO DATA RECORDED IN THIS SECTOR</p>
-            <p className="text-[8px] text-white/10 mt-1">BE THE FIRST TO DEPLOY</p>
+            <p className="text-[10px] text-white/20 italic uppercase tracking-widest">NO DATA RECORDED</p>
           </div>
         ) : (
           entries.map((entry, idx) => (
@@ -83,7 +98,7 @@ const Leaderboard = () => {
                   #{idx + 1}
                 </span>
                 <span className="text-white font-bold truncate max-w-[100px] uppercase">
-                  {entry.profiles?.username || "UNKNOWN"}
+                  {entry.username}
                 </span>
               </div>
               <div className="flex items-center gap-4">
