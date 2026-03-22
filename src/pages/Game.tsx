@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
@@ -12,6 +12,7 @@ import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOu
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
+import { toast } from "sonner";
 
 const Game = () => {
   const navigate = useNavigate();
@@ -42,6 +43,9 @@ const Game = () => {
   const [username, setUsername] = useState("");
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
+  
+  // Use a ref to track if we've already triggered submission for the current gameover
+  const submissionTriggeredRef = useRef(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -84,14 +88,13 @@ const Game = () => {
     }
   }, [user, authLoading, navigate]);
 
-  const fetchGlobalRank = async () => {
+  const fetchGlobalRank = async (currentScore: number) => {
     if (!user) return;
     try {
-      // Count how many users have a higher score than the current high score
       const { count, error } = await supabase
         .from('leaderboard')
         .select('*', { count: 'exact', head: true })
-        .gt('score', stats.totalScore > highScore ? stats.totalScore : highScore);
+        .gt('score', currentScore);
       
       if (error) throw error;
       setGlobalRank((count || 0) + 1);
@@ -101,10 +104,12 @@ const Game = () => {
   };
 
   const submitScore = async () => {
-    if (!user || isSubmitting || hasSubmitted) return;
+    // Ensure we have a valid score and user
+    if (!user || isSubmitting || hasSubmitted || stats.totalScore <= 0) return;
 
     setIsSubmitting(true);
     try {
+      // Only save if it's a new personal best
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
@@ -119,22 +124,34 @@ const Game = () => {
           
         if (error) throw error;
         setHighScore(stats.totalScore);
+        toast.success("NEW PERSONAL BEST RECORDED!");
       }
       
-      await fetchGlobalRank();
+      await fetchGlobalRank(stats.totalScore > highScore ? stats.totalScore : highScore);
       setHasSubmitted(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Score submission failed:", err);
+      toast.error("FAILED TO UPLOAD INTEL: " + err.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Reset submission flag when starting a new game
   useEffect(() => {
-    if (gameState === "gameover" && user && !hasSubmitted && !isSubmitting) {
+    if (gameState === "playing") {
+      submissionTriggeredRef.current = false;
+      setHasSubmitted(false);
+    }
+  }, [gameState]);
+
+  // Trigger submission when stats are ready after gameover
+  useEffect(() => {
+    if (gameState === "gameover" && user && !hasSubmitted && !isSubmitting && stats.totalScore > 0 && !submissionTriggeredRef.current) {
+      submissionTriggeredRef.current = true;
       submitScore();
     }
-  }, [gameState, user, hasSubmitted, isSubmitting]);
+  }, [gameState, user, hasSubmitted, isSubmitting, stats.totalScore]);
 
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
@@ -143,7 +160,7 @@ const Game = () => {
         return;
       }
 
-      if (gameState === "idle" || (gameState === "gameover" && hasSubmitted)) {
+      if (gameState === "idle" || (gameState === "gameover" && (hasSubmitted || stats.totalScore === 0))) {
         startGame();
       }
     };
@@ -157,7 +174,7 @@ const Game = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted]);
+  }, [gameState, startGame, hasSubmitted, stats.totalScore]);
 
   if (authLoading || isProfileLoading) {
     return (
