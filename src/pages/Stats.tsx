@@ -1,3 +1,4 @@
+updated_at) and improving error logging">
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -10,7 +11,7 @@ interface Entry {
   score: number;
   level: number;
   username: string;
-  created_at: string;
+  updated_at: string;
 }
 
 const Stats = () => {
@@ -23,13 +24,17 @@ const Stats = () => {
     setIsRefreshing(true);
     try {
       // 1. Fetch the top scores from the leaderboard
+      // Note: Using 'updated_at' as 'created_at' does not exist in this schema
       const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
-        .select('score, level, user_id, created_at')
+        .select('score, level, user_id, updated_at')
         .order('score', { ascending: false })
         .limit(50);
 
-      if (scoreError) throw scoreError;
+      if (scoreError) {
+        console.error("Score fetch error:", scoreError);
+        throw scoreError;
+      }
 
       if (!scores || scores.length === 0) {
         setEntries([]);
@@ -44,7 +49,10 @@ const Stats = () => {
         .select('id, username')
         .in('id', userIds);
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error("Profile fetch error:", profileError);
+        throw profileError;
+      }
 
       // 3. Combine the data
       const combinedData = scores.map(score => {
@@ -52,7 +60,7 @@ const Stats = () => {
         return {
           score: score.score,
           level: score.level,
-          created_at: score.created_at,
+          updated_at: score.updated_at || "",
           username: profile?.username || "UNKNOWN"
         };
       });
@@ -60,8 +68,8 @@ const Stats = () => {
       setEntries(combinedData);
       setError(null);
     } catch (err: any) {
-      console.error("Fetch error:", err);
-      setError("FAILED TO RETRIEVE INTEL");
+      console.error("Detailed fetch error:", err);
+      setError(err.message || "FAILED TO RETRIEVE INTEL");
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -108,6 +116,12 @@ const Stats = () => {
           <div className="flex flex-col items-center justify-center py-12 gap-4 border border-red-500/20 bg-red-500/5 p-8 text-center">
             <AlertCircle className="w-12 h-12 text-red-500" />
             <p className="text-red-500 font-black text-sm tracking-widest uppercase">{error}</p>
+            <button 
+              onClick={fetchLeaderboard}
+              className="mt-4 text-xs text-yellow-400 underline font-bold tracking-widest"
+            >
+              RETRY CONNECTION
+            </button>
           </div>
         ) : (
           <div className="space-y-2">
