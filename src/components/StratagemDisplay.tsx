@@ -96,9 +96,9 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
       {/* Main Content Area */}
       <div className="flex flex-col items-center justify-center w-full gap-4 md:gap-6">
         {/* Icon and Queue */}
-        <div className="flex items-center justify-center gap-3 md:gap-6">
+        <div className="flex items-center justify-center gap-3 md:gap-8">
           <div className={cn(
-            "w-32 h-32 md:w-40 md:h-40 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
+            "w-32 h-32 md:w-48 md:h-48 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
             isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           )}>
             <StratagemIcon 
@@ -111,9 +111,10 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
             />
           </div>
 
-          <div className="flex flex-col gap-2 md:gap-3 opacity-30">
-            {queue.slice(1, 4).map((nextStrat, idx) => (
-              <div key={idx} className="w-8 h-8 md:w-10 md:h-10 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
+          {/* Horizontal Faded Queue for PC */}
+          <div className="hidden md:flex flex-row gap-4 opacity-20">
+            {queue.slice(1, 5).map((nextStrat, idx) => (
+              <div key={idx} className="w-24 h-24 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 
@@ -125,15 +126,27 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
               </div>
             ))}
           </div>
+          
+          {/* Mobile Vertical Queue */}
+          <div className="flex md:hidden flex-col gap-2 opacity-30">
+            {queue.slice(1, 4).map((nextStrat, idx) => (
+              <div key={idx} className="w-8 h-8 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
+                <StratagemIcon 
+                  url={nextStrat.iconUrl} 
+                  category={nextStrat.category} 
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Name Bar */}
+        {/* Name Bar - Full Width */}
         <div className={cn(
-          "w-full py-1.5 md:py-2 px-4 md:px-12 transition-all duration-500",
+          "w-full py-1.5 md:py-3 transition-all duration-500",
           isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
         )}>
           <h2 className={cn(
-            "text-[10px] md:text-xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[1.5rem] flex items-center justify-center uppercase italic",
+            "text-[10px] md:text-2xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[2rem] flex items-center justify-center uppercase italic",
             isDisrupted ? "text-purple-100" : "text-black"
           )}>
             {isDisrupted ? <IlluminateText /> : stratagem.name}
