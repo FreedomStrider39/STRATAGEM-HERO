@@ -1,4 +1,3 @@
-updated_at) and improving error logging">
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -23,8 +22,6 @@ const Stats = () => {
   const fetchLeaderboard = async () => {
     setIsRefreshing(true);
     try {
-      // 1. Fetch the top scores from the leaderboard
-      // Note: Using 'updated_at' as 'created_at' does not exist in this schema
       const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
         .select('score, level, user_id, updated_at')
@@ -42,7 +39,6 @@ const Stats = () => {
         return;
       }
 
-      // 2. Fetch the profiles for these users to get their usernames
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
@@ -54,7 +50,6 @@ const Stats = () => {
         throw profileError;
       }
 
-      // 3. Combine the data
       const combinedData = scores.map(score => {
         const profile = profiles?.find(p => p.id === score.user_id);
         return {
