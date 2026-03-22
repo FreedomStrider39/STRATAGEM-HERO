@@ -135,7 +135,7 @@ const Game = () => {
     window.addEventListener("touchstart", handleGlobalInput, { passive: true });
 
     return () => {
-      window.removeEventListener("keydown", handleGlobalInput);
+      window.removeIdentifier("keydown", handleGlobalInput);
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
