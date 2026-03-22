@@ -9,10 +9,8 @@ import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw } from "
 interface Entry {
   score: number;
   level: number;
+  username: string;
   created_at: string;
-  profiles: {
-    username: string;
-  };
 }
 
 const Stats = () => {
@@ -24,21 +22,42 @@ const Stats = () => {
   const fetchLeaderboard = async () => {
     setIsRefreshing(true);
     try {
-      const { data, error: supabaseError } = await supabase
+      // 1. Fetch the top scores from the leaderboard
+      const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
-        .select(`
-          score, 
-          level, 
-          created_at,
-          profiles (
-            username
-          )
-        `)
+        .select('score, level, user_id, created_at')
         .order('score', { ascending: false })
         .limit(50);
 
-      if (supabaseError) throw supabaseError;
-      setEntries((data as any) || []);
+      if (scoreError) throw scoreError;
+
+      if (!scores || scores.length === 0) {
+        setEntries([]);
+        setError(null);
+        return;
+      }
+
+      // 2. Fetch the profiles for these users to get their usernames
+      const userIds = scores.map(s => s.user_id);
+      const { data: profiles, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, username')
+        .in('id', userIds);
+
+      if (profileError) throw profileError;
+
+      // 3. Combine the data
+      const combinedData = scores.map(score => {
+        const profile = profiles?.find(p => p.id === score.user_id);
+        return {
+          score: score.score,
+          level: score.level,
+          created_at: score.created_at,
+          username: profile?.username || "UNKNOWN"
+        };
+      });
+
+      setEntries(combinedData);
       setError(null);
     } catch (err: any) {
       console.error("Fetch error:", err);
@@ -116,7 +135,7 @@ const Stats = () => {
                     </span>
                     <div className="flex flex-col min-w-0">
                       <span className={`font-black tracking-widest truncate uppercase ${idx === 0 ? 'text-yellow-400 text-lg md:text-xl' : 'text-white text-sm md:text-lg'}`}>
-                        {entry.profiles?.username || "UNKNOWN"}
+                        {entry.username}
                       </span>
                       <span className="text-[10px] text-white/40 font-bold">LEVEL {entry.level}</span>
                     </div>
