@@ -53,7 +53,7 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-7 h-7 md:w-14 md:h-14 flex items-center justify-center flex-shrink-0",
+        "transition-all duration-75 w-7 h-7 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0",
         completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
         isDisrupted && !completed && "text-purple-400/70"
       )}
@@ -80,22 +80,25 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   score
 }) => {
   return (
-    <div className="flex flex-col items-center w-full h-full justify-between py-2">
-      <div className="flex items-start justify-between w-full px-4 md:px-12 pt-12 md:pt-8">
+    <div className="flex flex-col items-center w-full h-full justify-center py-2">
+      {/* Header - Round & Score */}
+      <div className="flex items-start justify-between w-full px-4 md:px-12 mb-4">
         <div className="flex flex-col items-start">
-          <span className="text-white/40 text-[10px] md:text-xs font-bold tracking-[0.2em]">ROUND</span>
-          <span className="text-yellow-400 text-3xl md:text-5xl font-black leading-none text-glow-yellow italic">{round}</span>
+          <span className="text-white/40 text-[8px] md:text-[10px] font-bold tracking-[0.2em]">ROUND</span>
+          <span className="text-yellow-400 text-2xl md:text-4xl font-black leading-none text-glow-yellow italic">{round}</span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-white/40 text-[10px] md:text-xs font-bold tracking-[0.2em]">SCORE</span>
-          <span className="text-yellow-400 text-3xl md:text-5xl font-black leading-none text-glow-yellow italic">{score}</span>
+          <span className="text-white/40 text-[8px] md:text-[10px] font-bold tracking-[0.2em]">SCORE</span>
+          <span className="text-yellow-400 text-2xl md:text-4xl font-black leading-none text-glow-yellow italic">{score}</span>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center w-full gap-4 md:gap-6">
+      {/* Main Content Area */}
+      <div className="flex flex-col items-center justify-center w-full gap-4 md:gap-6">
+        {/* Icon and Queue */}
         <div className="flex items-center justify-center gap-3 md:gap-6">
           <div className={cn(
-            "w-40 h-40 md:w-56 md:h-56 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
+            "w-32 h-32 md:w-48 md:h-48 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
             isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           )}>
             <StratagemIcon 
@@ -110,7 +113,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
           <div className="flex flex-col gap-2 md:gap-3 opacity-30">
             {queue.slice(1, 4).map((nextStrat, idx) => (
-              <div key={idx} className="w-10 h-10 md:w-16 md:h-16 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
+              <div key={idx} className="w-8 h-8 md:w-12 md:h-12 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 
@@ -124,20 +127,22 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           </div>
         </div>
 
+        {/* Name Bar */}
         <div className={cn(
-          "w-full py-2 md:py-3 px-4 md:px-12 transition-all duration-500",
+          "w-full py-1.5 md:py-2 px-4 md:px-12 transition-all duration-500",
           isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
         )}>
           <h2 className={cn(
-            "text-xs md:text-2xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1.2rem] md:min-h-[2rem] flex items-center justify-center uppercase italic",
+            "text-[10px] md:text-xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[1.5rem] flex items-center justify-center uppercase italic",
             isDisrupted ? "text-purple-100" : "text-black"
           )}>
             {isDisrupted ? <IlluminateText /> : stratagem.name}
           </h2>
         </div>
 
+        {/* Arrows */}
         <div className={cn(
-          "flex flex-nowrap justify-center gap-2 md:gap-3 transition-transform duration-75 w-full px-4 overflow-x-auto no-scrollbar",
+          "flex flex-nowrap justify-center gap-1.5 md:gap-3 transition-transform duration-75 w-full px-4 overflow-x-auto no-scrollbar",
           isError && "animate-shake"
         )}>
           {activeSequence.map((dir, idx) => (

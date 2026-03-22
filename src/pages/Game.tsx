@@ -185,14 +185,14 @@ const Game = () => {
 
   return (
     <div className="h-screen w-screen bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-between crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
+      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         {(gameState === "playing" || gameState === "break") && (
           <button 
             onClick={() => window.location.reload()}
-            className="absolute top-4 left-4 md:top-8 md:left-8 z-[60] bg-black/60 border border-white/10 px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
+            className="absolute top-4 left-4 md:top-6 md:left-6 z-[60] bg-black/60 border border-white/10 px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
           >
             <ArrowLeft size={12} className="md:w-4 md:h-4" />
             <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Abort</span>
@@ -206,15 +206,15 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-4 md:gap-8 overflow-hidden py-4"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-4 md:gap-6 overflow-hidden py-4"
             >
               <div className="flex flex-col items-center shrink-0">
-                <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white mb-1 md:mb-2 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-1 md:mb-2 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
                   Stratagem Hero
                 </h1>
-                <div className="h-1 w-32 md:h-1.5 md:w-[25rem] bg-yellow-400 mb-4 md:mb-6 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+                <div className="h-1 w-32 md:h-1.5 md:w-[20rem] bg-yellow-400 mb-4 md:mb-6 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
-                <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
+                <div className="flex flex-col items-center gap-2 mb-4 md:mb-6">
                   <div className="flex items-center gap-2">
                     <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
                     <span className="text-white text-sm md:text-xl font-black italic tracking-widest uppercase">{username || "UNASSIGNED"}</span>
@@ -238,7 +238,7 @@ const Game = () => {
                 <motion.p 
                   animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="text-yellow-400 text-xl md:text-4xl font-black tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-4 md:mb-8 uppercase italic"
+                  className="text-yellow-400 text-xl md:text-4xl font-black tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-4 md:mb-6 uppercase italic"
                 >
                   {('ontouchstart' in window) ? 'Tap to Start' : 'Press Any Key to Start'}
                 </motion.p>
@@ -260,10 +260,10 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full flex flex-col items-center justify-between z-10 overflow-hidden"
+              className="w-full h-full flex flex-col items-center justify-center z-10 overflow-hidden"
             >
-              <div className="w-full flex-1 flex flex-col overflow-hidden">
-                <div className="h-6 md:h-8 flex flex-col gap-1 shrink-0 mt-10 md:mt-16">
+              <div className="w-full max-h-full flex flex-col overflow-hidden py-4">
+                <div className="h-6 md:h-8 flex flex-col gap-1 shrink-0 mb-2">
                   <AnimatePresence>
                     {isDisrupted && (
                       <motion.div 
@@ -326,7 +326,7 @@ const Game = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className="w-full flex flex-col items-center gap-4 mt-auto shrink-0 pb-4 md:pb-8">
+                <div className="w-full flex flex-col items-center gap-2 mt-2 shrink-0">
                   <div className="w-full px-6 max-w-3xl">
                     <div className="relative h-2 md:h-4 bg-black/60 border md:border-[2px] border-white/20 overflow-hidden">
                       <motion.div 
@@ -458,7 +458,7 @@ const Game = () => {
           )}
         </AnimatePresence>
 
-        <div className="absolute bottom-2 md:bottom-4 left-0 right-0 flex justify-center z-[60] opacity-20 scale-[0.3] md:scale-40">
+        <div className="absolute bottom-1 md:bottom-4 left-0 right-0 flex justify-center z-[60] opacity-20 scale-[0.25] md:scale-50">
           <MadeWithDyad />
         </div>
       </div>
