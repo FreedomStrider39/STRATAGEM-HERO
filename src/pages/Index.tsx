@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Shield, FileText, LogIn, Play, ShieldCheck } from "lucide-react";
+import { Shield, FileText, LogIn, ShieldCheck } from "lucide-react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/components/AuthProvider";
@@ -12,6 +12,11 @@ const Welcome = () => {
   const { user, loading } = useAuth();
 
   if (loading) return null;
+
+  // If user is already signed in, redirect them directly to the game's "Press to Start" screen
+  if (user) {
+    return <Navigate to="/game" replace />;
+  }
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center p-0 overflow-hidden">
@@ -44,29 +49,18 @@ const Welcome = () => {
               Mandatory training for all Helldivers. 
               Master your inputs to ensure victory for Super Earth.
             </p>
-            {!user && (
-              <div className="flex items-center justify-center gap-2 text-yellow-400/80 text-[7px] md:text-[10px] font-black tracking-widest uppercase animate-pulse">
-                <ShieldCheck size={10} className="md:w-3 md:h-3" /> Enrollment Required to Proceed
-              </div>
-            )}
+            <div className="flex items-center justify-center gap-2 text-yellow-400/80 text-[7px] md:text-[10px] font-black tracking-widest uppercase animate-pulse">
+              <ShieldCheck size={10} className="md:w-3 md:h-3" /> Enrollment Required to Proceed
+            </div>
           </div>
 
           <div className="flex flex-col gap-3 w-full max-w-[200px] md:max-w-xs mb-6 md:mb-10">
-            {user ? (
-              <Link 
-                to="/game"
-                className="flex items-center justify-center gap-2 bg-yellow-400 text-black px-4 py-2 md:px-6 md:py-3 font-black text-xs md:text-base tracking-widest hover:bg-yellow-500 transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] uppercase"
-              >
-                <Play size={14} className="md:w-4 md:h-4" fill="currentColor" /> START
-              </Link>
-            ) : (
-              <Link 
-                to="/login"
-                className="flex items-center justify-center gap-2 bg-yellow-400 text-black px-4 py-3 md:px-6 md:py-4 font-black text-xs md:text-lg tracking-widest hover:bg-yellow-500 transition-all shadow-[0_0_20px_rgba(250,204,21,0.4)] uppercase"
-              >
-                <LogIn size={16} className="md:w-5 md:h-5" /> Sign In to Play
-              </Link>
-            )}
+            <Link 
+              to="/login"
+              className="flex items-center justify-center gap-2 bg-yellow-400 text-black px-4 py-3 md:px-6 md:py-4 font-black text-xs md:text-lg tracking-widest hover:bg-yellow-500 transition-all shadow-[0_0_20px_rgba(250,204,21,0.4)] uppercase"
+            >
+              <LogIn size={16} className="md:w-5 md:h-5" /> Sign In to Play
+            </Link>
           </div>
 
           <div className="flex flex-col items-center gap-2 md:gap-4 w-full pt-3 md:pt-4 border-t border-white/10">
