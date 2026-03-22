@@ -45,7 +45,6 @@ const Leaderboard = () => {
 
       if (profileError) {
         console.error("Leaderboard Profile Fetch Error:", profileError);
-        // We don't throw here, we just show "UNKNOWN" for usernames
       }
 
       // Map usernames back to scores
@@ -54,7 +53,7 @@ const Leaderboard = () => {
         return {
           score: score.score,
           level: score.level,
-          username: profile?.username || "UNKNOWN"
+          username: profile?.username || "REDACTED"
         };
       });
 
