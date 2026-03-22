@@ -22,6 +22,7 @@ const Stats = () => {
   const fetchLeaderboard = async () => {
     setIsRefreshing(true);
     try {
+      // 1. Fetch scores first
       const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
         .select('score, level, user_id, updated_at')
@@ -30,7 +31,7 @@ const Stats = () => {
 
       if (scoreError) {
         console.error("Score fetch error:", scoreError);
-        throw scoreError;
+        throw new Error(scoreError.message);
       }
 
       if (!scores || scores.length === 0) {
@@ -39,6 +40,7 @@ const Stats = () => {
         return;
       }
 
+      // 2. Fetch profiles for these users
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
@@ -46,17 +48,18 @@ const Stats = () => {
         .in('id', userIds);
 
       if (profileError) {
-        console.error("Profile fetch error:", profileError);
-        throw profileError;
+        console.warn("Profile fetch warning:", profileError);
+        // We don't throw here, we'll just use fallbacks for names
       }
 
+      // 3. Combine data
       const combinedData = scores.map(score => {
         const profile = profiles?.find(p => p.id === score.user_id);
         return {
           score: score.score,
           level: score.level,
           updated_at: score.updated_at || "",
-          username: profile?.username || "UNKNOWN"
+          username: profile?.username || "REDACTED"
         };
       });
 
