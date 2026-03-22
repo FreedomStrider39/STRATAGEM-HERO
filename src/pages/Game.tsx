@@ -397,83 +397,83 @@ const Game = () => {
                 key="gameover"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center w-full h-full z-10 px-6 py-4 overflow-hidden"
+                className="flex flex-col items-center justify-start md:justify-center w-full h-full z-10 px-6 py-4 overflow-y-auto no-scrollbar"
               >
-                <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-4xl">
-                  <h2 className="text-4xl md:text-8xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none uppercase text-center">
+                <div className="flex flex-col items-center gap-3 md:gap-6 w-full max-w-4xl py-4 md:py-0">
+                  <h2 className="text-3xl md:text-7xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_30px_rgba(239,68,68,0.5)] leading-none uppercase text-center">
                     Mission Failed
                   </h2>
 
-                  <div className="flex flex-wrap justify-center gap-3 md:gap-6">
-                    <div className="flex items-center gap-3 md:gap-6 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-8 py-2 md:py-3">
-                      <Trophy className="text-yellow-400 w-4 h-4 md:w-8 md:h-8" />
+                  <div className="flex flex-wrap justify-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-2 md:gap-4 bg-yellow-400/10 border border-yellow-400/30 px-3 md:px-6 py-1.5 md:py-3">
+                      <Trophy className="text-yellow-400 w-3 h-3 md:w-6 md:h-6" />
                       <div className="flex flex-col">
-                        <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
-                        <span className="text-sm md:text-2xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
+                        <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Rank</span>
+                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
                       </div>
                     </div>
 
                     {globalRank !== null && (
-                      <div className="flex items-center gap-3 md:gap-6 bg-cyan-400/10 border border-cyan-400/30 px-4 md:px-8 py-2 md:py-3">
-                        <Globe className="text-cyan-400 w-4 h-4 md:w-8 md:h-8" />
+                      <div className="flex items-center gap-2 md:gap-4 bg-cyan-400/10 border border-cyan-400/30 px-3 md:px-6 py-1.5 md:py-3">
+                        <Globe className="text-cyan-400 w-3 h-3 md:w-6 md:h-6" />
                         <div className="flex flex-col">
-                          <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Global Position</span>
-                          <span className="text-sm md:text-2xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
+                          <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Global</span>
+                          <span className="text-[10px] md:text-xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex flex-col justify-center gap-2 md:gap-4 w-full max-w-[280px] md:max-w-[450px] bg-black/60 p-4 md:p-8 border-2 md:border-[4px] border-white/10 shadow-2xl min-h-[150px] md:min-h-[250px]">
+                  <div className="flex flex-col justify-center gap-1.5 md:gap-3 w-full max-w-[260px] md:max-w-[400px] bg-black/60 p-4 md:p-6 border-2 md:border-[4px] border-white/10 shadow-2xl min-h-[120px] md:min-h-[200px]">
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase whitespace-nowrap">Round Bonus</span>
-                      <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.roundBonus}</span>
+                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Round Bonus</span>
+                      <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.roundBonus}</span>
                     </div>
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase whitespace-nowrap">Time Bonus</span>
-                      <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.timeBonus}</span>
+                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Time Bonus</span>
+                      <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.timeBonus}</span>
                     </div>
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase whitespace-nowrap">Max Combo</span>
-                      <span className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.maxCombo}</span>
+                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Max Combo</span>
+                      <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.maxCombo}</span>
                     </div>
 
-                    <div className="w-full h-[1px] bg-white/20 my-1 md:my-2" />
+                    <div className="w-full h-[1px] bg-white/20 my-0.5 md:my-1" />
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase whitespace-nowrap">Total Score</span>
-                      <span className="text-yellow-400 text-lg md:text-4xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</span>
+                      <span className="text-[#4ade80] text-[10px] md:text-xl font-black tracking-[0.1em] uppercase whitespace-nowrap">Total Score</span>
+                      <span className="text-yellow-400 text-sm md:text-3xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="flex flex-col items-center gap-1">
-                      <div className="flex items-center gap-1 text-white/60 text-[10px] md:text-sm font-bold tracking-widest uppercase">
+                  <div className="flex flex-col items-center gap-2 md:gap-4">
+                    <div className="flex flex-col items-center gap-0.5">
+                      <div className="flex items-center gap-1 text-white/60 text-[8px] md:text-xs font-bold tracking-widest uppercase">
                         Recording As: <span className="text-yellow-400">{username || "UNASSIGNED"}</span>
                       </div>
                       {hasSubmitted ? (
-                        <div className="bg-green-500/20 border border-green-500/50 px-4 py-0.5">
-                          <p className="text-green-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">Record Secured</p>
+                        <div className="bg-green-500/20 border border-green-500/50 px-2 py-0.5">
+                          <p className="text-green-400 text-[6px] md:text-[10px] font-black tracking-widest uppercase">Record Secured</p>
                         </div>
                       ) : isSubmitting ? (
-                        <div className="animate-pulse text-yellow-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">
+                        <div className="animate-pulse text-yellow-400 text-[6px] md:text-[10px] font-black tracking-widest uppercase">
                           Uploading Intel...
                         </div>
                       ) : null}
                     </div>
 
                     <div className="flex flex-col items-center gap-2">
-                      <p className="text-white/40 text-[10px] md:text-xl font-bold animate-pulse tracking-[0.1em] text-center uppercase">
+                      <p className="text-white/40 text-[8px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center uppercase">
                         {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
                       </p>
                       
                       <button 
                         onClick={() => window.location.reload()}
-                        className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-4 py-1 md:py-2 hover:bg-white/10 transition-colors text-[10px] md:text-sm font-black tracking-widest uppercase"
+                        className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-3 py-1 md:py-2 hover:bg-white/10 transition-colors text-[8px] md:text-xs font-black tracking-widest uppercase"
                       >
-                        <Home size={14} className="md:w-5 md:h-5" /> Main Menu
+                        <Home size={12} className="md:w-4 md:h-4" /> Main Menu
                       </button>
                     </div>
                   </div>
