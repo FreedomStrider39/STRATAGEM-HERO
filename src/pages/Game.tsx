@@ -423,7 +423,7 @@ const Game = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-8 md:gap-x-24 gap-y-2 md:gap-y-4 w-full max-w-[800px] bg-black/40 p-4 md:p-12 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
+                <div className="grid grid-cols-2 gap-x-4 md:gap-x-12 gap-y-2 md:gap-y-4 w-full max-w-[300px] md:max-w-[600px] bg-black/40 p-4 md:p-10 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
                   <div className="text-left">
                     <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Round Bonus</p>
                   </div>
