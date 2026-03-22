@@ -143,7 +143,7 @@ const Game = () => {
 
   if (authLoading || isProfileLoading) {
     return (
-      <div className="min-h-screen bg-[#0a0c0c] flex items-center justify-center">
+      <div className="h-screen w-screen bg-[#0a0c0c] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
       </div>
     );
@@ -154,8 +154,8 @@ const Game = () => {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans selection:bg-yellow-400 selection:text-black flex items-center justify-center p-0 overflow-hidden">
-      <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-1 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
+    <div className="h-screen w-screen bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
+      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-hidden">
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
@@ -177,9 +177,9 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-2 md:gap-4 overflow-y-auto py-4 md:py-8"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-2 md:gap-6 overflow-hidden py-4"
             >
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center shrink-0">
                 <h1 className="text-2xl md:text-7xl font-black tracking-tighter text-white mb-1 md:mb-2 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none">
                   STRATAGEM HERO
                 </h1>
@@ -215,11 +215,11 @@ const Game = () => {
                 </motion.p>
               </div>
 
-              <div className="scale-75 md:scale-90 origin-center">
+              <div className="scale-75 md:scale-90 origin-center shrink min-h-0 overflow-hidden">
                 <Leaderboard />
               </div>
               
-              <div className="text-white/40 text-[10px] md:text-lg tracking-widest mt-2">
+              <div className="text-white/40 text-[10px] md:text-lg tracking-widest mt-2 shrink-0">
                 PERSONAL BEST: <span className="text-yellow-400">{highScore}</span>
               </div>
             </motion.div>
@@ -234,7 +234,7 @@ const Game = () => {
               className="w-full h-full flex flex-col items-center justify-between z-10 py-1 md:py-8 overflow-hidden"
             >
               <div className="w-full max-w-[1100px] mx-auto flex flex-col h-full overflow-hidden">
-                <div className="h-4 md:h-8 flex flex-col gap-1 mb-1">
+                <div className="h-4 md:h-8 flex flex-col gap-1 mb-1 shrink-0">
                   <AnimatePresence>
                     {isDisrupted && (
                       <motion.div 
@@ -297,7 +297,7 @@ const Game = () => {
                   </AnimatePresence>
                 </div>
 
-                <div className="w-full flex flex-col items-center gap-1 md:gap-2 mt-auto">
+                <div className="w-full flex flex-col items-center gap-1 md:gap-2 mt-auto shrink-0">
                   <div className="w-full px-2 max-w-2xl">
                     <div className="relative h-1.5 md:h-4 bg-black/60 border md:border-[2px] border-white/20 overflow-hidden">
                       <motion.div 
@@ -340,13 +340,13 @@ const Game = () => {
               key="gameover"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center w-full h-full z-10 px-4 overflow-y-auto max-h-full py-2 md:py-4 gap-2 md:gap-4"
+              className="flex flex-col items-center justify-center w-full h-full z-10 px-4 overflow-hidden py-2 md:py-4 gap-2 md:gap-4"
             >
-              <h2 className="text-xl md:text-5xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none">
+              <h2 className="text-xl md:text-5xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none shrink-0">
                 MISSION FAILED
               </h2>
 
-              <div className="flex items-center gap-2 md:gap-4 bg-yellow-400/10 border border-yellow-400/30 px-3 md:px-6 py-1">
+              <div className="flex items-center gap-2 md:gap-4 bg-yellow-400/10 border border-yellow-400/30 px-3 md:px-6 py-1 shrink-0">
                 <Trophy className="text-yellow-400 w-3 h-3 md:w-5 md:h-5" />
                 <div className="flex flex-col">
                   <span className="text-[5px] md:text-[9px] text-white/60 font-bold tracking-widest">CURRENT RANK</span>
@@ -354,7 +354,7 @@ const Game = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-x-4 md:gap-x-16 gap-y-1 md:gap-y-2 w-full max-w-[600px] bg-black/40 p-3 md:p-6 border md:border-[2px] border-white/10">
+              <div className="grid grid-cols-2 gap-x-4 md:gap-x-16 gap-y-1 md:gap-y-2 w-full max-w-[600px] bg-black/40 p-3 md:p-6 border md:border-[2px] border-white/10 shrink min-h-0 overflow-hidden">
                 <div className="text-left">
                   <p className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest">ROUND BONUS</p>
                 </div>
@@ -386,7 +386,7 @@ const Game = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col items-center gap-1 md:gap-2">
+              <div className="flex flex-col items-center gap-1 md:gap-2 shrink-0">
                 <div className="flex items-center gap-1 text-white/60 text-[8px] md:text-xs font-bold tracking-widest">
                   RECORDING AS: <span className="text-yellow-400">{username || "UNASSIGNED"}</span>
                 </div>
@@ -401,7 +401,7 @@ const Game = () => {
                 ) : null}
               </div>
 
-              <div className="flex flex-col gap-2 w-full max-w-[150px] md:max-w-xs items-center">
+              <div className="flex flex-col gap-2 w-full max-w-[150px] md:max-w-xs items-center shrink-0">
                 <p className="text-white/40 text-[8px] md:text-sm font-bold animate-pulse tracking-[0.1em] text-center uppercase">
                   {('ontouchstart' in window) ? 'TAP TO REDEPLOY' : 'PRESS ANY KEY TO REDEPLOY'}
                 </p>

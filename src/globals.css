@@ -82,12 +82,16 @@
   }
 }
 
-body {
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   background-color: #0a0c0c;
   color: white;
   cursor: crosshair;
   font-family: 'Orbitron', sans-serif;
-  overflow: hidden;
   /* Mobile optimizations */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -107,9 +111,4 @@ h1, h2, h3, span, p {
 
 .text-glow-cyan {
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 20px rgba(0, 255, 255, 0.4);
-}
-
-.h-dynamic-screen {
-  height: 100vh;
-  height: 100dvh;
 }
