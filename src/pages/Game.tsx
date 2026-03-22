@@ -423,35 +423,35 @@ const Game = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-4 md:gap-x-12 gap-y-2 md:gap-y-4 w-full max-w-[300px] md:max-w-[600px] bg-black/40 p-4 md:p-10 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
+                <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-2 md:gap-y-4 w-full max-w-[280px] md:max-w-[450px] bg-black/40 p-6 md:p-10 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
                   <div className="text-left">
-                    <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Round Bonus</p>
+                    <p className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Round Bonus</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.roundBonus}</p>
+                    <p className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.roundBonus}</p>
                   </div>
 
                   <div className="text-left">
-                    <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Time Bonus</p>
+                    <p className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Time Bonus</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.timeBonus}</p>
+                    <p className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.timeBonus}</p>
                   </div>
 
                   <div className="text-left">
-                    <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Max Combo</p>
+                    <p className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Max Combo</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.maxCombo}</p>
+                    <p className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.maxCombo}</p>
                   </div>
 
                   <div className="col-span-2 h-[1px] bg-white/20 my-1 md:my-2" />
 
                   <div className="text-left">
-                    <p className="text-[#4ade80] text-xs md:text-3xl font-black tracking-[0.1em] uppercase">Total Score</p>
+                    <p className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase">Total Score</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-yellow-400 text-lg md:text-5xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</p>
+                    <p className="text-yellow-400 text-lg md:text-4xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</p>
                   </div>
                 </div>
 
