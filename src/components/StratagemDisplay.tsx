@@ -98,7 +98,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
         {/* Icon Row: Main centered with queue on the side */}
         <div className="flex items-center justify-center gap-3 md:gap-6">
           <div className={cn(
-            "w-24 h-24 md:w-48 md:h-48 border-2 md:border-[4px] p-1.5 md:p-3 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
+            "w-32 h-32 md:w-56 md:h-56 border-2 md:border-[4px] p-1.5 md:p-3 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
             isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           )}>
             <StratagemIcon 

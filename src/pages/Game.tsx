@@ -177,15 +177,15 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-4 md:gap-8 overflow-hidden py-8"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-6 md:gap-12 overflow-hidden py-8"
             >
               <div className="flex flex-col items-center shrink-0">
-                <h1 className="text-3xl md:text-7xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
+                <h1 className="text-4xl md:text-8xl font-black tracking-tighter text-white mb-2 md:mb-4 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
                   Stratagem Hero
                 </h1>
-                <div className="h-1 w-24 md:h-1 md:w-[20rem] bg-yellow-400 mb-4 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+                <div className="h-1 w-32 md:h-1.5 md:w-[30rem] bg-yellow-400 mb-6 md:mb-10 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
-                <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
+                <div className="flex flex-col items-center gap-3 mb-8 md:mb-12">
                   <div className="flex items-center gap-2">
                     <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
                     <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username || "UNASSIGNED"}</span>
@@ -193,7 +193,7 @@ const Game = () => {
                       <Edit2 size={14} className="md:w-5 md:h-5" />
                     </Link>
                   </div>
-                  <div className="flex gap-4">
+                  <div className="flex gap-6">
                     <Link to="/stats" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
                       <BarChart3 size={12} className="md:w-4 md:h-4" /> Global Stats
                     </Link>
@@ -207,19 +207,19 @@ const Game = () => {
                 </div>
 
                 <motion.p 
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="text-yellow-400 text-lg md:text-4xl font-bold tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-4 md:mb-8 uppercase"
+                  animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-yellow-400 text-xl md:text-5xl font-black tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-8 md:mb-12 uppercase italic"
                 >
                   {('ontouchstart' in window) ? 'Tap to Start' : 'Press Any Key to Start'}
                 </motion.p>
               </div>
 
-              <div className="scale-90 md:scale-100 origin-center shrink min-h-0 overflow-hidden">
+              <div className="scale-90 md:scale-110 origin-center shrink min-h-0 overflow-hidden">
                 <Leaderboard />
               </div>
               
-              <div className="text-white/40 text-xs md:text-xl tracking-widest mt-4 shrink-0 uppercase">
+              <div className="text-white/40 text-xs md:text-2xl tracking-widest mt-6 shrink-0 uppercase font-black italic">
                 Personal Best: <span className="text-yellow-400">{highScore}</span>
               </div>
             </motion.div>
