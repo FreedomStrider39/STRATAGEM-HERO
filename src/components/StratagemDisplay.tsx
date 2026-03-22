@@ -80,25 +80,25 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   score
 }) => {
   return (
-    <div className="flex flex-col items-center w-full h-full justify-center py-2">
+    <div className="flex flex-col items-center w-full h-full max-h-full justify-between py-2 md:py-6">
       {/* Header - Round & Score */}
-      <div className="flex items-start justify-between w-full px-4 md:px-12 mb-4">
+      <div className="flex items-start justify-between w-full px-6 md:px-16 shrink-0">
         <div className="flex flex-col items-start">
           <span className="text-white/40 text-[8px] md:text-[10px] font-bold tracking-[0.2em]">ROUND</span>
-          <span className="text-yellow-400 text-2xl md:text-4xl font-black leading-none text-glow-yellow italic">{round}</span>
+          <span className="text-yellow-400 text-2xl md:text-5xl font-black leading-none text-glow-yellow italic">{round}</span>
         </div>
         <div className="flex flex-col items-end">
           <span className="text-white/40 text-[8px] md:text-[10px] font-bold tracking-[0.2em]">SCORE</span>
-          <span className="text-yellow-400 text-2xl md:text-4xl font-black leading-none text-glow-yellow italic">{score}</span>
+          <span className="text-yellow-400 text-2xl md:text-5xl font-black leading-none text-glow-yellow italic">{score}</span>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex flex-col items-center justify-center w-full gap-4 md:gap-6">
+      <div className="flex-1 flex flex-col items-center justify-center w-full gap-4 md:gap-8 min-h-0">
         {/* Icon and Queue */}
-        <div className="flex items-center justify-center gap-3 md:gap-8">
+        <div className="flex items-center justify-center gap-4 md:gap-10">
           <div className={cn(
-            "w-32 h-32 md:w-48 md:h-48 border-2 md:border-[3px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
+            "w-32 h-32 md:w-44 md:h-44 border-2 md:border-[4px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
             isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
           )}>
             <StratagemIcon 
@@ -114,7 +114,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           {/* Horizontal Faded Queue for PC */}
           <div className="hidden md:flex flex-row gap-4 opacity-20">
             {queue.slice(1, 5).map((nextStrat, idx) => (
-              <div key={idx} className="w-24 h-24 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
+              <div key={idx} className="w-20 h-20 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 
@@ -142,11 +142,11 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
         {/* Name Bar - Full Width */}
         <div className={cn(
-          "w-full py-1.5 md:py-3 transition-all duration-500",
+          "w-full py-2 md:py-4 transition-all duration-500 shrink-0",
           isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
         )}>
           <h2 className={cn(
-            "text-[10px] md:text-2xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[2rem] flex items-center justify-center uppercase italic",
+            "text-[10px] md:text-3xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[2.5rem] flex items-center justify-center uppercase italic",
             isDisrupted ? "text-purple-100" : "text-black"
           )}>
             {isDisrupted ? <IlluminateText /> : stratagem.name}
@@ -155,7 +155,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 
         {/* Arrows */}
         <div className={cn(
-          "flex flex-nowrap justify-center gap-1.5 md:gap-3 transition-transform duration-75 w-full px-4 overflow-x-auto no-scrollbar",
+          "flex flex-nowrap justify-center gap-1.5 md:gap-4 transition-transform duration-75 w-full px-4 overflow-x-auto no-scrollbar shrink-0",
           isError && "animate-shake"
         )}>
           {activeSequence.map((dir, idx) => (

@@ -185,17 +185,17 @@ const Game = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      <div className="w-full h-full max-w-5xl mx-auto bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[4px] border-[#1a1f1f] overflow-hidden">
+      <div className="w-full h-full max-w-5xl mx-auto bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
         
-        <div className="absolute inset-0 md:inset-2 border-[2px] md:border-[4px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
+        <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         {(gameState === "playing" || gameState === "break") && (
           <button 
             onClick={() => window.location.reload()}
-            className="absolute top-4 left-4 md:top-6 md:left-6 z-[60] bg-black/60 border border-white/10 px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
+            className="absolute top-4 left-4 md:top-8 md:left-8 z-[60] bg-black/60 border border-white/10 px-2 py-1 md:px-4 md:py-2 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
           >
-            <ArrowLeft size={12} className="md:w-4 md:h-4" />
-            <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Abort</span>
+            <ArrowLeft size={12} className="md:w-5 md:h-5" />
+            <span className="text-[7px] md:text-[12px] font-black tracking-widest uppercase">Abort</span>
           </button>
         )}
 
@@ -206,31 +206,31 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-4 md:gap-6 overflow-hidden py-4"
+              className="flex flex-col items-center text-center z-10 px-4 w-full h-full justify-center gap-4 md:gap-8 overflow-hidden py-4"
             >
               <div className="flex flex-col items-center shrink-0">
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-white mb-1 md:mb-2 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
+                <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white mb-1 md:mb-2 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
                   Stratagem Hero
                 </h1>
-                <div className="h-1 w-32 md:h-1.5 md:w-[20rem] bg-yellow-400 mb-4 md:mb-6 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
+                <div className="h-1 w-32 md:h-2 md:w-[24rem] bg-yellow-400 mb-4 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                 
-                <div className="flex flex-col items-center gap-2 mb-4 md:mb-6">
+                <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                   <div className="flex items-center gap-2">
-                    <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-widest">HELLDIVER:</span>
-                    <span className="text-white text-sm md:text-xl font-black italic tracking-widest uppercase">{username || "UNASSIGNED"}</span>
+                    <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest">HELLDIVER:</span>
+                    <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username || "UNASSIGNED"}</span>
                     <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
-                      <Edit2 size={14} className="md:w-4 md:h-4" />
+                      <Edit2 size={14} className="md:w-5 md:h-5" />
                     </Link>
                   </div>
-                  <div className="flex gap-4">
-                    <Link to="/stats" className="text-[10px] md:text-xs font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
-                      <BarChart3 size={12} className="md:w-4 md:h-4" /> Global Stats
+                  <div className="flex gap-6">
+                    <Link to="/stats" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
+                      <BarChart3 size={12} className="md:w-5 md:h-5" /> Global Stats
                     </Link>
                     <button 
                       onClick={() => signOut().then(() => navigate("/"))}
-                      className="text-[10px] md:text-xs font-bold text-red-500/60 hover:text-red-500 flex items-center gap-1 transition-colors uppercase"
+                      className="text-[10px] md:text-sm font-bold text-red-500/60 hover:text-red-500 flex items-center gap-1 transition-colors uppercase"
                     >
-                      <LogOut size={12} className="md:w-4 md:h-4" /> Sign Out
+                      <LogOut size={12} className="md:w-5 md:h-5" /> Sign Out
                     </button>
                   </div>
                 </div>
@@ -238,17 +238,17 @@ const Game = () => {
                 <motion.p 
                   animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="text-yellow-400 text-xl md:text-4xl font-black tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-4 md:mb-6 uppercase italic"
+                  className="text-yellow-400 text-xl md:text-5xl font-black tracking-[0.2em] md:tracking-[0.4em] text-glow-yellow mb-4 md:mb-8 uppercase italic"
                 >
                   {('ontouchstart' in window) ? 'Tap to Start' : 'Press Any Key to Start'}
                 </motion.p>
               </div>
 
-              <div className="scale-90 md:scale-100 origin-center shrink min-h-0 overflow-hidden">
+              <div className="scale-90 md:scale-110 origin-center shrink min-h-0 overflow-hidden">
                 <Leaderboard />
               </div>
               
-              <div className="text-white/40 text-xs md:text-xl tracking-widest mt-4 shrink-0 uppercase font-black italic">
+              <div className="text-white/40 text-xs md:text-2xl tracking-widest mt-4 shrink-0 uppercase font-black italic">
                 Personal Best: <span className="text-yellow-400">{highScore}</span>
               </div>
             </motion.div>
@@ -262,8 +262,8 @@ const Game = () => {
               exit={{ opacity: 0 }}
               className="w-full h-full flex flex-col items-center justify-center z-10 overflow-hidden"
             >
-              <div className="w-full max-h-full flex flex-col overflow-hidden py-4">
-                <div className="h-6 md:h-8 flex flex-col gap-1 shrink-0 mb-2">
+              <div className="w-full h-full flex flex-col overflow-hidden">
+                <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-4 md:mt-8">
                   <AnimatePresence>
                     {isDisrupted && (
                       <motion.div 
@@ -272,8 +272,8 @@ const Game = () => {
                         exit={{ opacity: 0 }}
                         className="flex items-center justify-center gap-2 bg-purple-600/30 border border-purple-500/50 py-1 px-4 backdrop-blur-md"
                       >
-                        <AlertTriangle className="w-3 h-3 md:w-4 md:h-4 text-purple-400 animate-pulse" />
-                        <span className="text-purple-400 text-[8px] md:text-xs font-bold tracking-[0.1em] animate-pulse text-center uppercase">
+                        <AlertTriangle className="w-3 h-3 md:w-5 md:h-5 text-purple-400 animate-pulse" />
+                        <span className="text-purple-400 text-[8px] md:text-sm font-bold tracking-[0.1em] animate-pulse text-center uppercase">
                           Cognitive Disruptor Detected
                         </span>
                       </motion.div>
@@ -285,8 +285,8 @@ const Game = () => {
                         exit={{ opacity: 0 }}
                         className="flex items-center justify-center gap-2 bg-orange-600/30 border border-orange-500/50 py-1 px-4 backdrop-blur-md"
                       >
-                        <CheckCircle2 className="w-3 h-3 md:w-4 md:h-4 text-orange-400" />
-                        <span className="text-white text-[8px] md:text-xs font-bold tracking-[0.1em] text-center uppercase">
+                        <CheckCircle2 className="w-3 h-3 md:w-5 md:h-5 text-orange-400" />
+                        <span className="text-white text-[8px] md:text-sm font-bold tracking-[0.1em] text-center uppercase">
                           Disruptor Destroyed
                         </span>
                       </motion.div>
@@ -314,21 +314,21 @@ const Game = () => {
                         initial={{ opacity: 0, scale: 0.5, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 1.5 }}
-                        className="absolute top-1/2 right-4 md:right-12 flex flex-col items-center z-20"
+                        className="absolute top-1/2 right-4 md:right-16 flex flex-col items-center z-20"
                       >
                         <div className="flex items-center gap-1 text-yellow-400">
-                          <Zap className="w-4 h-4 md:w-6 md:h-6 fill-yellow-400" />
-                          <span className="text-xl md:text-4xl font-black italic text-glow-yellow">x{combo}</span>
+                          <Zap className="w-4 h-4 md:w-8 md:h-8 fill-yellow-400" />
+                          <span className="text-xl md:text-5xl font-black italic text-glow-yellow">x{combo}</span>
                         </div>
-                        <span className="text-[8px] md:text-xs font-bold tracking-[0.1em] text-white/60 uppercase">Combo</span>
+                        <span className="text-[8px] md:text-sm font-bold tracking-[0.1em] text-white/60 uppercase">Combo</span>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
 
-                <div className="w-full flex flex-col items-center gap-2 mt-2 shrink-0">
-                  <div className="w-full px-6 max-w-3xl">
-                    <div className="relative h-2 md:h-4 bg-black/60 border md:border-[2px] border-white/20 overflow-hidden">
+                <div className="w-full flex flex-col items-center gap-2 mb-4 md:mb-12 shrink-0">
+                  <div className="w-full px-6 md:px-16">
+                    <div className="relative h-2 md:h-6 bg-black/60 border md:border-[3px] border-white/20 overflow-hidden">
                       <motion.div 
                         className={`absolute inset-y-0 left-0 shadow-[0_0_15px_rgba(250,204,21,0.6)] ${isDisrupted ? 'bg-purple-500' : 'bg-yellow-400'}`}
                         style={{ width: `${(timeLeft / maxTime) * 100}%` }}
@@ -351,14 +351,14 @@ const Game = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center text-center z-30 bg-black/80 p-8 md:p-12 border-y-[3px] md:border-y-[4px] border-yellow-400 w-full"
+              className="flex flex-col items-center text-center z-30 bg-black/80 p-8 md:p-16 border-y-[3px] md:border-y-[6px] border-yellow-400 w-full"
             >
-              <h2 className="text-2xl md:text-5xl font-black text-yellow-400 mb-2 md:mb-4 italic tracking-tighter text-glow-yellow leading-none uppercase">
+              <h2 className="text-2xl md:text-6xl font-black text-yellow-400 mb-2 md:mb-6 italic tracking-tighter text-glow-yellow leading-none uppercase">
                 Round Complete
               </h2>
-              <div className="h-1 w-16 md:h-1.5 md:w-[12rem] bg-white/20 mb-4 md:mb-6" />
-              <p className="text-xs md:text-2xl font-bold text-white mb-2 md:mb-4 tracking-widest uppercase">Preparing Next Wave</p>
-              <div className="text-3xl md:text-5xl font-black text-yellow-400 animate-pulse italic">
+              <div className="h-1 w-16 md:h-2 md:w-[16rem] bg-white/20 mb-4 md:mb-8" />
+              <p className="text-xs md:text-3xl font-bold text-white mb-2 md:mb-6 tracking-widest uppercase">Preparing Next Wave</p>
+              <div className="text-3xl md:text-7xl font-black text-yellow-400 animate-pulse italic">
                 {Math.ceil(breakTimeLeft)}S
               </div>
             </motion.div>
@@ -369,89 +369,89 @@ const Game = () => {
               key="gameover"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center w-full h-full z-10 px-6 overflow-hidden py-4 gap-4 md:gap-6"
+              className="flex flex-col items-center justify-center w-full h-full z-10 px-6 overflow-hidden py-4 gap-4 md:gap-8"
             >
-              <h2 className="text-3xl md:text-6xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none shrink-0 uppercase">
+              <h2 className="text-3xl md:text-8xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_40px_rgba(239,68,68,0.5)] leading-none shrink-0 uppercase">
                 Mission Failed
               </h2>
 
-              <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-                <div className="flex items-center gap-3 md:gap-4 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-6 py-2">
-                  <Trophy className="text-yellow-400 w-4 h-4 md:w-6 md:h-6" />
+              <div className="flex flex-wrap justify-center gap-3 md:gap-6">
+                <div className="flex items-center gap-3 md:gap-6 bg-yellow-400/10 border border-yellow-400/30 px-4 md:px-8 py-2 md:py-4">
+                  <Trophy className="text-yellow-400 w-4 h-4 md:w-8 md:h-8" />
                   <div className="flex flex-col">
-                    <span className="text-[8px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
-                    <span className="text-sm md:text-xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
+                    <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Current Rank</span>
+                    <span className="text-sm md:text-2xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
                   </div>
                 </div>
 
                 {globalRank !== null && (
-                  <div className="flex items-center gap-3 md:gap-4 bg-cyan-400/10 border border-cyan-400/30 px-4 md:px-6 py-2">
-                    <Globe className="text-cyan-400 w-4 h-4 md:w-6 md:h-6" />
+                  <div className="flex items-center gap-3 md:gap-6 bg-cyan-400/10 border border-cyan-400/30 px-4 md:px-8 py-2 md:py-4">
+                    <Globe className="text-cyan-400 w-4 h-4 md:w-8 md:h-8" />
                     <div className="flex flex-col">
-                      <span className="text-[8px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Global Position</span>
-                      <span className="text-sm md:text-xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
+                      <span className="text-[8px] md:text-[12px] text-white/60 font-bold tracking-widest uppercase">Global Position</span>
+                      <span className="text-sm md:text-2xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
                     </div>
                   </div>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-x-8 md:gap-x-16 gap-y-2 md:gap-y-3 w-full max-w-[600px] bg-black/40 p-4 md:p-8 border md:border-[2px] border-white/10 shrink min-h-0 overflow-hidden">
+              <div className="grid grid-cols-2 gap-x-8 md:gap-x-24 gap-y-2 md:gap-y-4 w-full max-w-[800px] bg-black/40 p-4 md:p-12 border md:border-[3px] border-white/10 shrink min-h-0 overflow-hidden">
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Round Bonus</p>
+                  <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Round Bonus</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.roundBonus}</p>
+                  <p className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.roundBonus}</p>
                 </div>
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Time Bonus</p>
+                  <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Time Bonus</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.timeBonus}</p>
+                  <p className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.timeBonus}</p>
                 </div>
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-[10px] md:text-xl font-bold tracking-widest uppercase">Max Combo</p>
+                  <p className="text-[#4ade80] text-[10px] md:text-2xl font-bold tracking-widest uppercase">Max Combo</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-sm md:text-2xl font-black italic">{stats.maxCombo}</p>
+                  <p className="text-yellow-400 text-sm md:text-3xl font-black italic">{stats.maxCombo}</p>
                 </div>
 
-                <div className="col-span-2 h-[1px] bg-white/20 my-1" />
+                <div className="col-span-2 h-[1px] bg-white/20 my-1 md:my-2" />
 
                 <div className="text-left">
-                  <p className="text-[#4ade80] text-xs md:text-2xl font-black tracking-[0.1em] uppercase">Total Score</p>
+                  <p className="text-[#4ade80] text-xs md:text-3xl font-black tracking-[0.1em] uppercase">Total Score</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-yellow-400 text-lg md:text-4xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</p>
+                  <p className="text-yellow-400 text-lg md:text-5xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</p>
                 </div>
               </div>
 
               <div className="flex flex-col items-center gap-1 shrink-0">
-                <div className="flex items-center gap-1 text-white/60 text-[10px] md:text-xs font-bold tracking-widest uppercase">
+                <div className="flex items-center gap-1 text-white/60 text-[10px] md:text-sm font-bold tracking-widest uppercase">
                   Recording As: <span className="text-yellow-400">{username || "UNASSIGNED"}</span>
                 </div>
                 {hasSubmitted ? (
                   <div className="bg-green-500/20 border border-green-500/50 px-4 py-0.5">
-                    <p className="text-green-400 text-[8px] md:text-[10px] font-black tracking-widest uppercase">Record Secured</p>
+                    <p className="text-green-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">Record Secured</p>
                   </div>
                 ) : isSubmitting ? (
-                  <div className="animate-pulse text-yellow-400 text-[8px] md:text-[10px] font-black tracking-widest uppercase">
+                  <div className="animate-pulse text-yellow-400 text-[8px] md:text-[12px] font-black tracking-widest uppercase">
                     Uploading Intel...
                   </div>
                 ) : null}
               </div>
 
-              <div className="flex flex-col gap-2 w-full max-w-[200px] md:max-w-sm items-center shrink-0">
-                <p className="text-white/40 text-[10px] md:text-base font-bold animate-pulse tracking-[0.1em] text-center uppercase">
+              <div className="flex flex-col gap-2 w-full max-w-[200px] md:max-w-md items-center shrink-0">
+                <p className="text-white/40 text-[10px] md:text-xl font-bold animate-pulse tracking-[0.1em] text-center uppercase">
                   {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
                 </p>
                 
                 <button 
                   onClick={() => window.location.reload()}
-                  className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-4 py-1.5 md:py-2 hover:bg-white/10 transition-colors text-[10px] md:text-xs font-black tracking-widest uppercase"
+                  className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-4 py-1.5 md:py-3 hover:bg-white/10 transition-colors text-[10px] md:text-sm font-black tracking-widest uppercase"
                 >
-                  <Home size={14} className="md:w-4 md:h-4" /> Main Menu
+                  <Home size={14} className="md:w-5 md:h-5" /> Main Menu
                 </button>
               </div>
             </motion.div>
