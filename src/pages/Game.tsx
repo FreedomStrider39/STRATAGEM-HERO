@@ -260,7 +260,7 @@ const Game = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full flex flex-col items-center justify-center z-10 overflow-hidden"
+              className="w-full h-full flex flex-col items-center justify-center z-10 overflow-hidden p-0 md:p-4"
             >
               <div className="w-full h-full flex flex-col overflow-hidden">
                 <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-4 md:mt-8">

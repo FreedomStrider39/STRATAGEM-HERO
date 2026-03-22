@@ -81,8 +81,8 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center w-full h-full max-h-full justify-between py-1 md:py-4">
-      {/* Header - Round & Score (Moved Up) */}
-      <div className="flex items-start justify-between w-full px-6 md:px-16 shrink-0 -mt-2 md:-mt-4">
+      {/* Header - Round & Score */}
+      <div className="flex items-start justify-between w-full px-6 md:px-12 shrink-0 -mt-2 md:-mt-4">
         <div className="flex flex-col items-start">
           <span className="text-white/40 text-[8px] md:text-[10px] font-bold tracking-[0.2em]">ROUND</span>
           <span className="text-yellow-400 text-2xl md:text-5xl font-black leading-none text-glow-yellow italic">{round}</span>
@@ -111,7 +111,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
             />
           </div>
 
-          {/* Horizontal Faded Queue for PC (Positioned to the right) */}
+          {/* Horizontal Faded Queue for PC */}
           <div className="hidden md:flex flex-row gap-4 opacity-20 absolute left-full ml-10">
             {queue.slice(1, 5).map((nextStrat, idx) => (
               <div key={idx} className="w-20 h-20 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
@@ -145,7 +145,6 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           "w-full py-2 md:py-4 transition-all duration-500 shrink-0 relative",
           isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
         )}>
-          {/* Scanline texture for the name bar */}
           <div className="absolute inset-0 opacity-20 pointer-events-none bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]" />
           
           <h2 className={cn(
