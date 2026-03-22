@@ -5,7 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ShieldCheck, ArrowLeft, Shield, AlertCircle } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Shield, AlertCircle, CheckSquare } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -55,6 +55,11 @@ const Login = () => {
             }}
             theme="dark"
           />
+
+          <div className="mt-6 flex items-center justify-center gap-2 text-yellow-400/60">
+            <CheckSquare size={14} className="text-yellow-400" />
+            <span className="text-[10px] font-black tracking-widest uppercase">Persistent Session Enabled</span>
+          </div>
 
           <div className="mt-8 pt-6 border-t border-white/10 space-y-4">
             <div className="flex gap-3 items-start text-white/40">
