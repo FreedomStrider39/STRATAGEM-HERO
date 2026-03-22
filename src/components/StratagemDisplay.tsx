@@ -81,8 +81,8 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center w-full h-full justify-between py-2">
-      {/* Header: Round and Score in absolute corners */}
-      <div className="flex items-start justify-between w-full px-4 md:px-12 pt-2 md:pt-6">
+      {/* Header: Round and Score in absolute corners - Adjusted for Abort button */}
+      <div className="flex items-start justify-between w-full px-4 md:px-12 pt-14 md:pt-10">
         <div className="flex flex-col items-start">
           <span className="text-white/40 text-[10px] md:text-sm font-bold tracking-[0.2em]">ROUND</span>
           <span className="text-yellow-400 text-3xl md:text-6xl font-black leading-none text-glow-yellow italic">{round}</span>

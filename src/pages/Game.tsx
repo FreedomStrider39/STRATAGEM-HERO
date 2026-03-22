@@ -159,14 +159,14 @@ const Game = () => {
         
         <div className="absolute inset-0 md:inset-4 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
-        {/* Abort Mission Button - Positioned higher up */}
-        {gameState === "playing" && (
+        {/* Abort Mission Button - Moved to corner to avoid overlap */}
+        {(gameState === "playing" || gameState === "break") && (
           <button 
             onClick={() => window.location.reload()}
-            className="absolute top-10 left-1/2 -translate-x-1/2 z-[60] bg-black/60 border border-white/10 px-3 py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
+            className="absolute top-6 left-6 md:top-10 md:left-10 z-[60] bg-black/60 border border-white/10 px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
           >
-            <ArrowLeft size={14} className="md:w-4 md:h-4" />
-            <span className="text-[8px] md:text-[10px] font-black tracking-widest uppercase">Abort Mission</span>
+            <ArrowLeft size={12} className="md:w-4 md:h-4" />
+            <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Abort</span>
           </button>
         )}
 
