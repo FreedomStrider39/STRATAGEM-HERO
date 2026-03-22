@@ -25,9 +25,14 @@ const Leaderboard = () => {
         .order('score', { ascending: false })
         .limit(10);
 
-      if (scoreError) throw scoreError;
+      if (scoreError) {
+        console.error("Leaderboard Score Fetch Error:", scoreError);
+        throw scoreError;
+      }
+
       if (!scores || scores.length === 0) {
         setEntries([]);
+        setLoading(false);
         return;
       }
 
@@ -38,7 +43,10 @@ const Leaderboard = () => {
         .select('id, username')
         .in('id', userIds);
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error("Leaderboard Profile Fetch Error:", profileError);
+        // We don't throw here, we just show "UNKNOWN" for usernames
+      }
 
       // Map usernames back to scores
       const combinedData = scores.map(score => {
@@ -53,7 +61,7 @@ const Leaderboard = () => {
       setEntries(combinedData);
       setError(null);
     } catch (err: any) {
-      console.error("Leaderboard fetch failed:", err);
+      console.error("Leaderboard Full Error Object:", err);
       setError("INTEL OFFLINE");
     } finally {
       setLoading(false);
