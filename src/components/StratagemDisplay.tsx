@@ -53,7 +53,7 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       } : {}}
       transition={{ repeat: Infinity, duration: 0.15 }}
       className={cn(
-        "transition-all duration-75 w-7 h-7 md:w-10 md:h-10 flex items-center justify-center flex-shrink-0",
+        "transition-all duration-75 w-10 h-10 md:w-16 md:h-16 flex items-center justify-center flex-shrink-0",
         completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
         isDisrupted && !completed && "text-purple-400/70"
       )}

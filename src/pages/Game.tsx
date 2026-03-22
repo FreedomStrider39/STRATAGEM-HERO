@@ -224,7 +224,7 @@ const Game = () => {
 
         {/* Content Area - Scales to fit browser window */}
         <div 
-          className="w-full h-full z-10 flex flex-col overflow-hidden origin-center"
+          className="w-full h-full z-10 flex flex-col justify-center overflow-hidden origin-center"
           style={{ transform: `scale(${scale})` }}
         >
           <AnimatePresence mode="wait">
