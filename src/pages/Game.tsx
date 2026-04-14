@@ -183,7 +183,7 @@ const Game = () => {
               >
                 <div className="flex flex-col items-center shrink-0">
                   <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-white mb-1 md:mb-2 italic drop-shadow-[0_0_40px_rgba(255,255,255,0.3)] leading-none uppercase">
-                    Stratagem Hero
+                    Stratagem Hero <span className="text-yellow-400">2</span>
                   </h1>
                   <div className="h-1 w-32 md:h-2 md:w-[24rem] bg-yellow-400 mb-4 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                   
