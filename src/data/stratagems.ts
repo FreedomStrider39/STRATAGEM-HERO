@@ -50,6 +50,8 @@ import stalwartSvg from "../assets/icons/support/stalwart.svg";
 import sterilizerSvg from "../assets/icons/support/sterilizer.svg";
 import supplyPackSvg from "../assets/icons/support/supply_pack.svg";
 import directionalShieldSvg from "../assets/icons/support/directional_shield.svg";
+import waspLauncherSvg from "../assets/icons/support/wasp_launcher.svg";
+import breachingHammerSvg from "../assets/icons/support/breaching_hammer.svg";
 
 // Defensive Icons
 import antiPersonnelMinesSvg from "../assets/icons/defensive/anti_personnel_mines.svg";
@@ -124,11 +126,15 @@ export const STRATAGEMS: Stratagem[] = [
   { name: "MG-206 Heavy Machine Gun", sequence: ["D", "L", "U", "D", "D"], category: "Support", iconUrl: hmgSvg },
   { name: "RL-77 Airburst Rocket Launcher", sequence: ["D", "U", "U", "L", "R"], category: "Support", iconUrl: airburstRocketLauncherSvg },
   { name: "FAF-14 Spear", sequence: ["D", "D", "U", "D", "D"], category: "Support", iconUrl: spearSvg },
+  { name: "TX-41 Sterilizer", sequence: ["D", "L", "U", "D", "L"], category: "Support", iconUrl: sterilizerSvg },
+  { name: "Stingshot Wasp Launcher", sequence: ["D", "D", "U", "L", "R"], category: "Support", iconUrl: waspLauncherSvg },
+  { name: "Breaching Hammer", sequence: ["D", "D", "L", "U", "U"], category: "Support", iconUrl: breachingHammerSvg },
   { name: "B-1 Supply Pack", sequence: ["D", "L", "D", "U", "U", "D"], category: "Support", iconUrl: supplyPackSvg },
   { name: "LIFT-850 Jump Pack", sequence: ["D", "U", "U", "D", "U"], category: "Support", iconUrl: jumpPackSvg },
-  { name: "SH-20 Ballistic Shield Backpack", sequence: ["D", "L", "D", "D", "U", "L"], category: "Support", iconUrl: directionalShieldSvg },
+  { name: "SH-20 Ballistic Shield", sequence: ["D", "L", "D", "D", "U", "L"], category: "Support", iconUrl: directionalShieldSvg },
   { name: "AX/LAS-5 “Guard Dog” Rover", sequence: ["D", "U", "L", "U", "R", "R"], category: "Support", iconUrl: guardDogRoverSvg },
   { name: "AX/AR-23 “Guard Dog”", sequence: ["D", "U", "L", "U", "R", "D"], category: "Support", iconUrl: guardDogSvg },
+  { name: "AX/TX-13 “Guard Dog” Breath", sequence: ["D", "U", "L", "U", "R", "D"], category: "Support", iconUrl: guardDogBreathSvg },
 
   // --- DEFENSIVE ---
   { name: "E/MG-101 HMG Emplacement", sequence: ["D", "U", "L", "R", "R", "L"], category: "Defensive", iconUrl: hmgEmplacementSvg },
