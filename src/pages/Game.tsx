@@ -199,9 +199,6 @@ const Game = () => {
                       <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(highScore)}</span>
                     </div>
                     <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-2">
-                      <Link to="/" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
-                        <Home size={12} className="md:w-5 md:h-5" /> Home
-                      </Link>
                       <Link to="/intel" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
                         <Book size={12} className="md:w-5 md:h-5" /> Intel
                       </Link>
@@ -385,7 +382,6 @@ const Game = () => {
                     </div>
 
                     <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Time Bonus</span>
                       <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.timeBonus}</span>
                     </div>
 
