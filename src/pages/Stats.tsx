@@ -42,18 +42,18 @@ const Stats = () => {
         return;
       }
 
-      // 2. Fetch profiles for these users to get total_score for ranking
+      // 2. Fetch profiles for these users
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username, total_score')
+        .select('id, username')
         .in('id', userIds);
 
       if (profileError) {
         console.warn("Profile fetch warning:", profileError);
       }
 
-      // 3. Combine data
+      // 3. Combine data safely
       const combinedData = scores.map(score => {
         const profile = profiles?.find(p => p.id === score.user_id);
         return {
@@ -61,7 +61,7 @@ const Stats = () => {
           level: score.level,
           updated_at: score.updated_at || "",
           username: profile?.username || "REDACTED",
-          total_score: profile?.total_score || 0
+          total_score: (profile as any)?.total_score || 0
         };
       });
 

@@ -48,7 +48,7 @@ const Auth = () => {
 
     setIsSaving(true);
     try {
-      // Use UPSERT instead of UPDATE to ensure the profile exists
+      // Use UPSERT to ensure the profile exists before updating
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({ 
