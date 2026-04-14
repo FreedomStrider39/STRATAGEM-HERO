@@ -34,6 +34,7 @@ const Game = () => {
     stats,
     combo,
     startGame,
+    abortGame,
     handleInput
   } = useStratagemGame();
 
@@ -239,8 +240,20 @@ const Game = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-full flex flex-col items-center justify-center overflow-hidden p-0"
+                className="w-full h-full flex flex-col items-center justify-center overflow-hidden p-0 relative"
               >
+                {/* Abort Button */}
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    abortGame();
+                  }}
+                  className="absolute top-6 right-6 z-[60] p-2 text-white/20 hover:text-red-500 transition-colors flex flex-col items-center gap-1 group"
+                >
+                  <X size={24} className="md:w-8 md:h-8" />
+                  <span className="text-[8px] font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity uppercase">Abort</span>
+                </button>
+
                 <div className="w-full h-full flex flex-col overflow-hidden">
                   <div className="h-6 md:h-10 flex flex-col gap-1 shrink-0 mt-4 md:mt-8">
                     <AnimatePresence>
@@ -382,6 +395,7 @@ const Game = () => {
                     </div>
 
                     <div className="flex justify-between items-center w-full">
+                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Time Bonus</span>
                       <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.timeBonus}</span>
                     </div>
 

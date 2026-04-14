@@ -105,6 +105,14 @@ export const useStratagemGame = () => {
     setGameState("playing");
   };
 
+  const abortGame = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (breakTimerRef.current) clearInterval(breakTimerRef.current);
+    if (disruptorIntervalRef.current) clearInterval(disruptorIntervalRef.current);
+    audioManager.stopBgm();
+    setGameState("idle");
+  };
+
   const calculateFinalStats = useCallback(() => {
     const rBonus = level * 50;
     const tBonus = Math.floor(timeLeft * 10);
@@ -324,6 +332,7 @@ export const useStratagemGame = () => {
     stats,
     combo,
     startGame,
+    abortGame,
     handleInput
   };
 };
