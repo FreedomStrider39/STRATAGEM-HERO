@@ -359,85 +359,85 @@ const Game = () => {
                 key="gameover"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col items-center justify-center w-full h-full z-10 px-4 md:px-6 py-4 overflow-y-auto no-scrollbar"
+                className="flex flex-col items-center justify-center w-full h-full z-10 px-4 md:px-6 py-2 overflow-y-auto no-scrollbar"
               >
-                <div className="flex flex-col items-center gap-4 md:gap-8 w-full max-w-2xl py-8">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-4xl md:text-8xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_30px_rgba(239,68,68,0.5)] leading-none uppercase">
+                <div className="flex flex-col items-center gap-3 md:gap-6 w-full max-w-2xl py-4">
+                  <div className="text-center space-y-1">
+                    <h2 className="text-3xl md:text-7xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_20px_rgba(239,68,68,0.5)] leading-none uppercase">
                       Mission Failed
                     </h2>
-                    <div className="h-1 w-24 md:w-48 bg-red-500 mx-auto shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
+                    <div className="h-0.5 w-16 md:w-48 bg-red-500 mx-auto shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
                   </div>
 
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     {globalRank !== null ? (
-                      <div className="flex flex-col items-center bg-cyan-400/10 border-2 border-cyan-400/30 px-8 py-4 backdrop-blur-md">
-                        <span className="text-[10px] md:text-xs text-cyan-400/60 font-black tracking-[0.3em] uppercase">Global Standing</span>
-                        <div className="flex items-center gap-3">
-                          <Globe className="text-cyan-400 w-6 h-6 md:w-10 md:h-10" />
-                          <span className="text-3xl md:text-6xl font-black text-cyan-400 italic uppercase tracking-tighter">#{globalRank}</span>
+                      <div className="flex flex-col items-center bg-cyan-400/10 border border-cyan-400/30 px-6 py-2 backdrop-blur-md">
+                        <span className="text-[8px] md:text-xs text-cyan-400/60 font-black tracking-[0.2em] uppercase">Global Standing</span>
+                        <div className="flex items-center gap-2">
+                          <Globe className="text-cyan-400 w-4 h-4 md:w-8 md:h-8" />
+                          <span className="text-2xl md:text-5xl font-black text-cyan-400 italic uppercase tracking-tighter">#{globalRank}</span>
                         </div>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 text-white/20 animate-pulse">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-[10px] font-black tracking-widest uppercase">Calculating Rank...</span>
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <span className="text-[8px] font-black tracking-widest uppercase">Calculating Rank...</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 w-full max-w-xl">
-                    <div className="bg-black/60 p-4 md:p-6 border-2 border-white/10 flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-white/40 mb-1">
-                        <Zap size={14} />
-                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Max Combo</span>
+                  <div className="grid grid-cols-2 gap-2 md:gap-4 w-full max-w-lg">
+                    <div className="bg-black/60 p-3 md:p-5 border border-white/10 flex flex-col gap-0.5">
+                      <div className="flex items-center gap-1.5 text-white/40">
+                        <Zap size={12} className="md:w-4 md:h-4" />
+                        <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Max Combo</span>
                       </div>
-                      <span className="text-2xl md:text-4xl font-black text-yellow-400 italic">{stats.maxCombo}</span>
+                      <span className="text-lg md:text-3xl font-black text-yellow-400 italic">{stats.maxCombo}</span>
                     </div>
 
-                    <div className="bg-black/60 p-4 md:p-6 border-2 border-white/10 flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-white/40 mb-1">
-                        <Target size={14} />
-                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Accuracy</span>
+                    <div className="bg-black/60 p-3 md:p-5 border border-white/10 flex flex-col gap-0.5">
+                      <div className="flex items-center gap-1.5 text-white/40">
+                        <Target size={12} className="md:w-4 md:h-4" />
+                        <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Accuracy</span>
                       </div>
-                      <span className="text-2xl md:text-4xl font-black text-yellow-400 italic">{stats.accuracy}%</span>
+                      <span className="text-lg md:text-3xl font-black text-yellow-400 italic">{stats.accuracy}%</span>
                     </div>
 
-                    <div className="bg-black/60 p-4 md:p-6 border-2 border-white/10 flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-white/40 mb-1">
-                        <ShieldAlert size={14} />
-                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Mistakes</span>
+                    <div className="bg-black/60 p-3 md:p-5 border border-white/10 flex flex-col gap-0.5">
+                      <div className="flex items-center gap-1.5 text-white/40">
+                        <ShieldAlert size={12} className="md:w-4 md:h-4" />
+                        <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Mistakes</span>
                       </div>
-                      <span className="text-2xl md:text-4xl font-black text-red-500 italic">{stats.mistakes}</span>
+                      <span className="text-lg md:text-3xl font-black text-red-500 italic">{stats.mistakes}</span>
                     </div>
 
-                    <div className="bg-yellow-400/10 p-4 md:p-6 border-2 border-yellow-400/30 flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-yellow-400/60 mb-1">
-                        <Trophy size={14} />
-                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Total Score</span>
+                    <div className="bg-yellow-400/10 p-3 md:p-5 border border-yellow-400/30 flex flex-col gap-0.5">
+                      <div className="flex items-center gap-1.5 text-yellow-400/60">
+                        <Trophy size={12} className="md:w-4 md:h-4" />
+                        <span className="text-[7px] md:text-[10px] font-black tracking-widest uppercase">Total Score</span>
                       </div>
-                      <span className="text-3xl md:text-5xl font-black text-yellow-400 italic text-glow-yellow leading-none">{stats.totalScore.toLocaleString()}</span>
+                      <span className="text-xl md:text-4xl font-black text-yellow-400 italic text-glow-yellow leading-none">{stats.totalScore.toLocaleString()}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center gap-6 w-full">
-                    <div className="flex flex-col items-center gap-1">
-                      <span className="text-[10px] text-white/40 font-black tracking-widest uppercase">Designation</span>
-                      <span className="text-lg md:text-2xl font-black text-white italic uppercase tracking-widest">{username}</span>
+                  <div className="flex flex-col items-center gap-4 w-full">
+                    <div className="flex flex-col items-center gap-0.5">
+                      <span className="text-[8px] text-white/40 font-black tracking-widest uppercase">Designation</span>
+                      <span className="text-sm md:text-xl font-black text-white italic uppercase tracking-widest">{username}</span>
                     </div>
 
-                    <div className="flex flex-col items-center gap-4 w-full max-w-xs">
+                    <div className="flex flex-col items-center gap-3 w-full max-w-xs">
                       <motion.p 
                         animate={{ opacity: [0.4, 1, 0.4] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
-                        className="text-yellow-400 text-xs md:text-lg font-black tracking-[0.2em] text-center uppercase italic"
+                        className="text-yellow-400 text-[10px] md:text-base font-black tracking-[0.1em] text-center uppercase italic"
                       >
                         {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
                       </motion.p>
                       
                       <button 
                         onClick={() => window.location.reload()}
-                        className="w-full bg-white/5 border-2 border-white/20 py-4 hover:bg-white/10 hover:border-yellow-400/50 transition-all text-xs md:text-sm font-black tracking-[0.3em] uppercase flex items-center justify-center gap-3"
+                        className="w-full bg-white/5 border border-white/20 py-3 hover:bg-white/10 hover:border-yellow-400/50 transition-all text-[10px] md:text-xs font-black tracking-[0.2em] uppercase flex items-center justify-center gap-2"
                       >
                         Main Menu
                       </button>
