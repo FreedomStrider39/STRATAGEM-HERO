@@ -181,6 +181,7 @@ export const useStratagemGame = () => {
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === activeSequence.length) {
+        // Sequence Complete
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
@@ -234,14 +235,12 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
+        // Correct partial input - just increment index
         audioManager.playHit();
-        setLastInputCorrect(false);
-        setInputIndex(0);
-        setCombo(0);
-        setErrorsThisStratagem(prev => prev + 1);
-        setMistakesInGame(prev => prev + 1);
+        setInputIndex(nextInputIdx);
       }
     } else {
+      // Wrong input - reset sequence
       audioManager.playError();
       setLastInputCorrect(false);
       setInputIndex(0);

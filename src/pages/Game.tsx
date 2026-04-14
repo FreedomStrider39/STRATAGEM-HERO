@@ -41,6 +41,7 @@ const Game = () => {
   const [username, setUsername] = useState("HELLDIVER");
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const submissionTriggeredRef = useRef(false);
 
@@ -98,8 +99,9 @@ const Game = () => {
   };
 
   const submitScore = async () => {
-    if (!user || stats.totalScore <= 0) return;
+    if (!user || stats.totalScore <= 0 || isSubmitting) return;
 
+    setIsSubmitting(true);
     try {
       if (stats.totalScore > highScore) {
         const { error } = await supabase
@@ -118,6 +120,8 @@ const Game = () => {
     } catch (err: any) {
       console.error("Score submission failed:", err);
       toast.error("FAILED TO UPLOAD INTEL");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -126,13 +130,20 @@ const Game = () => {
       submissionTriggeredRef.current = true;
       submitScore();
     }
+    if (gameState === "playing") {
+      submissionTriggeredRef.current = false;
+    }
   }, [gameState, user, stats.totalScore]);
 
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
       const target = e.target as HTMLElement;
       if (target.closest('a') || target.closest('button') || target.closest('input')) return;
-      if (gameState === "idle" || gameState === "gameover") startGame();
+      
+      // Allow restart if idle or gameover (even if submission is still pending)
+      if (gameState === "idle" || gameState === "gameover") {
+        startGame();
+      }
     };
 
     window.addEventListener("keydown", handleGlobalInput);
