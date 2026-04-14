@@ -18,17 +18,13 @@ const Leaderboard = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      // Fetch leaderboard data
       const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
         .select('score, level, user_id')
         .order('score', { ascending: false })
         .limit(10);
 
-      if (scoreError) {
-        console.error("Leaderboard Score Fetch Error:", scoreError);
-        throw scoreError;
-      }
+      if (scoreError) throw scoreError;
 
       if (!scores || scores.length === 0) {
         setEntries([]);
@@ -36,31 +32,26 @@ const Leaderboard = () => {
         return;
       }
 
-      // Fetch profiles for these users to get usernames
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
         .select('id, username')
         .in('id', userIds);
 
-      if (profileError) {
-        console.error("Leaderboard Profile Fetch Error:", profileError);
-      }
-
-      // Map usernames back to scores
+      // If profiles are private/missing, we map them to a default name
       const combinedData = scores.map(score => {
         const profile = profiles?.find(p => p.id === score.user_id);
         return {
           score: score.score,
           level: score.level,
-          username: profile?.username || "REDACTED"
+          username: profile?.username || "HELLDIVER"
         };
       });
 
       setEntries(combinedData);
       setError(null);
     } catch (err: any) {
-      console.error("Leaderboard Full Error Object:", err);
+      console.error("Leaderboard Fetch Error:", err);
       setError("INTEL OFFLINE");
     } finally {
       setLoading(false);

@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -107,7 +107,6 @@ const Game = () => {
 
     setIsSubmitting(true);
     try {
-      // 1. Update High Score in Leaderboard
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
@@ -125,7 +124,6 @@ const Game = () => {
         toast.success("NEW PERSONAL BEST RECORDED!");
       }
 
-      // 2. Update Lifetime Total Score and Max Level in Profiles
       const newTotalScore = totalScore + stats.totalScore;
       const { error: profileError } = await supabase
         .from('profiles')
@@ -199,10 +197,8 @@ const Game = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      {/* Main Container - No max-width, fills screen */}
       <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
         
-        {/* Yellow Border Frame - Now inset-0 to touch edges */}
         <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
         {(gameState === "playing" || gameState === "break") && (
@@ -215,7 +211,6 @@ const Game = () => {
           </button>
         )}
 
-        {/* Content Area - Fills browser window */}
         <div className="w-full h-full z-10 flex flex-col justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             {gameState === "idle" && (
@@ -243,7 +238,10 @@ const Game = () => {
                     <div className="flex items-center gap-2">
                       <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(totalScore)}</span>
                     </div>
-                    <div className="flex gap-6 mt-2">
+                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-2">
+                      <Link to="/intel" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
+                        <Book size={12} className="md:w-5 md:h-5" /> Stratagem Intel
+                      </Link>
                       <Link to="/stats" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
                         <BarChart3 size={12} className="md:w-5 md:h-5" /> Global Stats
                       </Link>

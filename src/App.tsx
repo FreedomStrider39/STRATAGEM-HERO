@@ -13,6 +13,7 @@ import Auth from "./pages/Auth";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Index from "./pages/Index";
+import Encyclopedia from "./pages/Encyclopedia";
 import OpeningScreen from "./components/OpeningScreen";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => {
               <Route path="/auth" element={<Auth />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/intel" element={<Encyclopedia />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </HashRouter>
