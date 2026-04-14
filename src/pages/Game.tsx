@@ -47,45 +47,46 @@ const Game = () => {
   
   const submissionTriggeredRef = useRef(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user) {
-        setIsProfileLoading(false);
-        return;
-      }
+  // Fetch user data whenever the user is available or when returning to the menu
+  const fetchUserData = async () => {
+    if (!user) {
+      setIsProfileLoading(false);
+      return;
+    }
+    
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('username, total_score')
+        .eq('id', user.id)
+        .maybeSingle();
       
-      try {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('username, total_score')
-          .eq('id', user.id)
-          .maybeSingle();
-        
-        if (profile?.username) {
-          setUsername(profile.username);
-          setTotalScore(profile.total_score || 0);
-        }
-
-        const { data: leaderboard } = await supabase
-          .from('leaderboard')
-          .select('score')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (leaderboard) {
-          setHighScore(leaderboard.score);
-        }
-      } catch (err) {
-        console.error("Failed to fetch user data:", err);
-      } finally {
-        setIsProfileLoading(false);
+      if (profile) {
+        setUsername(profile.username || "HELLDIVER");
+        setTotalScore(profile.total_score || 0);
       }
-    };
 
+      const { data: leaderboard } = await supabase
+        .from('leaderboard')
+        .select('score')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (leaderboard) {
+        setHighScore(leaderboard.score);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user data:", err);
+    } finally {
+      setIsProfileLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (!authLoading) {
       fetchUserData();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, gameState === "idle"]); // Re-fetch when returning to idle state
 
   const fetchGlobalRank = async (currentScore: number) => {
     if (!user) return;
@@ -229,7 +230,7 @@ const Game = () => {
                   
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                     <div className="flex items-center gap-2">
-                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest">HELLDIVER:</span>
+                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest">DESIGNATION:</span>
                       <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
                       <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
                         <Edit2 size={14} className="md:w-5 md:h-5" />
