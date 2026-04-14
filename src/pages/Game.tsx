@@ -41,7 +41,7 @@ const Game = () => {
   const [totalScore, setTotalScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("HELLDIVER");
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
   
@@ -64,8 +64,6 @@ const Game = () => {
         if (profile?.username) {
           setUsername(profile.username);
           setTotalScore(profile.total_score || 0);
-        } else {
-          navigate("/auth");
         }
 
         const { data: leaderboard } = await supabase
@@ -87,7 +85,7 @@ const Game = () => {
     if (!authLoading) {
       fetchUserData();
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading]);
 
   const fetchGlobalRank = async (currentScore: number) => {
     if (!user) return;
@@ -237,7 +235,7 @@ const Game = () => {
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                     <div className="flex items-center gap-2">
                       <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest">HELLDIVER:</span>
-                      <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username || "UNASSIGNED"}</span>
+                      <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
                       <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
                         <Edit2 size={14} className="md:w-5 md:h-5" />
                       </Link>
@@ -446,7 +444,7 @@ const Game = () => {
                   <div className="flex flex-col items-center gap-2 md:gap-4">
                     <div className="flex flex-col items-center gap-0.5">
                       <div className="flex items-center gap-1 text-white/60 text-[8px] md:text-xs font-bold tracking-widest uppercase">
-                        Recording As: <span className="text-yellow-400">{username || "UNASSIGNED"}</span>
+                        Recording As: <span className="text-yellow-400">{username}</span>
                       </div>
                       {hasSubmitted ? (
                         <div className="bg-green-500/20 border border-green-500/50 px-2 py-0.5">

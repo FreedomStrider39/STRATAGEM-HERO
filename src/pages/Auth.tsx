@@ -69,6 +69,7 @@ const Auth = () => {
         const { error } = await supabase.auth.updateUser({ password: newPassword });
         if (error) throw error;
         setNewPassword("");
+        toast.success("PASSWORD UPDATED");
       }
 
       toast.success("INTEL UPDATED SUCCESSFULLY");
@@ -118,7 +119,7 @@ const Auth = () => {
           <form onSubmit={handleUpdateProfile} className="space-y-6">
             <div className="space-y-4">
               <div>
-                <label className="text-[10px] font-black tracking-widest text-white/40 mb-1 block">DESIGNATION</label>
+                <label className="text-[10px] font-black tracking-widest text-white/40 mb-1 block">DESIGNATION (USERNAME)</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-400/50" />
                   <input 
@@ -144,16 +145,16 @@ const Auth = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="text-[10px] font-black tracking-widest text-white/40 mb-1 block">NEW PASSWORD (LEAVE BLANK TO KEEP)</label>
+              <div className="pt-4 border-t border-white/10">
+                <label className="text-[10px] font-black tracking-widest text-yellow-400/60 mb-1 block uppercase">Optional: Change Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-400/50" />
                   <input 
                     type="password" 
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-black/40 border border-white/20 pl-10 pr-4 py-3 text-white font-bold focus:outline-none focus:border-yellow-400 transition-all"
+                    placeholder="LEAVE BLANK TO KEEP CURRENT"
+                    className="w-full bg-black/40 border border-white/20 pl-10 pr-4 py-3 text-white font-bold focus:outline-none focus:border-yellow-400 transition-all placeholder:text-white/10 placeholder:text-[10px]"
                   />
                 </div>
               </div>
