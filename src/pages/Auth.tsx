@@ -48,23 +48,25 @@ const Auth = () => {
 
     setIsSaving(true);
     try {
-      // Update Username
-      if (username.trim()) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ username: username.trim().toUpperCase() })
-          .eq('id', user.id);
-        if (error) throw error;
-      }
+      // Use UPSERT instead of UPDATE to ensure the profile exists
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({ 
+          id: user.id,
+          username: username.trim().toUpperCase() || "HELLDIVER",
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
 
-      // Update Email
+      if (profileError) throw profileError;
+
+      // Update Email if changed
       if (newEmail !== user.email) {
         const { error } = await supabase.auth.updateUser({ email: newEmail });
         if (error) throw error;
         toast.info("CHECK NEW EMAIL FOR CONFIRMATION");
       }
 
-      // Update Password
+      // Update Password if provided
       if (newPassword) {
         const { error } = await supabase.auth.updateUser({ password: newPassword });
         if (error) throw error;
