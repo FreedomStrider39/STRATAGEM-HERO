@@ -47,27 +47,6 @@ const Game = () => {
   
   const submissionTriggeredRef = useRef(false);
 
-  // Scaling logic to handle browser zoom and maintain proportions
-  const [scale, setScale] = useState(1);
-  useEffect(() => {
-    const handleResize = () => {
-      const targetHeight = 900; // Reference height for scaling
-      const currentHeight = window.innerHeight;
-      const newScale = currentHeight / targetHeight;
-      
-      if (window.innerWidth < 768) {
-        setScale(1);
-      } else {
-        // Allow scaling to fit the window height
-        setScale(Math.max(0.5, newScale));
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user) {
@@ -238,11 +217,8 @@ const Game = () => {
           </button>
         )}
 
-        {/* Content Area - Scales to fit browser window */}
-        <div 
-          className="w-full h-full z-10 flex flex-col justify-center overflow-hidden origin-center"
-          style={{ transform: `scale(${scale})` }}
-        >
+        {/* Content Area - Fills browser window */}
+        <div className="w-full h-full z-10 flex flex-col justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             {gameState === "idle" && (
               <motion.div 
