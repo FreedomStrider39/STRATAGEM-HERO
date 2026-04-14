@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -141,7 +141,6 @@ const Game = () => {
       const target = e.target as HTMLElement;
       if (target.closest('a') || target.closest('button') || target.closest('input')) return;
       
-      // Allow restart if idle or gameover (even if submission is still pending)
       if (gameState === "idle" || gameState === "gameover") {
         startGame();
       }
@@ -242,7 +241,6 @@ const Game = () => {
                 exit={{ opacity: 0 }}
                 className="w-full h-full flex flex-col items-center justify-center overflow-hidden p-0 relative"
               >
-                {/* Abort Button */}
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();
@@ -359,85 +357,90 @@ const Game = () => {
             {gameState === "gameover" && (
               <motion.div 
                 key="gameover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-start md:justify-center w-full h-full z-10 px-6 py-4 overflow-y-auto no-scrollbar"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center w-full h-full z-10 px-4 md:px-6 py-4 overflow-y-auto no-scrollbar"
               >
-                <div className="flex flex-col items-center gap-3 md:gap-6 w-full max-w-4xl py-4 md:py-0">
-                  <h2 className="text-3xl md:text-7xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_30px_rgba(239,68,68,0.5)] leading-none uppercase text-center">
-                    Mission Failed
-                  </h2>
+                <div className="flex flex-col items-center gap-4 md:gap-8 w-full max-w-2xl py-8">
+                  <div className="text-center space-y-2">
+                    <h2 className="text-4xl md:text-8xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_30px_rgba(239,68,68,0.5)] leading-none uppercase">
+                      Mission Failed
+                    </h2>
+                    <div className="h-1 w-24 md:w-48 bg-red-500 mx-auto shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
+                  </div>
 
-                  <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-                    <div className="flex items-center gap-2 md:gap-4 bg-yellow-400/10 border border-yellow-400/30 px-3 md:px-6 py-1.5 md:py-3">
-                      <Trophy className="text-yellow-400 w-3 h-3 md:w-6 md:h-6" />
-                      <div className="flex flex-col">
-                        <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Session Rank</span>
-                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(stats.totalScore)}</span>
-                      </div>
-                    </div>
-
-                    {globalRank !== null && (
-                      <div className="flex items-center gap-2 md:gap-4 bg-cyan-400/10 border border-cyan-400/30 px-3 md:px-6 py-1.5 md:py-3">
-                        <Globe className="text-cyan-400 w-3 h-3 md:w-6 md:h-6" />
-                        <div className="flex flex-col">
-                          <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Global</span>
-                          <span className="text-[10px] md:text-xl font-black text-cyan-400 italic uppercase">#{globalRank}</span>
+                  <div className="flex flex-col items-center gap-2">
+                    {globalRank !== null ? (
+                      <div className="flex flex-col items-center bg-cyan-400/10 border-2 border-cyan-400/30 px-8 py-4 backdrop-blur-md">
+                        <span className="text-[10px] md:text-xs text-cyan-400/60 font-black tracking-[0.3em] uppercase">Global Standing</span>
+                        <div className="flex items-center gap-3">
+                          <Globe className="text-cyan-400 w-6 h-6 md:w-10 md:h-10" />
+                          <span className="text-3xl md:text-6xl font-black text-cyan-400 italic uppercase tracking-tighter">#{globalRank}</span>
                         </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-white/20 animate-pulse">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-[10px] font-black tracking-widest uppercase">Calculating Rank...</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex flex-col justify-center gap-1.5 md:gap-3 w-full max-w-[260px] md:max-w-[400px] bg-black/60 p-4 md:p-6 border-2 md:border-[4px] border-white/10 shadow-2xl min-h-[120px] md:min-h-[200px]">
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Round Bonus</span>
-                      <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.roundBonus}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 w-full max-w-xl">
+                    <div className="bg-black/60 p-4 md:p-6 border-2 border-white/10 flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-white/40 mb-1">
+                        <Zap size={14} />
+                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Max Combo</span>
+                      </div>
+                      <span className="text-2xl md:text-4xl font-black text-yellow-400 italic">{stats.maxCombo}</span>
                     </div>
 
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Time Bonus</span>
-                      <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.timeBonus}</span>
+                    <div className="bg-black/60 p-4 md:p-6 border-2 border-white/10 flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-white/40 mb-1">
+                        <Target size={14} />
+                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Accuracy</span>
+                      </div>
+                      <span className="text-2xl md:text-4xl font-black text-yellow-400 italic">{stats.accuracy}%</span>
                     </div>
 
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[8px] md:text-lg font-bold tracking-widest uppercase whitespace-nowrap">Max Combo</span>
-                      <span className="text-yellow-400 text-[10px] md:text-xl font-black italic">{stats.maxCombo}</span>
+                    <div className="bg-black/60 p-4 md:p-6 border-2 border-white/10 flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-white/40 mb-1">
+                        <ShieldAlert size={14} />
+                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Mistakes</span>
+                      </div>
+                      <span className="text-2xl md:text-4xl font-black text-red-500 italic">{stats.mistakes}</span>
                     </div>
 
-                    <div className="w-full h-[1px] bg-white/20 my-0.5 md:my-1" />
-
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-[#4ade80] text-[10px] md:text-xl font-black tracking-[0.1em] uppercase whitespace-nowrap">Total Score</span>
-                      <span className="text-yellow-400 text-sm md:text-3xl font-black text-glow-yellow leading-none italic">{stats.totalScore}</span>
+                    <div className="bg-yellow-400/10 p-4 md:p-6 border-2 border-yellow-400/30 flex flex-col gap-1">
+                      <div className="flex items-center gap-2 text-yellow-400/60 mb-1">
+                        <Trophy size={14} />
+                        <span className="text-[10px] md:text-xs font-black tracking-widest uppercase">Total Score</span>
+                      </div>
+                      <span className="text-3xl md:text-5xl font-black text-yellow-400 italic text-glow-yellow leading-none">{stats.totalScore.toLocaleString()}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center gap-2 md:gap-4">
-                    <div className="flex flex-col items-center gap-0.5">
-                      <div className="flex items-center gap-1 text-white/60 text-[8px] md:text-xs font-bold tracking-widest uppercase">
-                        Recording As: <span className="text-yellow-400">{username}</span>
-                      </div>
+                  <div className="flex flex-col items-center gap-6 w-full">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-[10px] text-white/40 font-black tracking-widest uppercase">Designation</span>
+                      <span className="text-lg md:text-2xl font-black text-white italic uppercase tracking-widest">{username}</span>
                     </div>
 
-                    <div className="flex flex-col items-center gap-2">
-                      <p className="text-white/40 text-[8px] md:text-lg font-bold animate-pulse tracking-[0.1em] text-center uppercase">
+                    <div className="flex flex-col items-center gap-4 w-full max-w-xs">
+                      <motion.p 
+                        animate={{ opacity: [0.4, 1, 0.4] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="text-yellow-400 text-xs md:text-lg font-black tracking-[0.2em] text-center uppercase italic"
+                      >
                         {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
-                      </p>
+                      </motion.p>
                       
-                      <div className="flex gap-2">
-                        <Link 
-                          to="/"
-                          className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-3 py-1 md:py-2 hover:bg-white/10 transition-colors text-[8px] md:text-xs font-black tracking-widest uppercase"
-                        >
-                          <Home size={12} className="md:w-4 md:h-4" /> Home
-                        </Link>
-                        <button 
-                          onClick={() => window.location.reload()}
-                          className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-3 py-1 md:py-2 hover:bg-white/10 transition-colors text-[8px] md:text-xs font-black tracking-widest uppercase"
-                        >
-                          Main Menu
-                        </button>
-                      </div>
+                      <button 
+                        onClick={() => window.location.reload()}
+                        className="w-full bg-white/5 border-2 border-white/20 py-4 hover:bg-white/10 hover:border-yellow-400/50 transition-all text-xs md:text-sm font-black tracking-[0.3em] uppercase flex items-center justify-center gap-3"
+                      >
+                        Main Menu
+                      </button>
                     </div>
                   </div>
                 </div>

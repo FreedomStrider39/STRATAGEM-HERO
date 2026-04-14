@@ -5,15 +5,16 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 1.0; // Adjusted to 1s for a tighter, more balanced challenge
+const UNCONDITIONAL_TIME_REWARD = 1.0; 
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
   roundBonus: number;
-  timeBonus: number;
   perfectBonus: number;
   totalScore: number;
   maxCombo: number;
+  accuracy: number;
+  mistakes: number;
 }
 
 export const useStratagemGame = () => {
@@ -27,6 +28,8 @@ export const useStratagemGame = () => {
   
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
+  const [totalInputs, setTotalInputs] = useState(0);
+  const [correctInputs, setCorrectInputs] = useState(0);
   
   const [isDisrupted, setIsDisrupted] = useState(false);
   const [disruptedCount, setDisruptedCount] = useState(0);
@@ -42,10 +45,11 @@ export const useStratagemGame = () => {
 
   const [stats, setStats] = useState<GameStats>({
     roundBonus: 0,
-    timeBonus: 0,
     perfectBonus: 0,
     totalScore: 0,
-    maxCombo: 0
+    maxCombo: 0,
+    accuracy: 0,
+    mistakes: 0
   });
   
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -96,6 +100,8 @@ export const useStratagemGame = () => {
     setErrorsThisStratagem(0);
     setCombo(0);
     setMaxCombo(0);
+    setTotalInputs(0);
+    setCorrectInputs(0);
     setIsDisrupted(false);
     setDisruptedCount(0);
     setDisruptedLimit(0);
@@ -115,17 +121,18 @@ export const useStratagemGame = () => {
 
   const calculateFinalStats = useCallback(() => {
     const rBonus = level * 50;
-    const tBonus = Math.floor(timeLeft * 10);
     const pBonus = mistakesInGame === 0 ? 500 : 0;
+    const accuracy = totalInputs > 0 ? Math.round((correctInputs / totalInputs) * 100) : 0;
     
     setStats({
       roundBonus: rBonus,
-      timeBonus: tBonus,
       perfectBonus: pBonus,
-      totalScore: score + rBonus + tBonus + pBonus,
-      maxCombo: maxCombo
+      totalScore: score + rBonus + pBonus,
+      maxCombo: maxCombo,
+      accuracy: accuracy,
+      mistakes: mistakesInGame
     });
-  }, [level, timeLeft, mistakesInGame, score, maxCombo]);
+  }, [level, mistakesInGame, score, maxCombo, totalInputs, correctInputs]);
 
   const startNextLevel = useCallback(() => {
     const nextLvl = level + 1;
@@ -184,12 +191,14 @@ export const useStratagemGame = () => {
   const handleInput = useCallback((direction: Direction) => {
     if (gameState !== "playing" || missionQueue.length === 0) return;
 
+    setTotalInputs(prev => prev + 1);
+
     if (activeSequence[inputIndex] === direction) {
+      setCorrectInputs(prev => prev + 1);
       setLastInputCorrect(true);
       const nextInputIdx = inputIndex + 1;
       
       if (nextInputIdx === activeSequence.length) {
-        // Sequence Complete
         audioManager.playCorrect();
         
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
@@ -205,7 +214,6 @@ export const useStratagemGame = () => {
         const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
-        // UNCONDITIONAL TIME REWARD - Applied regardless of mistakes
         setTimeLeft(prev => Math.min(prev + UNCONDITIONAL_TIME_REWARD, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
@@ -218,7 +226,7 @@ export const useStratagemGame = () => {
             nextIsDisrupted = false;
             setIsDisrupted(false);
             setShowDisruptorDestroyed(true);
-            setTimeLeft(prev => Math.min(prev + 1.0, MAX_TIME)); // Extra time for destroying disruptor
+            setTimeLeft(prev => Math.min(prev + 1.0, MAX_TIME)); 
             audioManager.playSuccess();
             setTimeout(() => setShowDisruptorDestroyed(false), 3000);
           }
@@ -243,12 +251,10 @@ export const useStratagemGame = () => {
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
-        // Correct partial input - just increment index
         audioManager.playHit();
         setInputIndex(nextInputIdx);
       }
     } else {
-      // Wrong input - reset sequence
       audioManager.playError();
       setLastInputCorrect(false);
       setInputIndex(0);
@@ -275,7 +281,6 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Restored original drain rate for difficulty
           const drainRate = 0.18 + (level * 0.015);
           return prev - drainRate;
         });
