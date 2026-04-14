@@ -199,6 +199,9 @@ const Game = () => {
                       <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(highScore)}</span>
                     </div>
                     <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-2">
+                      <Link to="/" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
+                        <Home size={12} className="md:w-5 md:h-5" /> Home
+                      </Link>
                       <Link to="/intel" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
                         <Book size={12} className="md:w-5 md:h-5" /> Intel
                       </Link>
@@ -411,12 +414,20 @@ const Game = () => {
                         {('ontouchstart' in window) ? 'Tap to Redeploy' : 'Press Any Key to Redeploy'}
                       </p>
                       
-                      <button 
-                        onClick={() => window.location.reload()}
-                        className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-3 py-1 md:py-2 hover:bg-white/10 transition-colors text-[8px] md:text-xs font-black tracking-widest uppercase"
-                      >
-                        <Home size={12} className="md:w-4 md:h-4" /> Main Menu
-                      </button>
+                      <div className="flex gap-2">
+                        <Link 
+                          to="/"
+                          className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-3 py-1 md:py-2 hover:bg-white/10 transition-colors text-[8px] md:text-xs font-black tracking-widest uppercase"
+                        >
+                          <Home size={12} className="md:w-4 md:h-4" /> Home
+                        </Link>
+                        <button 
+                          onClick={() => window.location.reload()}
+                          className="flex items-center justify-center gap-2 bg-white/5 border border-white/20 px-3 py-1 md:py-2 hover:bg-white/10 transition-colors text-[8px] md:text-xs font-black tracking-widest uppercase"
+                        >
+                          Main Menu
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
