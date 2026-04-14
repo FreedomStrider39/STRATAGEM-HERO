@@ -154,7 +154,7 @@ const Game = () => {
         .from('profiles')
         .update({ 
           total_score: newTotalScore,
-          max_level: Math.max(level, 0) // We'll use level as a proxy for max round
+          max_level: Math.max(level, 0)
         })
         .eq('id', user.id);
       
@@ -428,7 +428,7 @@ const Game = () => {
                       <Trophy className="text-yellow-400 w-3 h-3 md:w-6 md:h-6" />
                       <div className="flex flex-col">
                         <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Session Rank</span>
-                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(stats.totalScore)}</span>
+                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(totalScore + stats.totalScore)}</span>
                       </div>
                     </div>
 
