@@ -38,16 +38,12 @@ const Game = () => {
   } = useStratagemGame();
 
   const [highScore, setHighScore] = useState(0);
-  const [totalScore, setTotalScore] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [username, setUsername] = useState("HELLDIVER");
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
   
   const submissionTriggeredRef = useRef(false);
 
-  // Fetch user data whenever the user is available or when returning to the menu
   const fetchUserData = async () => {
     if (!user) {
       setIsProfileLoading(false);
@@ -57,14 +53,12 @@ const Game = () => {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('username, total_score')
+        .select('username')
         .eq('id', user.id)
         .maybeSingle();
       
-      if (profile) {
-        setUsername(profile.username || "HELLDIVER");
-        // Use career total_score if available, otherwise fallback to 0
-        setTotalScore((profile as any).total_score || 0);
+      if (profile?.username) {
+        setUsername(profile.username);
       }
 
       const { data: leaderboard } = await supabase
@@ -75,10 +69,6 @@ const Game = () => {
 
       if (leaderboard) {
         setHighScore(leaderboard.score);
-        // If total career score is 0, use high score as a fallback for rank calculation
-        if (!profile || !(profile as any).total_score) {
-          setTotalScore(leaderboard.score);
-        }
       }
     } catch (err) {
       console.error("Failed to fetch user data:", err);
@@ -91,17 +81,16 @@ const Game = () => {
     if (!authLoading) {
       fetchUserData();
     }
-  }, [user, authLoading, gameState === "idle"]); // Re-fetch when returning to idle state
+  }, [user, authLoading, gameState === "idle"]);
 
   const fetchGlobalRank = async (currentScore: number) => {
     if (!user) return;
     try {
-      const { count, error } = await supabase
+      const { count } = await supabase
         .from('leaderboard')
         .select('*', { count: 'exact', head: true })
         .gt('score', currentScore);
       
-      if (error) throw error;
       setGlobalRank((count || 0) + 1);
     } catch (err) {
       console.error("Failed to fetch global rank:", err);
@@ -109,19 +98,14 @@ const Game = () => {
   };
 
   const submitScore = async () => {
-    if (!user || isSubmitting || hasSubmitted || stats.totalScore <= 0) return;
+    if (!user || stats.totalScore <= 0) return;
 
-    setIsSubmitting(true);
     try {
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
           .upsert(
-            { 
-              user_id: user.id, 
-              score: stats.totalScore, 
-              level: level 
-            }, 
+            { user_id: user.id, score: stats.totalScore, level: level }, 
             { onConflict: 'user_id' }
           );
           
@@ -129,54 +113,26 @@ const Game = () => {
         setHighScore(stats.totalScore);
         toast.success("NEW PERSONAL BEST RECORDED!");
       }
-
-      // Update career total score
-      const newTotalScore = totalScore + stats.totalScore;
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ 
-          total_score: newTotalScore
-        } as any)
-        .eq('id', user.id);
-      
-      if (!profileError) {
-        setTotalScore(newTotalScore);
-      }
       
       await fetchGlobalRank(stats.totalScore > highScore ? stats.totalScore : highScore);
-      setHasSubmitted(true);
     } catch (err: any) {
       console.error("Score submission failed:", err);
       toast.error("FAILED TO UPLOAD INTEL");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   useEffect(() => {
-    if (gameState === "playing") {
-      submissionTriggeredRef.current = false;
-      setHasSubmitted(false);
-    }
-  }, [gameState]);
-
-  useEffect(() => {
-    if (gameState === "gameover" && user && !hasSubmitted && !isSubmitting && stats.totalScore > 0 && !submissionTriggeredRef.current) {
+    if (gameState === "gameover" && user && stats.totalScore > 0 && !submissionTriggeredRef.current) {
       submissionTriggeredRef.current = true;
       submitScore();
     }
-  }, [gameState, user, hasSubmitted, isSubmitting, stats.totalScore]);
+  }, [gameState, user, stats.totalScore]);
 
   useEffect(() => {
     const handleGlobalInput = (e: any) => {
       const target = e.target as HTMLElement;
-      if (target.closest('a') || target.closest('button') || target.closest('input')) {
-        return;
-      }
-
-      if (gameState === "idle" || (gameState === "gameover" && (hasSubmitted || stats.totalScore === 0))) {
-        startGame();
-      }
+      if (target.closest('a') || target.closest('button') || target.closest('input')) return;
+      if (gameState === "idle" || gameState === "gameover") startGame();
     };
 
     window.addEventListener("keydown", handleGlobalInput);
@@ -188,7 +144,7 @@ const Game = () => {
       window.removeEventListener("mousedown", handleGlobalInput);
       window.removeEventListener("touchstart", handleGlobalInput);
     };
-  }, [gameState, startGame, hasSubmitted, stats.totalScore]);
+  }, [gameState, startGame]);
 
   if (authLoading || isProfileLoading) {
     return (
@@ -198,25 +154,11 @@ const Game = () => {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
       <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
         
         <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
-
-        {(gameState === "playing" || gameState === "break") && (
-          <button 
-            onClick={() => window.location.reload()}
-            className="absolute top-6 left-6 md:top-10 md:left-10 z-[60] bg-black/60 border border-white/10 px-2 py-1 md:px-4 md:py-2 flex items-center gap-2 hover:bg-yellow-400 hover:text-black transition-all group"
-          >
-            <ArrowLeft size={12} className="md:w-5 md:h-5" />
-            <span className="text-[7px] md:text-[12px] font-black tracking-widest uppercase">Abort</span>
-          </button>
-        )}
 
         <div className="w-full h-full z-10 flex flex-col justify-center overflow-hidden">
           <AnimatePresence mode="wait">
@@ -236,27 +178,27 @@ const Game = () => {
                   
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                     <div className="flex items-center gap-2">
-                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest">DESIGNATION:</span>
+                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest uppercase">Designation:</span>
                       <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
                       <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
                         <Edit2 size={14} className="md:w-5 md:h-5" />
                       </Link>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(totalScore)}</span>
+                      <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(highScore)}</span>
                     </div>
                     <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-2">
                       <Link to="/intel" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
-                        <Book size={12} className="md:w-5 md:h-5" /> Stratagem Intel
+                        <Book size={12} className="md:w-5 md:h-5" /> Intel
                       </Link>
                       <Link to="/stats" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
-                        <BarChart3 size={12} className="md:w-5 md:h-5" /> Global Stats
+                        <BarChart3 size={12} className="md:w-5 md:h-5" /> Stats
                       </Link>
                       <button 
                         onClick={() => signOut().then(() => navigate("/"))}
                         className="text-[10px] md:text-sm font-bold text-red-500/60 hover:text-red-500 flex items-center gap-1 transition-colors uppercase"
                       >
-                        <LogOut size={12} className="md:w-5 md:h-5" /> Sign Out
+                        <LogOut size={12} className="md:w-5 md:h-5" /> Exit
                       </button>
                     </div>
                   </div>
@@ -407,7 +349,7 @@ const Game = () => {
                       <Trophy className="text-yellow-400 w-3 h-3 md:w-6 md:h-6" />
                       <div className="flex flex-col">
                         <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Session Rank</span>
-                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(totalScore + stats.totalScore)}</span>
+                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(stats.totalScore)}</span>
                       </div>
                     </div>
 
@@ -451,15 +393,6 @@ const Game = () => {
                       <div className="flex items-center gap-1 text-white/60 text-[8px] md:text-xs font-bold tracking-widest uppercase">
                         Recording As: <span className="text-yellow-400">{username}</span>
                       </div>
-                      {hasSubmitted ? (
-                        <div className="bg-green-500/20 border border-green-500/50 px-2 py-0.5">
-                          <p className="text-green-400 text-[6px] md:text-[10px] font-black tracking-widest uppercase">Record Secured</p>
-                        </div>
-                      ) : isSubmitting ? (
-                        <div className="animate-pulse text-yellow-400 text-[6px] md:text-[10px] font-black tracking-widest uppercase">
-                          Uploading Intel...
-                        </div>
-                      ) : null}
                     </div>
 
                     <div className="flex flex-col items-center gap-2">
