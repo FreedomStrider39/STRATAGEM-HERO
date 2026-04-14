@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 2.5; // Increased from 1.2 to 2.5 for better feedback
+const UNCONDITIONAL_TIME_REWARD = 2.0; // Guaranteed 2s bonus per correct sequence
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -267,8 +267,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Slower base drain rate (0.12 instead of 0.18) for better early game feel
-          const drainRate = 0.12 + (level * 0.018);
+          // Restored original drain rate for difficulty
+          const drainRate = 0.18 + (level * 0.015);
           return prev - drainRate;
         });
       }, 100);
