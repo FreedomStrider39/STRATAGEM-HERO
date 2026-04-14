@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 1.2; // Guaranteed 1.2s bonus per correct sequence
+const UNCONDITIONAL_TIME_REWARD = 2.5; // Increased from 1.2 to 2.5 for better feedback
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -197,7 +197,7 @@ export const useStratagemGame = () => {
         const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
-        // UNCONDITIONAL TIME REWARD
+        // UNCONDITIONAL TIME REWARD - Applied regardless of mistakes
         setTimeLeft(prev => Math.min(prev + UNCONDITIONAL_TIME_REWARD, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
@@ -210,7 +210,7 @@ export const useStratagemGame = () => {
             nextIsDisrupted = false;
             setIsDisrupted(false);
             setShowDisruptorDestroyed(true);
-            setTimeLeft(prev => Math.min(prev + 0.5, MAX_TIME));
+            setTimeLeft(prev => Math.min(prev + 1.0, MAX_TIME)); // Extra time for destroying disruptor
             audioManager.playSuccess();
             setTimeout(() => setShowDisruptorDestroyed(false), 3000);
           }
@@ -267,7 +267,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          const drainRate = 0.18 + (level * 0.015);
+          // Slower base drain rate (0.12 instead of 0.18) for better early game feel
+          const drainRate = 0.12 + (level * 0.018);
           return prev - drainRate;
         });
       }, 100);
