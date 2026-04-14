@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const BASE_TIME_REWARD = 0.4; 
+const UNCONDITIONAL_TIME_REWARD = 1.2; // Guaranteed 1.2s bonus per correct sequence
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
@@ -196,8 +196,8 @@ export const useStratagemGame = () => {
         const points = Math.max(5, Math.floor((complexityBonus + speedBonus - errorPenalty) * multiplier));
         setScore(prev => prev + points);
         
-        const timeReward = BASE_TIME_REWARD + (activeSequence.length * 0.05);
-        setTimeLeft(prev => Math.min(prev + timeReward, MAX_TIME));
+        // UNCONDITIONAL TIME REWARD
+        setTimeLeft(prev => Math.min(prev + UNCONDITIONAL_TIME_REWARD, MAX_TIME));
         
         const nextQueueIdx = currentQueueIndex + 1;
         
@@ -235,7 +235,11 @@ export const useStratagemGame = () => {
         }
       } else {
         audioManager.playHit();
-        setInputIndex(nextInputIdx);
+        setLastInputCorrect(false);
+        setInputIndex(0);
+        setCombo(0);
+        setErrorsThisStratagem(prev => prev + 1);
+        setMistakesInGame(prev => prev + 1);
       }
     } else {
       audioManager.playError();
@@ -264,7 +268,6 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Reverted to previous balanced drain rate
           const drainRate = 0.18 + (level * 0.015);
           return prev - drainRate;
         });

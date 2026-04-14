@@ -38,6 +38,7 @@ const Game = () => {
   } = useStratagemGame();
 
   const [highScore, setHighScore] = useState(0);
+  const [totalScore, setTotalScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [username, setUsername] = useState("");
@@ -77,12 +78,13 @@ const Game = () => {
       try {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('username')
+          .select('username, total_score')
           .eq('id', user.id)
           .maybeSingle();
         
         if (profile?.username) {
           setUsername(profile.username);
+          setTotalScore(profile.total_score || 0);
         } else {
           navigate("/auth");
         }
@@ -128,6 +130,7 @@ const Game = () => {
 
     setIsSubmitting(true);
     try {
+      // 1. Update High Score in Leaderboard
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
@@ -144,6 +147,19 @@ const Game = () => {
         setHighScore(stats.totalScore);
         toast.success("NEW PERSONAL BEST RECORDED!");
       }
+
+      // 2. Update Lifetime Total Score and Max Level in Profiles
+      const newTotalScore = totalScore + stats.totalScore;
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ 
+          total_score: newTotalScore,
+          max_level: Math.max(level, 0) // We'll use level as a proxy for max round
+        })
+        .eq('id', user.id);
+      
+      if (profileError) throw profileError;
+      setTotalScore(newTotalScore);
       
       await fetchGlobalRank(stats.totalScore > highScore ? stats.totalScore : highScore);
       setHasSubmitted(true);
@@ -250,7 +266,10 @@ const Game = () => {
                         <Edit2 size={14} className="md:w-5 md:h-5" />
                       </Link>
                     </div>
-                    <div className="flex gap-6">
+                    <div className="flex items-center gap-2">
+                      <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(totalScore)}</span>
+                    </div>
+                    <div className="flex gap-6 mt-2">
                       <Link to="/stats" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
                         <BarChart3 size={12} className="md:w-5 md:h-5" /> Global Stats
                       </Link>
@@ -408,8 +427,8 @@ const Game = () => {
                     <div className="flex items-center gap-2 md:gap-4 bg-yellow-400/10 border border-yellow-400/30 px-3 md:px-6 py-1.5 md:py-3">
                       <Trophy className="text-yellow-400 w-3 h-3 md:w-6 md:h-6" />
                       <div className="flex flex-col">
-                        <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Rank</span>
-                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(level)}</span>
+                        <span className="text-[7px] md:text-[10px] text-white/60 font-bold tracking-widest uppercase">Session Rank</span>
+                        <span className="text-[10px] md:text-xl font-black text-yellow-400 italic uppercase">{getRank(stats.totalScore)}</span>
                       </div>
                     </div>
 

@@ -154,15 +154,28 @@ export const STRATAGEMS: Stratagem[] = [
 ];
 
 export const RANKS = [
-  { minLevel: 0, name: "Cadet" },
-  { minLevel: 5, name: "Space Cadet" },
-  { minLevel: 10, name: "Sergeant" },
-  { minLevel: 20, name: "Chief" },
-  { minLevel: 30, name: "Death Captain" },
-  { minLevel: 50, name: "Skull Admiral" },
-  { minLevel: 100, name: "Super Citizen" },
+  { minScore: 0, name: "Cadet" },
+  { minScore: 5000, name: "Space Cadet" },
+  { minScore: 15000, name: "Sergeant" },
+  { minScore: 30000, name: "Master Sergeant" },
+  { minScore: 50000, name: "Chief" },
+  { minScore: 75000, name: "Space Chief Prime" },
+  { minScore: 100000, name: "Death Captain" },
+  { minScore: 150000, name: "Marshal" },
+  { minScore: 200000, name: "Star Marshal" },
+  { minScore: 300000, name: "Admiral" },
+  { minScore: 450000, name: "Fleet Admiral" },
+  { minScore: 600000, name: "Skull Admiral" },
+  { minScore: 800000, name: "Commander" },
+  { minScore: 1000000, name: "Galactic Commander" },
+  { minScore: 1500000, name: "Hell Commander" },
+  { minScore: 2000000, name: "General" },
+  { minScore: 3000000, name: "Chief General" },
+  { minScore: 4500000, name: "Space Admiral" },
+  { minScore: 6000000, name: "Super Citizen" },
+  { minScore: 10000000, name: "Super Private" },
 ];
 
-export const getRank = (level: number) => {
-  return [...RANKS].reverse().find(r => level >= r.minLevel)?.name || "Cadet";
+export const getRank = (totalScore: number) => {
+  return [...RANKS].reverse().find(r => totalScore >= r.minScore)?.name || "Cadet";
 };

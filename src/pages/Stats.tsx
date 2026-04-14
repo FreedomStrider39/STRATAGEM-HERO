@@ -4,12 +4,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw } from "lucide-react";
+import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw, Shield } from "lucide-react";
+import { getRank } from "@/data/stratagems";
 
 interface Entry {
   score: number;
   level: number;
   username: string;
+  total_score: number;
   updated_at: string;
 }
 
@@ -40,16 +42,15 @@ const Stats = () => {
         return;
       }
 
-      // 2. Fetch profiles for these users
+      // 2. Fetch profiles for these users to get total_score for ranking
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username')
+        .select('id, username, total_score')
         .in('id', userIds);
 
       if (profileError) {
         console.warn("Profile fetch warning:", profileError);
-        // We don't throw here, we'll just use fallbacks for names
       }
 
       // 3. Combine data
@@ -59,7 +60,8 @@ const Stats = () => {
           score: score.score,
           level: score.level,
           updated_at: score.updated_at || "",
-          username: profile?.username || "REDACTED"
+          username: profile?.username || "REDACTED",
+          total_score: profile?.total_score || 0
         };
       });
 
@@ -146,17 +148,22 @@ const Stats = () => {
                       #{idx + 1}
                     </span>
                     <div className="flex flex-col min-w-0">
-                      <span className={`font-black tracking-widest truncate uppercase ${idx === 0 ? 'text-yellow-400 text-lg md:text-xl' : 'text-white text-sm md:text-lg'}`}>
-                        {entry.username}
-                      </span>
-                      <span className="text-[10px] text-white/40 font-bold">LEVEL {entry.level}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`font-black tracking-widest truncate uppercase ${idx === 0 ? 'text-yellow-400 text-lg md:text-xl' : 'text-white text-sm md:text-lg'}`}>
+                          {entry.username}
+                        </span>
+                        <span className="text-[8px] md:text-[10px] bg-yellow-400/20 text-yellow-400 px-1.5 py-0.5 font-black italic uppercase border border-yellow-400/30">
+                          {getRank(entry.total_score)}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-white/40 font-bold">MAX ROUND: {entry.level}</span>
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
                     <span className="text-yellow-400 font-black text-lg md:text-2xl italic tracking-tighter text-glow-yellow">
                       {entry.score.toLocaleString()}
                     </span>
-                    <span className="text-[8px] text-white/20 font-bold">POINTS</span>
+                    <span className="text-[8px] text-white/20 font-bold">HIGH SCORE</span>
                   </div>
                 </motion.div>
               ))
