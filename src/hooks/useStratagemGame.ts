@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 2.0; // Guaranteed 2s bonus per correct sequence
+const UNCONDITIONAL_TIME_REWARD = 1.0; // Adjusted to 1s for a tighter, more balanced challenge
 const DISRUPTOR_REFRESH_MS = 2500;
 
 export interface GameStats {
