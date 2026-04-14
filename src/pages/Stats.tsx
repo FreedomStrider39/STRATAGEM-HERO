@@ -42,26 +42,28 @@ const Stats = () => {
         return;
       }
 
-      // 2. Fetch profiles for these users
+      // 2. Fetch profiles for these users including their total career score
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username')
+        .select('id, username, total_score')
         .in('id', userIds);
 
       if (profileError) {
         console.warn("Profile fetch warning:", profileError);
       }
 
-      // 3. Combine data safely
+      // 3. Combine data safely, using high score as fallback for rank if total_score is missing
       const combinedData = scores.map(score => {
         const profile = profiles?.find(p => p.id === score.user_id);
+        const careerScore = (profile as any)?.total_score || score.score || 0;
+        
         return {
           score: score.score,
           level: score.level,
           updated_at: score.updated_at || "",
-          username: profile?.username || "REDACTED",
-          total_score: (profile as any)?.total_score || 0
+          username: profile?.username || "HELLDIVER",
+          total_score: careerScore
         };
       });
 

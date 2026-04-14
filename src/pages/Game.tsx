@@ -63,7 +63,8 @@ const Game = () => {
       
       if (profile) {
         setUsername(profile.username || "HELLDIVER");
-        setTotalScore(profile.total_score || 0);
+        // Use career total_score if available, otherwise fallback to 0
+        setTotalScore((profile as any).total_score || 0);
       }
 
       const { data: leaderboard } = await supabase
@@ -74,6 +75,10 @@ const Game = () => {
 
       if (leaderboard) {
         setHighScore(leaderboard.score);
+        // If total career score is 0, use high score as a fallback for rank calculation
+        if (!profile || !(profile as any).total_score) {
+          setTotalScore(leaderboard.score);
+        }
       }
     } catch (err) {
       console.error("Failed to fetch user data:", err);
@@ -125,23 +130,24 @@ const Game = () => {
         toast.success("NEW PERSONAL BEST RECORDED!");
       }
 
+      // Update career total score
       const newTotalScore = totalScore + stats.totalScore;
       const { error: profileError } = await supabase
         .from('profiles')
         .update({ 
-          total_score: newTotalScore,
-          max_level: Math.max(level, 0)
-        })
+          total_score: newTotalScore
+        } as any)
         .eq('id', user.id);
       
-      if (profileError) throw profileError;
-      setTotalScore(newTotalScore);
+      if (!profileError) {
+        setTotalScore(newTotalScore);
+      }
       
       await fetchGlobalRank(stats.totalScore > highScore ? stats.totalScore : highScore);
       setHasSubmitted(true);
     } catch (err: any) {
       console.error("Score submission failed:", err);
-      toast.error("FAILED TO UPLOAD INTEL: " + err.message);
+      toast.error("FAILED TO UPLOAD INTEL");
     } finally {
       setIsSubmitting(false);
     }
