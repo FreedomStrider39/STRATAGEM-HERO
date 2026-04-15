@@ -214,7 +214,7 @@ export const useStratagemGame = () => {
         audioManager.playCorrect();
         
         if (isTrumpCard) {
-          audioManager.playFailure();
+          audioManager.playEagleStrike();
           setScore(prev => prev + 1000);
           setGameState("strike");
           return;
