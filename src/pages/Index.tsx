@@ -5,7 +5,6 @@ import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, FileText, LogIn, ShieldCheck } from "lucide-react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/components/AuthProvider";
 
 const Welcome = () => {
@@ -38,21 +37,6 @@ const Welcome = () => {
     }
   };
 
-  const logoVariants = {
-    hidden: { opacity: 0, scale: 0.8, rotate: -5 },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      rotate: 0,
-      transition: { 
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        delay: 0.1
-      }
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center p-0 overflow-hidden">
       <div className="w-full h-full max-w-full bg-[#121616] relative flex flex-col items-center justify-center px-4 md:px-12 crt-screen border-x-[2px] md:border-x-[8px] border-[#1a1f1f] overflow-y-auto">
@@ -65,16 +49,7 @@ const Welcome = () => {
           animate="visible"
           className="flex flex-col items-center text-center z-10 max-w-xl w-full py-4 md:py-8"
         >
-          <motion.div variants={logoVariants} className="relative mb-2 md:mb-6 group">
-            <div className="absolute inset-0 bg-yellow-400/10 blur-2xl rounded-full" />
-            <img 
-              src={logoImg} 
-              alt="Stratagem Hero 2 Logo" 
-              className="w-24 h-24 md:w-48 md:h-48 object-contain relative z-10 drop-shadow-[0_0_20px_rgba(250,204,21,0.3)]"
-            />
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="relative mb-1 md:mb-2">
+          <motion.div variants={itemVariants} className="relative mb-1 md:mb-2 mt-8 md:mt-0">
             {/* Large background '2' */}
             <motion.span 
               initial={{ opacity: 0, scale: 0.5, x: 20 }}
