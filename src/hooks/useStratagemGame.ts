@@ -5,10 +5,10 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 30;
 const MAX_TIME = 30;
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 1.0; 
+const UNCONDITIONAL_TIME_REWARD = 0.75; 
 const DISRUPTOR_REFRESH_MS = 2500;
 const TRUMP_CARD_COOLDOWN = 5; 
-const STRUGGLE_THRESHOLD = 1; // TEST: Only 1 mistake needed
+const STRUGGLE_THRESHOLD = 3; 
 
 export interface GameStats {
   roundBonus: number;
@@ -93,14 +93,6 @@ export const useStratagemGame = () => {
     const firstRoundSize = getRoundSize(1);
     const firstRound = generateRound(firstRoundSize);
     
-    // --- TEST: FORCE JAMMER ON START ---
-    setIsDisrupted(true);
-    setDisruptedLimit(3);
-    setDisruptedCount(0);
-    const firstFake = generateRandomSequence(firstRound[0].sequence.length);
-    setActiveSequence(firstFake);
-    // -----------------------------------
-
     setScore(0);
     setLevel(1);
     setTimeLeft(INITIAL_TIME);
@@ -114,10 +106,12 @@ export const useStratagemGame = () => {
     setTotalInputs(0);
     setCorrectInputs(0);
     setIsTrumpCard(false);
+    setIsDisrupted(false);
     setShowDisruptorDestroyed(false);
     lastDisruptedRoundRef.current = 1;
     lastTrumpCardRoundRef.current = -10;
     stratagemStartTimeRef.current = Date.now();
+    setActiveSequence(firstRound[0].sequence);
     setGameState("playing");
   };
 
@@ -284,13 +278,13 @@ export const useStratagemGame = () => {
       setErrorsThisStratagem(newErrors);
       setMistakesInGame(prev => prev + 1);
 
-      // --- TEST: TRIGGER TRUMP CARD ON 1ST MISTAKE ---
       if (
         isDisrupted && 
         !isTrumpCard && 
-        newErrors >= STRUGGLE_THRESHOLD
+        newErrors >= STRUGGLE_THRESHOLD &&
+        level > lastTrumpCardRoundRef.current + TRUMP_CARD_COOLDOWN &&
+        Math.random() < 0.4
       ) {
-        // 100% chance for test
         setIsTrumpCard(true);
         lastTrumpCardRoundRef.current = level;
         
