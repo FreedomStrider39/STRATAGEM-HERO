@@ -90,23 +90,28 @@ export const useStratagemGame = () => {
     const firstRoundSize = getRoundSize(1);
     const firstRound = generateRound(firstRoundSize);
     
+    // --- TEST MODE: FORCE TRUMP CARD ON START ---
+    setIsDisrupted(true);
+    setIsTrumpCard(true);
+    const eagle500kg = STRATAGEMS.find(s => s.name === "Eagle 500kg Bomb") || firstRound[0];
+    firstRound[0] = eagle500kg;
+    setActiveSequence(eagle500kg.sequence);
+    setDisruptedLimit(3);
+    setDisruptedCount(0);
+    // --------------------------------------------
+
     setScore(0);
     setLevel(1);
     setTimeLeft(INITIAL_TIME);
     setMissionQueue(firstRound);
     setCurrentQueueIndex(0);
     setInputIndex(0);
-    setActiveSequence(firstRound[0].sequence);
     setMistakesInGame(0);
     setErrorsThisStratagem(0);
     setCombo(0);
     setMaxCombo(0);
     setTotalInputs(0);
     setCorrectInputs(0);
-    setIsDisrupted(false);
-    setDisruptedCount(0);
-    setDisruptedLimit(0);
-    setIsTrumpCard(false);
     setShowDisruptorDestroyed(false);
     lastDisruptedRoundRef.current = -5;
     stratagemStartTimeRef.current = Date.now();
@@ -153,7 +158,6 @@ export const useStratagemGame = () => {
       setDisruptedLimit(limit);
       setDisruptedCount(0);
       
-      // 10% chance for a Trump Card during disruption
       if (Math.random() < 0.10) {
         setIsTrumpCard(true);
         const eagle500kg = STRATAGEMS.find(s => s.name === "Eagle 500kg Bomb") || nextRound[0];
@@ -215,11 +219,9 @@ export const useStratagemGame = () => {
         audioManager.playCorrect();
         
         if (isTrumpCard) {
-          // TRUMP CARD ACTIVATED
-          audioManager.playFailure(); // Using failurefull for the boom sound
-          setScore(prev => prev + 1000); // Massive bonus
+          audioManager.playFailure();
+          setScore(prev => prev + 1000);
           setGameState("strike");
-          // The Game.tsx component will handle the video and transition back to break
           return;
         }
 
@@ -264,7 +266,6 @@ export const useStratagemGame = () => {
           setInputIndex(0);
           setErrorsThisStratagem(0);
           
-          // Roll for Trump Card on next stratagem if still disrupted
           if (nextIsDisrupted && Math.random() < 0.10) {
             setIsTrumpCard(true);
             const eagle500kg = STRATAGEMS.find(s => s.name === "Eagle 500kg Bomb") || nextStrat;
