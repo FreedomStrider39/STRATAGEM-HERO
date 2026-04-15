@@ -14,6 +14,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
 import eagleStrikeVideo from "@/assets/video/eagle_strike.mp4";
+import { audioManager } from "@/utils/audio";
 
 const Game = () => {
   const navigate = useNavigate();
@@ -90,14 +91,23 @@ const Game = () => {
     }
   }, [user, authLoading, gameState === "idle"]);
 
-  // Handle video playback
+  // Handle video playback and volume ducking
   useEffect(() => {
     if (gameState === "strike" && videoRef.current) {
       videoRef.current.currentTime = 0;
+      videoRef.current.volume = 1.0; // Ensure max volume
       videoRef.current.play().catch(err => console.error("Video play failed:", err));
+      
+      // Duck BGM volume during strike
+      audioManager.setBgmVolume(0.1);
     } else if (gameState !== "strike" && videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
+      
+      // Restore BGM volume if we were playing
+      if (gameState === "playing" || gameState === "break") {
+        audioManager.setBgmVolume(0.4);
+      }
     }
   }, [gameState]);
 

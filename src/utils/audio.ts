@@ -74,6 +74,10 @@ class AudioManager {
     if (!url) return;
     const audio = new Audio(url);
     audio.preload = "auto";
+    // Ensure eagle strike is always at max volume
+    if (name === "eagle_strike") {
+      audio.volume = 1.0;
+    }
     this.sounds[name] = audio;
   }
 
@@ -98,6 +102,7 @@ class AudioManager {
   startBgm() {
     if (this.bgm) {
       this.bgm.currentTime = 0;
+      this.bgm.volume = 0.4;
       this.bgm.play().catch((err) => {
         console.warn("BGM play failed:", err);
       });
@@ -108,6 +113,12 @@ class AudioManager {
     if (this.bgm) {
       this.bgm.pause();
       this.bgm.currentTime = 0;
+    }
+  }
+
+  setBgmVolume(volume: number) {
+    if (this.bgm) {
+      this.bgm.volume = volume;
     }
   }
 
