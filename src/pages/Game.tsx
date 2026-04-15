@@ -50,7 +50,6 @@ const Game = () => {
   
   const submissionTriggeredRef = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const videoStartedRef = useRef(false);
 
   const fetchUserData = async () => {
     if (!user) {
@@ -91,14 +90,14 @@ const Game = () => {
     }
   }, [user, authLoading, gameState === "idle"]);
 
-  // Handle video playback to ensure it only plays once
+  // Handle video playback
   useEffect(() => {
-    if (gameState === "strike" && videoRef.current && !videoStartedRef.current) {
-      videoStartedRef.current = true;
+    if (gameState === "strike" && videoRef.current) {
+      videoRef.current.currentTime = 0;
       videoRef.current.play().catch(err => console.error("Video play failed:", err));
-    }
-    if (gameState !== "strike") {
-      videoStartedRef.current = false;
+    } else if (gameState !== "strike" && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
     }
   }, [gameState]);
 
@@ -187,6 +186,21 @@ const Game = () => {
       <div className={`w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden ${gameState === 'strike' ? 'animate-shake' : ''}`}>
         
         <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
+
+        {/* Persistent Video Element for reliability */}
+        <div className={`fixed inset-0 z-[100] bg-black transition-opacity duration-500 ${gameState === 'strike' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+          <video 
+            ref={videoRef}
+            src={eagleStrikeVideo}
+            className="w-full h-full object-cover"
+            playsInline
+            muted={false}
+            onEnded={() => {
+              setGameState("break");
+              setBreakTimeLeft(4);
+            }}
+          />
+        </div>
 
         <div className="w-full h-full z-10 flex flex-col justify-center overflow-hidden">
           <AnimatePresence mode="wait">
@@ -350,28 +364,6 @@ const Game = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            )}
-
-            {gameState === "strike" && (
-              <motion.div 
-                key="strike"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black"
-              >
-                <video 
-                  ref={videoRef}
-                  src={eagleStrikeVideo}
-                  className="w-full h-full object-cover"
-                  playsInline
-                  onEnded={() => {
-                    setGameState("break");
-                    setBreakTimeLeft(4);
-                  }}
-                />
               </motion.div>
             )}
 
