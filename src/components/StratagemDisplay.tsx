@@ -12,6 +12,7 @@ interface StratagemDisplayProps {
   isError: boolean;
   queue: Stratagem[];
   isDisrupted?: boolean;
+  isTrumpCard?: boolean;
   activeSequence: Direction[];
   round: number;
   score: number;
@@ -35,7 +36,7 @@ const IlluminateText = () => {
   return <span className="font-serif tracking-[0.2em] text-purple-400 opacity-80">{glyphs}</span>;
 };
 
-const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Direction, completed: boolean, isDisrupted?: boolean }) => {
+const CustomArrow = ({ direction, completed, isDisrupted, isTrumpCard }: { direction: Direction, completed: boolean, isDisrupted?: boolean, isTrumpCard?: boolean }) => {
   const rotation = {
     U: "rotate-0",
     D: "rotate-180",
@@ -45,7 +46,7 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
 
   return (
     <motion.div 
-      animate={isDisrupted ? {
+      animate={(isDisrupted || isTrumpCard) ? {
         x: [0, Math.random() * 4 - 2, 0],
         y: [0, Math.random() * 4 - 2, 0],
         rotate: [0, Math.random() * 2 - 1, 0],
@@ -55,7 +56,8 @@ const CustomArrow = ({ direction, completed, isDisrupted }: { direction: Directi
       className={cn(
         "transition-all duration-75 w-10 h-10 md:w-16 md:h-16 flex items-center justify-center flex-shrink-0",
         completed ? "text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,1)]" : "text-[#222222]",
-        isDisrupted && !completed && "text-purple-400/70"
+        isDisrupted && !completed && "text-purple-400/70",
+        isTrumpCard && !completed && "text-red-500/70"
       )}
     >
       <svg 
@@ -75,13 +77,14 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
   isError, 
   queue,
   isDisrupted,
+  isTrumpCard,
   activeSequence,
   round,
   score
 }) => {
   return (
     <div className="flex flex-col items-center w-full h-full max-h-full justify-between py-1 md:py-4">
-      {/* Header - Round & Score - Fixed padding for mobile */}
+      {/* Header - Round & Score */}
       <div className="flex items-start justify-between w-full px-6 md:px-12 shrink-0 pt-4 md:pt-2">
         <div className="flex flex-col items-start">
           <span className="text-white/40 text-[8px] md:text-[10px] font-bold tracking-[0.2em]">ROUND</span>
@@ -99,34 +102,23 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
         <div className="flex items-center justify-center gap-4 md:gap-10 relative">
           <div className={cn(
             "w-32 h-32 md:w-44 md:h-44 border-2 md:border-[4px] p-1.5 md:p-2 bg-black/40 relative overflow-hidden transition-colors duration-500 flex-shrink-0",
-            isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]"
+            isDisrupted ? "border-purple-500 shadow-[0_0_40px_rgba(168,85,247,0.5)]" : "border-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.3)]",
+            isTrumpCard && "border-red-500 shadow-[0_0_60px_rgba(239,68,68,0.8)] animate-pulse"
           )}>
+            {isTrumpCard && (
+              <div className="absolute inset-0 bg-red-500/20 animate-pulse z-0" />
+            )}
             <StratagemIcon 
               url={stratagem.iconUrl} 
               category={stratagem.category} 
               className={cn(
-                "w-full h-full transition-all duration-500", 
-                isDisrupted && "hue-rotate-[280deg] brightness-150"
+                "w-full h-full transition-all duration-500 relative z-10", 
+                isDisrupted && "hue-rotate-[280deg] brightness-150",
+                isTrumpCard && "brightness-150 contrast-125"
               )} 
             />
           </div>
 
-          {/* Horizontal Faded Queue for PC */}
-          <div className="hidden md:flex flex-row gap-4 opacity-20 absolute left-full ml-10">
-            {queue.slice(1, 5).map((nextStrat, idx) => (
-              <div key={idx} className="w-20 h-20 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
-                <StratagemIcon 
-                  url={nextStrat.iconUrl} 
-                  category={nextStrat.category} 
-                  className={cn(
-                    "w-full h-full", 
-                    isDisrupted && "hue-rotate-[280deg]"
-                  )} 
-                />
-              </div>
-            ))}
-          </div>
-          
           {/* Mobile Vertical Queue */}
           <div className="flex md:hidden flex-col gap-2 opacity-30">
             {queue.slice(1, 4).map((nextStrat, idx) => (
@@ -140,18 +132,21 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
           </div>
         </div>
 
-        {/* Name Bar - Full Width */}
+        {/* Name Bar */}
         <div className={cn(
           "w-full py-2 md:py-4 transition-all duration-500 shrink-0 relative",
-          isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400"
+          isDisrupted ? "bg-purple-900/90 border-y-2 border-purple-500/50" : "bg-yellow-400",
+          isTrumpCard && "bg-red-600 border-y-4 border-white shadow-[0_0_30px_rgba(239,68,68,1)]"
         )}>
           <div className="absolute inset-0 opacity-20 pointer-events-none bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px]" />
           
           <h2 className={cn(
-            "text-[10px] md:text-3xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[2.5rem] flex items-center justify-center uppercase italic relative z-10",
-            isDisrupted ? "text-purple-100" : "text-black"
+            "text-[10px] md:text-3xl font-black text-center tracking-[0.1em] md:tracking-[0.2em] min-h-[1rem] md:min-h-[2.5rem] flex flex-col items-center justify-center uppercase italic relative z-10",
+            isDisrupted ? "text-purple-100" : "text-black",
+            isTrumpCard && "text-white"
           )}>
-            {isDisrupted ? <IlluminateText /> : stratagem.name}
+            {isTrumpCard && <span className="text-[8px] md:text-xs font-black tracking-[0.5em] mb-1 text-white/60">TRUMP CARD DETECTED</span>}
+            {isDisrupted && !isTrumpCard ? <IlluminateText /> : stratagem.name}
           </h2>
         </div>
 
@@ -166,6 +161,7 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
               direction={dir} 
               completed={idx < currentIndex}
               isDisrupted={isDisrupted}
+              isTrumpCard={isTrumpCard}
             />
           ))}
         </div>
