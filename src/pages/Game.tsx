@@ -50,6 +50,7 @@ const Game = () => {
   
   const submissionTriggeredRef = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoStartedRef = useRef(false);
 
   const fetchUserData = async () => {
     if (!user) {
@@ -89,6 +90,17 @@ const Game = () => {
       fetchUserData();
     }
   }, [user, authLoading, gameState === "idle"]);
+
+  // Handle video playback to ensure it only plays once
+  useEffect(() => {
+    if (gameState === "strike" && videoRef.current && !videoStartedRef.current) {
+      videoStartedRef.current = true;
+      videoRef.current.play().catch(err => console.error("Video play failed:", err));
+    }
+    if (gameState !== "strike") {
+      videoStartedRef.current = false;
+    }
+  }, [gameState]);
 
   const fetchGlobalRank = async (currentScore: number) => {
     if (!user) return;
@@ -194,7 +206,7 @@ const Game = () => {
                   
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                     <div className="flex items-center gap-2">
-                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest uppercase">Designation:</span>
+                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest uppercase:">Designation:</span>
                       <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
                       <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
                         <Edit2 size={14} className="md:w-5 md:h-5" />
@@ -354,23 +366,12 @@ const Game = () => {
                   ref={videoRef}
                   src={eagleStrikeVideo}
                   className="w-full h-full object-cover"
-                  autoPlay
                   playsInline
                   onEnded={() => {
                     setGameState("break");
                     setBreakTimeLeft(4);
                   }}
                 />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                  <motion.h2 
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="text-4xl md:text-8xl font-black text-red-600 italic tracking-tighter uppercase text-center drop-shadow-[0_0_30px_rgba(239,68,68,0.8)]"
-                  >
-                    500KG INBOUND
-                  </motion.h2>
-                </div>
               </motion.div>
             )}
 
