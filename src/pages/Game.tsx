@@ -195,9 +195,20 @@ const Game = () => {
             className="w-full h-full object-cover"
             playsInline
             muted={false}
+            onTimeUpdate={(e) => {
+              const video = e.currentTarget;
+              // If we've reached the halfway point, treat it as ended to prevent repetition
+              if (gameState === "strike" && video.currentTime >= video.duration / 2 && video.duration > 0) {
+                video.pause();
+                setGameState("break");
+                setBreakTimeLeft(4);
+              }
+            }}
             onEnded={() => {
-              setGameState("break");
-              setBreakTimeLeft(4);
+              if (gameState === "strike") {
+                setGameState("break");
+                setBreakTimeLeft(4);
+              }
             }}
           />
         </div>
