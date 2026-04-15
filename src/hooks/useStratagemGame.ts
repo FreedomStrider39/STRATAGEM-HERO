@@ -18,7 +18,7 @@ export interface GameStats {
 }
 
 export const useStratagemGame = () => {
-  const [gameState, setGameState] = useState<"idle" | "playing" | "break" | "gameover" | "strike">("idle");
+  const [gameState, setGameState] = useState<"idle" | "playing" | "break" | "gameover">("idle");
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
@@ -39,7 +39,6 @@ export const useStratagemGame = () => {
   
   const [missionQueue, setMissionQueue] = useState<Stratagem[]>([]);
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0);
-  const [isTrumpCard, setIsTrumpCard] = useState(false);
   
   const [mistakesInGame, setMistakesInGame] = useState(0);
   const [errorsThisStratagem, setErrorsThisStratagem] = useState(0);
@@ -106,7 +105,6 @@ export const useStratagemGame = () => {
     setIsDisrupted(false);
     setDisruptedCount(0);
     setDisruptedLimit(0);
-    setIsTrumpCard(false);
     setShowDisruptorDestroyed(false);
     lastDisruptedRoundRef.current = -5;
     stratagemStartTimeRef.current = Date.now();
@@ -152,23 +150,12 @@ export const useStratagemGame = () => {
       const limit = Math.floor(Math.random() * 3) + 2;
       setDisruptedLimit(limit);
       setDisruptedCount(0);
-      
-      // 10% chance for a Trump Card during disruption
-      if (Math.random() < 0.10) {
-        setIsTrumpCard(true);
-        const eagle500kg = STRATAGEMS.find(s => s.name === "Eagle 500kg Bomb") || nextRound[0];
-        nextRound[0] = eagle500kg;
-        setActiveSequence(eagle500kg.sequence);
-      } else {
-        setIsTrumpCard(false);
-        const firstFake = generateRandomSequence(nextRound[0].sequence.length);
-        setActiveSequence(firstFake);
-      }
+      const firstFake = generateRandomSequence(nextRound[0].sequence.length);
+      setActiveSequence(firstFake);
     } else {
       setIsDisrupted(false);
       setDisruptedLimit(0);
       setDisruptedCount(0);
-      setIsTrumpCard(false);
       setActiveSequence(nextRound[0].sequence);
     }
 
@@ -184,7 +171,7 @@ export const useStratagemGame = () => {
   }, [level]);
 
   useEffect(() => {
-    if (gameState === "playing" && isDisrupted && !isTrumpCard) {
+    if (gameState === "playing" && isDisrupted) {
       disruptorIntervalRef.current = setInterval(() => {
         const currentStrat = missionQueue[currentQueueIndex];
         if (currentStrat) {
@@ -199,7 +186,7 @@ export const useStratagemGame = () => {
     return () => {
       if (disruptorIntervalRef.current) clearInterval(disruptorIntervalRef.current);
     };
-  }, [gameState, isDisrupted, isTrumpCard, currentQueueIndex, missionQueue]);
+  }, [gameState, isDisrupted, currentQueueIndex, missionQueue]);
 
   const handleInput = useCallback((direction: Direction) => {
     if (gameState !== "playing" || missionQueue.length === 0) return;
@@ -214,18 +201,6 @@ export const useStratagemGame = () => {
       if (nextInputIdx === activeSequence.length) {
         audioManager.playCorrect();
         
-        if (isTrumpCard) {
-          // TRUMP CARD ACTIVATED
-          audioManager.playFailure(); // Using failurefull for the boom
-          setScore(prev => prev + 1000); // Massive bonus
-          setGameState("strike");
-          setTimeout(() => {
-            setGameState("break");
-            setBreakTimeLeft(BREAK_DURATION);
-          }, 2000);
-          return;
-        }
-
         const timeTaken = Date.now() - stratagemStartTimeRef.current;
         const complexityBonus = activeSequence.length * 12;
         const speedBonus = Math.max(0, Math.floor((2500 - timeTaken) / 50));
@@ -266,22 +241,11 @@ export const useStratagemGame = () => {
           setCurrentQueueIndex(nextQueueIdx);
           setInputIndex(0);
           setErrorsThisStratagem(0);
-          
-          // Roll for Trump Card on next stratagem if still disrupted
-          if (nextIsDisrupted && Math.random() < 0.10) {
-            setIsTrumpCard(true);
-            const eagle500kg = STRATAGEMS.find(s => s.name === "Eagle 500kg Bomb") || nextStrat;
-            missionQueue[nextQueueIdx] = eagle500kg;
-            setActiveSequence(eagle500kg.sequence);
+          if (nextIsDisrupted) {
+            setActiveSequence(generateRandomSequence(nextStrat.sequence.length));
           } else {
-            setIsTrumpCard(false);
-            if (nextIsDisrupted) {
-              setActiveSequence(generateRandomSequence(nextStrat.sequence.length));
-            } else {
-              setActiveSequence(nextStrat.sequence);
-            }
+            setActiveSequence(nextStrat.sequence);
           }
-          
           stratagemStartTimeRef.current = Date.now();
         }
       } else {
@@ -298,7 +262,7 @@ export const useStratagemGame = () => {
     }
 
     setTimeout(() => setLastInputCorrect(null), 100);
-  }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem, activeSequence, isDisrupted, isTrumpCard, disruptedCount, disruptedLimit, combo, maxCombo]);
+  }, [gameState, missionQueue, currentQueueIndex, inputIndex, errorsThisStratagem, activeSequence, isDisrupted, disruptedCount, disruptedLimit, combo, maxCombo]);
 
   useEffect(() => {
     handleInputRef.current = handleInput;
@@ -366,7 +330,6 @@ export const useStratagemGame = () => {
     inputIndex,
     lastInputCorrect,
     isDisrupted,
-    isTrumpCard,
     showDisruptorDestroyed,
     activeSequence,
     stats,

@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert, Bomb } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -29,7 +29,6 @@ const Game = () => {
     inputIndex,
     lastInputCorrect,
     isDisrupted,
-    isTrumpCard,
     showDisruptorDestroyed,
     activeSequence,
     stats,
@@ -168,7 +167,7 @@ const Game = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      <div className={`w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden ${gameState === 'strike' ? 'animate-shake' : ''}`}>
+      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
         
         <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
@@ -293,7 +292,6 @@ const Game = () => {
                         isError={lastInputCorrect === false}
                         queue={missionQueue.slice(currentQueueIndex)}
                         isDisrupted={isDisrupted}
-                        isTrumpCard={isTrumpCard}
                         activeSequence={activeSequence}
                         round={level}
                         score={score}
@@ -334,34 +332,6 @@ const Game = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            )}
-
-            {gameState === "strike" && (
-              <motion.div 
-                key="strike"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
-              >
-                <motion.div 
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col items-center gap-4"
-                >
-                  <Bomb className="w-24 h-24 md:w-48 md:h-48 text-red-600 animate-bounce" />
-                  <h2 className="text-4xl md:text-8xl font-black text-red-600 italic tracking-tighter uppercase text-center">
-                    500KG INBOUND
-                  </h2>
-                  <p className="text-red-600/60 font-black tracking-[0.5em] uppercase text-xs md:text-xl">Clearing Sector...</p>
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0] }}
-                  transition={{ duration: 0.5, repeat: 4 }}
-                  className="absolute inset-0 bg-red-600/20 pointer-events-none"
-                />
               </motion.div>
             )}
 
