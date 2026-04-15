@@ -406,10 +406,10 @@ const Game = () => {
               >
                 <div className="flex flex-col items-center gap-3 md:gap-6 w-full max-w-2xl py-4">
                   <div className="text-center space-y-1">
-                    <h2 className="text-3xl md:text-7xl font-black text-red-500 italic tracking-tighter drop-shadow-[0_0_20px_rgba(239,68,68,0.5)] leading-none uppercase">
-                      Mission Failed
+                    <h2 className="text-3xl md:text-7xl font-black text-yellow-400 italic tracking-tighter drop-shadow-[0_0_20px_rgba(250,204,21,0.5)] leading-none uppercase">
+                      Training Concluded
                     </h2>
-                    <div className="h-0.5 w-16 md:w-48 bg-red-500 mx-auto shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
+                    <div className="h-0.5 w-16 md:w-48 bg-yellow-400 mx-auto shadow-[0_0_10px_rgba(250,204,21,0.5)]" />
                   </div>
 
                   <div className="flex flex-col items-center gap-1">
