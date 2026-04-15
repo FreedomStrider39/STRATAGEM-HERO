@@ -197,8 +197,8 @@ const Game = () => {
             muted={false}
             onTimeUpdate={(e) => {
               const video = e.currentTarget;
-              // Cut slightly before the halfway point for a cleaner loop prevention
-              if (gameState === "strike" && video.currentTime >= video.duration * 0.47 && video.duration > 0) {
+              // Cut earlier to ensure no loop repetition is visible
+              if (gameState === "strike" && video.currentTime >= video.duration * 0.44 && video.duration > 0) {
                 video.pause();
                 setGameState("break");
                 setBreakTimeLeft(4);
