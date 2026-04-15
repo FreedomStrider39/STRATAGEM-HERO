@@ -8,27 +8,31 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert, Bomb } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
+import eagleStrikeVideo from "@/assets/video/eagle_strike.mp4";
 
 const Game = () => {
   const navigate = useNavigate();
   const { user, signOut, loading: authLoading } = useAuth();
   const {
     gameState,
+    setGameState,
     score,
     level,
     timeLeft,
     maxTime,
     breakTimeLeft,
+    setBreakTimeLeft,
     missionQueue,
     currentQueueIndex,
     inputIndex,
     lastInputCorrect,
     isDisrupted,
+    isTrumpCard,
     showDisruptorDestroyed,
     activeSequence,
     stats,
@@ -45,6 +49,7 @@ const Game = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const submissionTriggeredRef = useRef(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const fetchUserData = async () => {
     if (!user) {
@@ -167,7 +172,7 @@ const Game = () => {
 
   return (
     <div className="fixed inset-0 bg-[#0a0c0c] text-white font-sans flex items-center justify-center overflow-hidden">
-      <div className="w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden">
+      <div className={`w-full h-full bg-[#121616] relative flex flex-col items-center justify-center crt-screen border-x-[2px] md:border-x-[6px] border-[#1a1f1f] overflow-hidden ${gameState === 'strike' ? 'animate-shake' : ''}`}>
         
         <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
@@ -292,6 +297,7 @@ const Game = () => {
                         isError={lastInputCorrect === false}
                         queue={missionQueue.slice(currentQueueIndex)}
                         isDisrupted={isDisrupted}
+                        isTrumpCard={isTrumpCard}
                         activeSequence={activeSequence}
                         round={level}
                         score={score}
@@ -331,6 +337,39 @@ const Game = () => {
                       <TouchControls onInput={handleInput} />
                     </div>
                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {gameState === "strike" && (
+              <motion.div 
+                key="strike"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black"
+              >
+                <video 
+                  ref={videoRef}
+                  src={eagleStrikeVideo}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  playsInline
+                  onEnded={() => {
+                    setGameState("break");
+                    setBreakTimeLeft(4);
+                  }}
+                />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                  <motion.h2 
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-4xl md:text-8xl font-black text-red-600 italic tracking-tighter uppercase text-center drop-shadow-[0_0_30px_rgba(239,68,68,0.8)]"
+                  >
+                    500KG INBOUND
+                  </motion.h2>
                 </div>
               </motion.div>
             )}
