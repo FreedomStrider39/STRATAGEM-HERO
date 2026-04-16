@@ -119,10 +119,10 @@ const StratagemDisplay: React.FC<StratagemDisplayProps> = ({
             />
           </div>
 
-          {/* Mobile Vertical Queue */}
-          <div className="flex md:hidden flex-col gap-2 opacity-30">
-            {queue.slice(1, 4).map((nextStrat, idx) => (
-              <div key={idx} className="w-8 h-8 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
+          {/* Upcoming Queue */}
+          <div className="flex flex-col md:flex-row gap-2 opacity-30">
+            {queue.slice(1, 5).map((nextStrat, idx) => (
+              <div key={idx} className="w-8 h-8 md:w-12 md:h-12 grayscale brightness-75 relative overflow-hidden border border-white/10 flex-shrink-0">
                 <StratagemIcon 
                   url={nextStrat.iconUrl} 
                   category={nextStrat.category} 
