@@ -171,7 +171,8 @@ export const useStratagemGame = () => {
     setCurrentQueueIndex(0);
     setInputIndex(0);
     setErrorsThisStratagem(0);
-    setTimeLeft(prev => Math.max(prev, 20));
+    // Reset timer to full for the new level
+    setTimeLeft(MAX_TIME);
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
   }, [level]);
