@@ -5,7 +5,7 @@ import { audioManager } from "@/utils/audio";
 const INITIAL_TIME = 40; 
 const MAX_TIME = 40; 
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 1.0; // Slightly reduced reward to maintain pressure
+const UNCONDITIONAL_TIME_REWARD = 1.2; // Restored to more generous reward
 const DISRUPTOR_REFRESH_MS = 2500;
 const TRUMP_CARD_COOLDOWN = 5; 
 const STRUGGLE_THRESHOLD = 3; 
@@ -315,8 +315,8 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Increased base drain and scaling for more challenge
-          const drainRate = 0.25 + (level * 0.02);
+          // Restored slower drain rate
+          const drainRate = 0.12 + (level * 0.01);
           return prev - drainRate;
         });
       }, 100);
