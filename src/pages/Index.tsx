@@ -67,18 +67,8 @@ const Welcome = () => {
 
           <motion.div 
             variants={itemVariants}
-            className="h-0.5 md:h-1 w-12 md:w-32 bg-yellow-400 mb-3 md:mb-6 shadow-[0_0_15px_rgba(250,204,21,0.6)]" 
+            className="h-0.5 md:h-1 w-12 md:w-32 bg-yellow-400 mb-6 md:mb-10 shadow-[0_0_15px_rgba(250,204,21,0.6)]" 
           />
-
-          <motion.div variants={itemVariants} className="bg-white/5 border border-white/10 p-3 md:p-6 backdrop-blur-md mb-4 md:mb-8">
-            <p className="text-white/80 text-[8px] md:text-sm font-bold tracking-widest uppercase leading-relaxed mb-2 md:mb-4">
-              Mandatory training for all Helldivers. 
-              Master your inputs to ensure victory for Super Earth.
-            </p>
-            <div className="flex items-center justify-center gap-2 text-yellow-400/80 text-[7px] md:text-[10px] font-black tracking-widest uppercase animate-pulse">
-              <ShieldCheck size={10} className="md:w-3 md:h-3" /> Enrollment Required to Proceed
-            </div>
-          </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-col gap-3 w-full max-w-[200px] md:max-w-xs mb-6 md:mb-10">
             <Link 
