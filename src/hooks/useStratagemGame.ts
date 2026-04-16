@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { STRATAGEMS, Direction, Stratagem } from "@/data/stratagems";
 import { audioManager } from "@/utils/audio";
 
-const INITIAL_TIME = 30;
-const MAX_TIME = 40; // Increased max buffer
+const INITIAL_TIME = 40; // Matches MAX_TIME to start full
+const MAX_TIME = 40; 
 const BREAK_DURATION = 4;
-const UNCONDITIONAL_TIME_REWARD = 1.2; // More time back per completion
+const UNCONDITIONAL_TIME_REWARD = 1.2; 
 const DISRUPTOR_REFRESH_MS = 2500;
 const TRUMP_CARD_COOLDOWN = 5; 
 const STRUGGLE_THRESHOLD = 3; 
@@ -74,7 +74,6 @@ export const useStratagemGame = () => {
   };
 
   const getRoundSize = (lvl: number) => {
-    // Starts at 4 stratagems and grows slower
     return 3 + lvl;
   };
 
@@ -145,7 +144,7 @@ export const useStratagemGame = () => {
     const nextRound = generateRound(nextRoundSize);
     
     const roundsSinceLast = nextLvl - lastDisruptedRoundRef.current;
-    const canDisrupt = nextLvl >= 6 && roundsSinceLast >= 5; // Starts later and less frequent
+    const canDisrupt = nextLvl >= 6 && roundsSinceLast >= 5; 
     const shouldDisrupt = canDisrupt && Math.random() < 0.2;
 
     if (shouldDisrupt) {
@@ -172,7 +171,6 @@ export const useStratagemGame = () => {
     setCurrentQueueIndex(0);
     setInputIndex(0);
     setErrorsThisStratagem(0);
-    // Don't reset time to initial, keep what they have but ensure it's at least 20s
     setTimeLeft(prev => Math.max(prev, 20));
     stratagemStartTimeRef.current = Date.now();
     setGameState("playing");
@@ -241,7 +239,7 @@ export const useStratagemGame = () => {
             nextIsDisrupted = false;
             setIsDisrupted(false);
             setShowDisruptorDestroyed(true);
-            setTimeLeft(prev => Math.min(prev + 2.0, MAX_TIME)); // Bigger reward for clearing disruptor
+            setTimeLeft(prev => Math.min(prev + 2.0, MAX_TIME)); 
             audioManager.playSuccess();
             setTimeout(() => setShowDisruptorDestroyed(false), 3000);
           }
@@ -317,7 +315,6 @@ export const useStratagemGame = () => {
             setGameState("gameover");
             return 0;
           }
-          // Slower base drain and slower scaling
           const drainRate = 0.12 + (level * 0.01);
           return prev - drainRate;
         });
