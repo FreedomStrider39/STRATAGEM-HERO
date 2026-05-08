@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw } from "lucide-react";
+import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw, User as UserIcon } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 
 interface Entry {
   score: number;
   level: number;
   username: string;
+  avatar_url: string | null;
   updated_at: string;
 }
 
@@ -38,11 +39,11 @@ const Stats = () => {
         return;
       }
 
-      // 2. Fetch usernames for these players
+      // 2. Fetch usernames and avatars for these players
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username')
+        .select('id, username, avatar_url')
         .in('id', userIds);
 
       if (profileError) console.warn("Profile fetch warning:", profileError);
@@ -54,7 +55,8 @@ const Stats = () => {
           score: score.score,
           level: score.level,
           updated_at: score.updated_at || "",
-          username: profile?.username || "HELLDIVER"
+          username: profile?.username || "HELLDIVER",
+          avatar_url: profile?.avatar_url || null
         };
       });
 
@@ -124,6 +126,15 @@ const Stats = () => {
               >
                 <div className="flex items-center gap-4 min-w-0">
                   <span className="font-black text-sm md:text-lg italic text-white/40 w-8">#{idx + 1}</span>
+                  
+                  <div className="w-10 h-10 md:w-12 md:h-12 border border-white/10 overflow-hidden flex items-center justify-center bg-black/20 shrink-0">
+                    {entry.avatar_url ? (
+                      <img src={entry.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <UserIcon className="w-5 h-5 md:w-6 md:h-6 text-white/20" />
+                    )}
+                  </div>
+
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
                       <span className={`font-black tracking-widest truncate uppercase ${idx === 0 ? 'text-yellow-400 text-lg md:text-xl' : 'text-white text-sm md:text-lg'}`}>
