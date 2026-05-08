@@ -32,9 +32,9 @@ const Encyclopedia = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0c0c] text-white crt-screen flex flex-col">
+    <div className="h-screen bg-[#0a0c0c] text-white crt-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0a0c0c]/90 backdrop-blur-md border-b-2 border-yellow-400 p-4 md:p-6">
+      <header className="shrink-0 bg-[#0a0c0c]/90 backdrop-blur-md border-b-2 border-yellow-400 p-4 md:p-6 z-50">
         <div className="max-w-7xl mx-auto flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -83,8 +83,8 @@ const Encyclopedia = () => {
         </div>
       </header>
 
-      {/* Content */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+      {/* Content - This is the scrollable area */}
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <AnimatePresence mode="popLayout">
@@ -131,7 +131,7 @@ const Encyclopedia = () => {
       </main>
 
       {/* Footer Info */}
-      <footer className="p-4 text-center border-t border-white/5 bg-black/20">
+      <footer className="shrink-0 p-4 text-center border-t border-white/5 bg-black/20">
         <p className="text-[8px] md:text-[10px] text-white/20 font-bold tracking-[0.3em] uppercase">
           Total Stratagems Cataloged: {STRATAGEMS.length}
         </p>

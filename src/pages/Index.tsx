@@ -2,8 +2,8 @@
 
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Shield, FileText, LogIn, ShieldCheck } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+import { Shield, FileText, LogIn } from "lucide-react";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -17,7 +17,7 @@ const Welcome = () => {
     return <Navigate to="/game" replace />;
   }
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -28,7 +28,7 @@ const Welcome = () => {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 
