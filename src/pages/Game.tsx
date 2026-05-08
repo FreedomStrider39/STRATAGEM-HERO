@@ -8,7 +8,7 @@ import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert, Bomb } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert, Bomb, User as UserIcon } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -45,6 +45,7 @@ const Game = () => {
 
   const [highScore, setHighScore] = useState(0);
   const [username, setUsername] = useState("HELLDIVER");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,12 +62,13 @@ const Game = () => {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('username')
+        .select('username, avatar_url')
         .eq('id', user.id)
         .maybeSingle();
       
-      if (profile?.username) {
-        setUsername(profile.username);
+      if (profile) {
+        setUsername(profile.username || "HELLDIVER");
+        setAvatarUrl(profile.avatar_url || null);
       }
 
       const { data: leaderboard } = await supabase
@@ -91,20 +93,15 @@ const Game = () => {
     }
   }, [user, authLoading, gameState === "idle"]);
 
-  // Handle video playback and volume ducking
   useEffect(() => {
     if (gameState === "strike" && videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.volume = 1.0; // Ensure max volume
+      videoRef.current.volume = 1.0;
       videoRef.current.play().catch(err => console.error("Video play failed:", err));
-      
-      // Duck BGM volume during strike
       audioManager.setBgmVolume(0.1);
     } else if (gameState !== "strike" && videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
-      
-      // Restore BGM volume if we were playing
       if (gameState === "playing" || gameState === "break") {
         audioManager.setBgmVolume(0.4);
       }
@@ -197,7 +194,6 @@ const Game = () => {
         
         <div className="absolute inset-0 border-[2px] md:border-[6px] border-yellow-400/80 shadow-[inset_0_0_15px_rgba(250,204,21,0.3),0_0_15px_rgba(250,204,21,0.3)] pointer-events-none z-50" />
 
-        {/* Persistent Video Element for reliability */}
         <div className={`fixed inset-0 z-[100] bg-black transition-opacity duration-500 ${gameState === 'strike' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
           <video 
             ref={videoRef}
@@ -207,7 +203,6 @@ const Game = () => {
             muted={false}
             onTimeUpdate={(e) => {
               const video = e.currentTarget;
-              // Cut earlier to ensure no loop repetition is visible
               if (gameState === "strike" && video.currentTime >= video.duration * 0.44 && video.duration > 0) {
                 video.pause();
                 setGameState("break");
@@ -240,17 +235,26 @@ const Game = () => {
                   <div className="h-1 w-32 md:h-2 md:w-[24rem] bg-yellow-400 mb-4 md:mb-8 shadow-[0_0_20px_rgba(250,204,21,0.8)]" />
                   
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white/40 text-[10px] md:text-base font-bold tracking-widest uppercase:">Designation:</span>
-                      <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
-                      <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
-                        <Edit2 size={14} className="md:w-5 md:h-5" />
-                      </Link>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 md:w-16 md:h-16 border-2 border-yellow-400/30 bg-black/40 overflow-hidden flex items-center justify-center">
+                        {avatarUrl ? (
+                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon className="w-6 h-6 md:w-10 md:h-10 text-yellow-400/20" />
+                        )}
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
+                          <Link to="/auth" className="text-yellow-400/40 hover:text-yellow-400 transition-colors">
+                            <Edit2 size={14} className="md:w-5 md:h-5" />
+                          </Link>
+                        </div>
+                        <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(highScore)}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-yellow-400 text-[10px] md:text-sm font-black tracking-widest uppercase italic">{getRank(highScore)}</span>
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-2">
+                    
+                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-4">
                       <Link to="/intel" className="text-[10px] md:text-sm font-bold text-white/40 hover:text-yellow-400 flex items-center gap-1 transition-colors uppercase">
                         <Book size={12} className="md:w-5 md:h-5" /> Intel
                       </Link>
@@ -474,8 +478,14 @@ const Game = () => {
                   </div>
 
                   <div className="flex flex-col items-center gap-4 w-full">
-                    <div className="flex flex-col items-center gap-0.5">
-                      <span className="text-[8px] text-white/40 font-black tracking-widest uppercase">Designation</span>
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 border border-white/20 overflow-hidden">
+                        {avatarUrl ? (
+                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon className="w-full h-full p-2 text-white/20" />
+                        )}
+                      </div>
                       <span className="text-sm md:text-xl font-black text-white italic uppercase tracking-widest">{username}</span>
                     </div>
 
