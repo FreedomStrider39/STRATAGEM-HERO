@@ -27,15 +27,17 @@ const Auth = () => {
         return;
       }
       
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('username, avatar_url')
         .eq('id', user.id)
         .maybeSingle();
       
       if (data) {
-        setUsername(data.username || "");
+        setUsername(data.username || "HELLDIVER");
         setAvatarUrl(data.avatar_url || null);
+      } else {
+        setUsername("HELLDIVER");
       }
       setNewEmail(user.email || "");
       setInitialLoading(false);
@@ -55,16 +57,15 @@ const Auth = () => {
 
       const file = event.target.files[0];
       const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
+      // Store in a folder named after the user ID for security policies
+      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
-      // Upload to 'avatars' bucket
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
@@ -72,6 +73,7 @@ const Auth = () => {
       setAvatarUrl(publicUrl);
       toast.success("INSIGNIA UPLOADED");
     } catch (error: any) {
+      console.error("Upload error:", error);
       toast.error("UPLOAD FAILED: " + error.message.toUpperCase());
     } finally {
       setIsUploading(false);
@@ -84,11 +86,13 @@ const Auth = () => {
 
     setIsSaving(true);
     try {
+      const finalUsername = username.trim().toUpperCase() || "HELLDIVER";
+      
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({ 
           id: user.id,
-          username: username.trim().toUpperCase() || "HELLDIVER",
+          username: finalUsername,
           avatar_url: avatarUrl,
           updated_at: new Date().toISOString()
         }, { onConflict: 'id' });
