@@ -60,6 +60,7 @@ const Game = () => {
     }
     
     try {
+      // Fetch profile
       const { data: profile } = await supabase
         .from('profiles')
         .select('username, avatar_url')
@@ -69,8 +70,18 @@ const Game = () => {
       if (profile) {
         setUsername(profile.username || "HELLDIVER");
         setAvatarUrl(profile.avatar_url || null);
+      } else {
+        // If no profile exists, create a default one to prevent "HELLDIVER" reset
+        const defaultName = user.user_metadata?.full_name || user.user_metadata?.name || "HELLDIVER";
+        await supabase.from('profiles').insert({
+          id: user.id,
+          username: defaultName,
+          updated_at: new Date().toISOString()
+        });
+        setUsername(defaultName);
       }
 
+      // Fetch high score
       const { data: leaderboard } = await supabase
         .from('leaderboard')
         .select('score')
@@ -127,6 +138,14 @@ const Game = () => {
 
     setIsSubmitting(true);
     try {
+      // Ensure profile is synced before submitting score
+      await supabase.from('profiles').upsert({
+        id: user.id,
+        username: username,
+        avatar_url: avatarUrl,
+        updated_at: new Date().toISOString()
+      });
+
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
