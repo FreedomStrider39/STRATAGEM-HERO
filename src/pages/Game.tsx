@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStratagemGame } from "@/hooks/useStratagemGame";
 import StratagemDisplay from "@/components/StratagemDisplay";
 import TouchControls from "@/components/TouchControls";
 import Leaderboard from "@/components/Leaderboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { MadeWithDyad } from "@/components/made-with-dyad";
-import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, Home, LogOut, Loader2, X, ArrowLeft, Globe, Book, Target, ShieldAlert, Bomb, User as UserIcon } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trophy, Zap, Edit2, BarChart3, LogOut, Loader2, X, Globe, Book, Target, ShieldAlert, User as UserIcon } from "lucide-react";
 import { getRank } from "@/data/stratagems";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -45,7 +45,6 @@ const Game = () => {
 
   const [highScore, setHighScore] = useState(0);
   const [username, setUsername] = useState("HELLDIVER");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,28 +59,16 @@ const Game = () => {
     }
     
     try {
-      // Fetch profile
       const { data: profile } = await supabase
         .from('profiles')
-        .select('username, avatar_url')
+        .select('username')
         .eq('id', user.id)
         .maybeSingle();
       
       if (profile) {
         setUsername(profile.username || "HELLDIVER");
-        setAvatarUrl(profile.avatar_url || null);
-      } else {
-        // If no profile exists, create a default one to prevent "HELLDIVER" reset
-        const defaultName = user.user_metadata?.full_name || user.user_metadata?.name || "HELLDIVER";
-        await supabase.from('profiles').insert({
-          id: user.id,
-          username: defaultName,
-          updated_at: new Date().toISOString()
-        });
-        setUsername(defaultName);
       }
 
-      // Fetch high score
       const { data: leaderboard } = await supabase
         .from('leaderboard')
         .select('score')
@@ -138,14 +125,6 @@ const Game = () => {
 
     setIsSubmitting(true);
     try {
-      // Ensure profile is synced before submitting score
-      await supabase.from('profiles').upsert({
-        id: user.id,
-        username: username,
-        avatar_url: avatarUrl,
-        updated_at: new Date().toISOString()
-      });
-
       if (stats.totalScore > highScore) {
         const { error } = await supabase
           .from('leaderboard')
@@ -255,13 +234,6 @@ const Game = () => {
                   
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 md:w-16 md:h-16 border-2 border-yellow-400/30 bg-black/40 overflow-hidden flex items-center justify-center">
-                        {avatarUrl ? (
-                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                        ) : (
-                          <UserIcon className="w-6 h-6 md:w-10 md:h-10 text-yellow-400/20" />
-                        )}
-                      </div>
                       <div className="flex flex-col items-start">
                         <div className="flex items-center gap-2">
                           <span className="text-white text-sm md:text-2xl font-black italic tracking-widest uppercase">{username}</span>
@@ -498,13 +470,6 @@ const Game = () => {
 
                   <div className="flex flex-col items-center gap-4 w-full">
                     <div className="flex flex-col items-center gap-2">
-                      <div className="w-12 h-12 border border-white/20 overflow-hidden">
-                        {avatarUrl ? (
-                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                        ) : (
-                          <UserIcon className="w-full h-full p-2 text-white/20" />
-                        )}
-                      </div>
                       <span className="text-sm md:text-xl font-black text-white italic uppercase tracking-widest">{username}</span>
                     </div>
 

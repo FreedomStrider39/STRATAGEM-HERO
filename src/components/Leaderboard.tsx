@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, AlertCircle, RefreshCw, User as UserIcon } from "lucide-react";
+import { Users, AlertCircle, RefreshCw } from "lucide-react";
 
 interface Entry {
   score: number;
   level: number;
   username: string;
-  avatar_url: string | null;
 }
 
 const Leaderboard = () => {
@@ -36,7 +35,7 @@ const Leaderboard = () => {
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username, avatar_url')
+        .select('id, username')
         .in('id', userIds);
 
       const combinedData = scores.map(score => {
@@ -44,8 +43,7 @@ const Leaderboard = () => {
         return {
           score: score.score,
           level: score.level,
-          username: profile?.username || "HELLDIVER",
-          avatar_url: profile?.avatar_url || null
+          username: profile?.username || "HELLDIVER"
         };
       });
 
@@ -96,13 +94,6 @@ const Leaderboard = () => {
                 <span className={idx < 3 ? "text-yellow-400 font-black" : "text-white/40"}>
                   #{idx + 1}
                 </span>
-                <div className="w-5 h-5 md:w-6 md:h-6 border border-white/10 overflow-hidden flex items-center justify-center bg-black/20">
-                  {entry.avatar_url ? (
-                    <img src={entry.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <UserIcon className="w-3 h-3 text-white/20" />
-                  )}
-                </div>
                 <span className="text-white font-bold truncate max-w-[100px] uppercase">
                   {entry.username}
                 </span>
