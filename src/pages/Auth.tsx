@@ -28,20 +28,25 @@ const Auth = () => {
         return;
       }
       
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('username, avatar_url')
-        .eq('id', user.id)
-        .maybeSingle();
-      
-      if (data) {
-        setUsername(data.username || "HELLDIVER");
-        setAvatarUrl(data.avatar_url || null);
-      } else {
-        setUsername("HELLDIVER");
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('username, avatar_url')
+          .eq('id', user.id)
+          .maybeSingle();
+        
+        if (data) {
+          setUsername(data.username || "HELLDIVER");
+          setAvatarUrl(data.avatar_url || null);
+        } else {
+          setUsername("HELLDIVER");
+        }
+        setNewEmail(user.email || "");
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      } finally {
+        setInitialLoading(false);
       }
-      setNewEmail(user.email || "");
-      setInitialLoading(false);
     };
 
     if (!authLoading) {
@@ -88,6 +93,7 @@ const Auth = () => {
     try {
       const finalUsername = username.trim().toUpperCase() || "HELLDIVER";
       
+      // We use upsert to handle both creation and update
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({ 
@@ -95,7 +101,7 @@ const Auth = () => {
           username: finalUsername,
           avatar_url: avatarUrl,
           updated_at: new Date().toISOString()
-        }, { onConflict: 'id' });
+        });
 
       if (profileError) throw profileError;
 
@@ -115,7 +121,7 @@ const Auth = () => {
       toast.success("INTEL UPDATED SUCCESSFULLY");
     } catch (err: any) {
       console.error("Update error:", err);
-      toast.error(err.message.toUpperCase());
+      toast.error("SECURITY CLEARANCE DENIED: " + err.message.toUpperCase());
     } finally {
       setIsSaving(false);
     }
