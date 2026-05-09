@@ -8,6 +8,7 @@ interface Entry {
   score: number;
   level: number;
   username: string;
+  avatar_url: string | null;
 }
 
 const Leaderboard = () => {
@@ -35,7 +36,7 @@ const Leaderboard = () => {
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username')
+        .select('id, username, avatar_url')
         .in('id', userIds);
 
       const combinedData = scores.map(score => {
@@ -43,7 +44,8 @@ const Leaderboard = () => {
         return {
           score: score.score,
           level: score.level,
-          username: profile?.username || "HELLDIVER"
+          username: profile?.username || "HELLDIVER",
+          avatar_url: profile?.avatar_url || null
         };
       });
 
@@ -95,7 +97,11 @@ const Leaderboard = () => {
                   #{idx + 1}
                 </span>
                 <div className="w-5 h-5 md:w-6 md:h-6 border border-white/10 overflow-hidden flex items-center justify-center bg-black/20">
-                  <UserIcon className="w-3 h-3 text-white/20" />
+                  {entry.avatar_url ? (
+                    <img src={entry.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <UserIcon className="w-3 h-3 text-white/20" />
+                  )}
                 </div>
                 <span className="text-white font-bold truncate max-w-[100px] uppercase">
                   {entry.username}

@@ -45,6 +45,7 @@ const Game = () => {
 
   const [highScore, setHighScore] = useState(0);
   const [username, setUsername] = useState("HELLDIVER");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [globalRank, setGlobalRank] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,12 +62,13 @@ const Game = () => {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('username')
+        .select('username, avatar_url')
         .eq('id', user.id)
         .maybeSingle();
       
       if (profile) {
         setUsername(profile.username || "HELLDIVER");
+        setAvatarUrl(profile.avatar_url || null);
       }
 
       const { data: leaderboard } = await supabase
@@ -235,7 +237,11 @@ const Game = () => {
                   <div className="flex flex-col items-center gap-2 mb-4 md:mb-8">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 md:w-16 md:h-16 border-2 border-yellow-400/30 bg-black/40 overflow-hidden flex items-center justify-center">
-                        <UserIcon className="w-6 h-6 md:w-10 md:h-10 text-yellow-400/20" />
+                        {avatarUrl ? (
+                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon className="w-6 h-6 md:w-10 md:h-10 text-yellow-400/20" />
+                        )}
                       </div>
                       <div className="flex flex-col items-start">
                         <div className="flex items-center gap-2">
@@ -474,7 +480,11 @@ const Game = () => {
                   <div className="flex flex-col items-center gap-4 w-full">
                     <div className="flex flex-col items-center gap-2">
                       <div className="w-12 h-12 border border-white/20 overflow-hidden">
-                        <UserIcon className="w-full h-full p-2 text-white/20" />
+                        {avatarUrl ? (
+                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon className="w-full h-full p-2 text-white/20" />
+                        )}
                       </div>
                       <span className="text-sm md:text-xl font-black text-white italic uppercase tracking-widest">{username}</span>
                     </div>
