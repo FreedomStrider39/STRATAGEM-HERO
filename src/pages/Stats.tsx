@@ -12,7 +12,6 @@ interface Entry {
   score: number;
   level: number;
   username: string;
-  avatar_url: string | null;
   updated_at: string;
 }
 
@@ -25,7 +24,6 @@ const Stats = () => {
   const fetchLeaderboard = async () => {
     setIsRefreshing(true);
     try {
-      // 1. Fetch high scores
       const { data: scores, error: scoreError } = await supabase
         .from('leaderboard')
         .select('score, level, user_id, updated_at')
@@ -40,24 +38,19 @@ const Stats = () => {
         return;
       }
 
-      // 2. Fetch usernames and avatars for these players
       const userIds = scores.map(s => s.user_id);
       const { data: profiles, error: profileError } = await supabase
         .from('profiles')
-        .select('id, username, avatar_url')
+        .select('id, username')
         .in('id', userIds);
 
-      if (profileError) console.warn("Profile fetch warning:", profileError);
-
-      // 3. Combine data
       const combinedData = scores.map(score => {
         const profile = profiles?.find(p => p.id === score.user_id);
         return {
           score: score.score,
           level: score.level,
           updated_at: score.updated_at || "",
-          username: profile?.username || "HELLDIVER",
-          avatar_url: profile?.avatar_url || null
+          username: profile?.username || "HELLDIVER"
         };
       });
 
@@ -129,11 +122,7 @@ const Stats = () => {
                   <span className="font-black text-sm md:text-lg italic text-white/40 w-8">#{idx + 1}</span>
                   
                   <div className="w-10 h-10 md:w-12 md:h-12 border border-white/10 overflow-hidden flex items-center justify-center bg-black/20 shrink-0">
-                    {entry.avatar_url ? (
-                      <img src={entry.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-                    ) : (
-                      <UserIcon className="w-5 h-5 md:w-6 md:h-6 text-white/20" />
-                    )}
+                    <UserIcon className="w-5 h-5 md:w-6 md:h-6 text-white/20" />
                   </div>
 
                   <div className="flex flex-col min-w-0">

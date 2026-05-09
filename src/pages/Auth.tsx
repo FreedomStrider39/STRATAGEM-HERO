@@ -15,11 +15,8 @@ const Auth = () => {
   const [username, setUsername] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,13 +28,12 @@ const Auth = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('username, avatar_url')
+          .select('username')
           .eq('id', user.id)
           .maybeSingle();
         
         if (data) {
           setUsername(data.username || "HELLDIVER");
-          setAvatarUrl(data.avatar_url || null);
         } else {
           setUsername("HELLDIVER");
         }
@@ -54,37 +50,6 @@ const Auth = () => {
     }
   }, [user, authLoading]);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      setIsUploading(true);
-      if (!event.target.files || event.target.files.length === 0 || !user) {
-        return;
-      }
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      setAvatarUrl(publicUrl);
-      toast.success("INSIGNIA UPLOADED");
-    } catch (error: any) {
-      console.error("Upload error:", error);
-      toast.error("UPLOAD FAILED: " + error.message.toUpperCase());
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || isSaving) return;
@@ -93,13 +58,11 @@ const Auth = () => {
     try {
       const finalUsername = username.trim().toUpperCase() || "HELLDIVER";
       
-      // We use upsert to handle both creation and update
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({ 
           id: user.id,
           username: finalUsername,
-          avatar_url: avatarUrl,
           updated_at: new Date().toISOString()
         });
 
@@ -167,40 +130,10 @@ const Auth = () => {
               <div className="flex flex-col items-center mb-8">
                 <div className="relative group">
                   <div className="w-24 h-24 md:w-32 md:h-32 bg-black/40 border-2 border-yellow-400/50 overflow-hidden flex items-center justify-center relative">
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                    ) : (
-                      <User className="w-12 h-12 md:w-16 md:h-16 text-yellow-400/20" />
-                    )}
-                    {isUploading && (
-                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                        <Loader2 className="w-6 h-6 text-yellow-400 animate-spin" />
-                      </div>
-                    )}
+                    <User className="w-12 h-12 md:w-16 md:h-16 text-yellow-400/20" />
                   </div>
-                  <button 
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute -bottom-2 -right-2 bg-yellow-400 text-black p-2 rounded-none hover:bg-yellow-500 transition-all shadow-lg"
-                  >
-                    <Camera size={16} />
-                  </button>
-                  {avatarUrl && (
-                    <button 
-                      onClick={() => setAvatarUrl(null)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white p-1 hover:bg-red-600 transition-all"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  )}
                 </div>
-                <input 
-                  type="file" 
-                  ref={fileInputRef} 
-                  onChange={handleFileUpload} 
-                  accept="image/*" 
-                  className="hidden" 
-                />
-                <p className="text-[8px] font-black tracking-widest text-white/20 mt-4 uppercase">Upload Combat Insignia</p>
+                <p className="text-[8px] font-black tracking-widest text-white/20 mt-4 uppercase">Insignia Upload Offline</p>
               </div>
 
               <form onSubmit={handleUpdateProfile} className="space-y-6">
@@ -250,7 +183,7 @@ const Auth = () => {
                 <div className="flex flex-col gap-3 pt-4">
                   <button 
                     type="submit"
-                    disabled={isSaving || isUploading}
+                    disabled={isSaving}
                     className="w-full bg-yellow-400 text-black py-4 font-black text-lg hover:bg-yellow-500 disabled:opacity-30 transition-all flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(250,204,21,0.3)] uppercase"
                   >
                     {isSaving ? <Loader2 className="animate-spin" /> : <Save size={20} />} Save Changes
