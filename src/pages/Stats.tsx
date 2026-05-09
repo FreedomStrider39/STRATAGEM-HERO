@@ -6,7 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import { Trophy, ArrowLeft, BarChart3, AlertCircle, Database, RefreshCw, User as UserIcon } from "lucide-react";
 import { getRank } from "@/data/stratagems";
-import RollingNumber from "@/components/RollingNumber";
 
 interface Entry {
   score: number;
@@ -149,10 +148,9 @@ const Stats = () => {
                   </div>
                 </div>
                 <div className="text-right flex flex-col items-end">
-                  <RollingNumber 
-                    value={entry.score} 
-                    className="text-yellow-400 font-black text-lg md:text-2xl italic tracking-tighter text-glow-yellow"
-                  />
+                  <span className="text-yellow-400 font-black text-lg md:text-2xl italic tracking-tighter text-glow-yellow">
+                    {entry.score.toLocaleString()}
+                  </span>
                   <span className="text-[8px] text-white/20 font-bold">HIGH SCORE</span>
                 </div>
               </motion.div>
